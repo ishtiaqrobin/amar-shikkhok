@@ -39,3 +39,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+amar_shikkhok.md
+frontend.workflow.md
+remaining_work.md
+workflow.md
+frontend.workflow.md
+*.md

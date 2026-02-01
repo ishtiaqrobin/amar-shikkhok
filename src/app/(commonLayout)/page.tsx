@@ -1,14 +1,31 @@
-import { Button } from "@/components/ui/button";
-import { userService } from "@/services/user.service";
+import { HeroSection } from "@/components/modules/home/HeroSection";
+import { CategorySection } from "@/components/modules/home/CategorySection";
+import { HowItWorks } from "@/components/modules/home/HowItWorks";
+import { FeaturedTutors } from "@/components/modules/home/FeaturedTutors";
+import { Testimonials } from "@/components/modules/home/Testimonials";
+import { CTASection } from "@/components/modules/home/CTASection";
 
-export default async function Home() {
-  const { data } = await userService.getSession();
-
-  console.log("data", data);
-
+export default function Home() {
   return (
-    <div>
-      <Button variant="outline">Click Here</Button>
+    <div className="flex flex-col min-h-screen">
+      {/* Static Content */}
+      <HeroSection />
+
+      {/* Dynamic Content */}
+      <CategorySection />
+
+      {/* Static Content */}
+      <HowItWorks />
+
+      {/* Dynamic Content */}
+      <FeaturedTutors />
+
+      {/* Dynamic Content */}
+      <Testimonials />
+
+      {/* Dynamic Content */}
+      <CTASection />
     </div>
   );
 }
+

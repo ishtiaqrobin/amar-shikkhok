@@ -10,46 +10,46 @@ import Link from "next/link";
 const tutors = [
     {
         id: "1",
-        name: "মেহেদি হাসান",
-        role: "গণিত বিশেষজ্ঞ",
+        name: "Mehdi Hasan",
+        role: "Math Expert",
         rating: 4.9,
         reviews: 42,
-        price: "৫০০",
+        price: "500",
         image: "https://i.pravatar.cc/150?u=1",
-        location: "ঢাকা",
+        location: "Dhaka",
         expertise: ["Algebra", "Calculus"],
     },
     {
         id: "2",
-        name: "সাদিয়া ইসলাম",
-        role: "ইংরেজি লেকচারার",
+        name: "Sadia Islam",
+        role: "English Lecturer",
         rating: 4.8,
         reviews: 35,
-        price: "৪৫০",
+        price: "450",
         image: "https://i.pravatar.cc/150?u=2",
-        location: "চট্টগ্রাম",
+        location: "Chattogram",
         expertise: ["IELTS", "Spoken English"],
     },
     {
         id: "3",
-        name: "ফয়সাল আহমেদ",
-        role: "পদার্থবিজ্ঞান শিক্ষক",
+        name: "Foysal Ahmed",
+        role: "Physics Teacher",
         rating: 5.0,
         reviews: 28,
-        price: "৬০০",
+        price: "600",
         image: "https://i.pravatar.cc/150?u=3",
-        location: "রাজশাহী",
+        location: "Rajshahi",
         expertise: ["Quantum Physics", "Mechanics"],
     },
     {
         id: "4",
-        name: "তানজিলা আক্তার",
-        role: "জীববিজ্ঞান বিশেষজ্ঞ",
+        name: "Tanjila Akter",
+        role: "Biology Expert",
         rating: 4.7,
         reviews: 19,
-        price: "৪০০",
+        price: "400",
         image: "https://i.pravatar.cc/150?u=4",
-        location: "সিলেট",
+        location: "Sylhet",
         expertise: ["Botany", "Genetics"],
     },
 ];
@@ -61,14 +61,14 @@ export function FeaturedTutors() {
                 <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
                     <div className="space-y-4">
                         <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-                            সেরা টিউটরদের খুঁজে নিন
+                            Find the Best Tutors
                         </h2>
                         <p className="text-lg text-muted-foreground">
-                            আমাদের প্ল্যাটফর্মের সেরা রেটিং প্রাপ্ত অভিজ্ঞ শিক্ষকবৃন্দ।
+                            Our platform&apos;s best-rated experienced teachers.
                         </p>
                     </div>
                     <Button asChild variant="outline" className="hidden md:flex">
-                        <Link href="/tutors">সব শিক্ষক দেখুন</Link>
+                        <Link href="/tutors">See All Tutors</Link>
                     </Button>
                 </div>
 
@@ -108,11 +108,11 @@ export function FeaturedTutors() {
                             </CardContent>
                             <CardFooter className="p-6 pt-0 flex items-center justify-between border-t bg-muted/10 mt-4 h-16">
                                 <div className="flex flex-col">
-                                    <span className="text-xs text-muted-foreground">প্রতি ঘণ্টা</span>
+                                    <span className="text-xs text-muted-foreground">Per Hour</span>
                                     <span className="text-lg font-bold text-foreground">৳{tutor.price}</span>
                                 </div>
                                 <Button size="sm" asChild>
-                                    <Link href={`/tutors/${tutor.id}`}>প্রোফাইল</Link>
+                                    <Link href={`/tutors/${tutor.id}`}>Profile</Link>
                                 </Button>
                             </CardFooter>
                         </Card>
@@ -121,7 +121,7 @@ export function FeaturedTutors() {
 
                 <div className="mt-10 text-center md:hidden">
                     <Button asChild variant="outline" className="w-full">
-                        <Link href="/tutors">সব শিক্ষক দেখুন</Link>
+                        <Link href="/tutors">See All Tutors</Link>
                     </Button>
                 </div>
             </div>

@@ -6,21 +6,21 @@ import { Quote } from "lucide-react";
 
 const testimonials = [
     {
-        name: "তানভীর রহমান",
-        role: "এইচএসসি শিক্ষার্থী",
-        content: "এই প্ল্যাটফর্মের মাধ্যমে আমি আমার ফিজিক্সের কঠিন বিষয়গুলো খুব সহজেই বুঝতে পেরেছি। শিক্ষকদের বোঝানোর ধরন চমৎকার।",
+        name: "Tanvir Rahman",
+        role: "HSC Student",
+        content: "Through this platform, I was able to understand difficult physics concepts very easily. The teachers explain things wonderfully.",
         image: "https://i.pravatar.cc/150?u=10",
     },
     {
-        name: "ফারিয়া ইসলাম",
-        role: "মেডিকেল ভর্তি পরীক্ষার্থী",
-        content: "বায়োলজি প্রিপারেশনের জন্য আমি এখানে সেরা টিউটর পেয়েছি। ডাউট ক্লিয়ারিং সেশনগুলো আমার খুব উপকারে এসেছে।",
+        name: "Faria Islam",
+        role: "Medical Admission Candidate",
+        content: "I found the best tutor for biology preparation here. The doubt clearing sessions were very helpful.",
         image: "https://i.pravatar.cc/150?u=11",
     },
     {
-        name: "আসিফ জামান",
-        role: "নবম শ্রেণীর ছাত্র",
-        content: "গণিতে আমার খুব ভয় ছিল, কিন্তু এখানকার টিউটরের কাছে পড়ার পর এখন ম্যাথ আমার প্রিয় বিষয়। ধন্যবাদ আমার শিক্ষককে।",
+        name: "Asif Zaman",
+        role: "9th Grade Student",
+        content: "I used to be very afraid of math, but after studying with a tutor here, it has become my favorite subject. Thank you to my teacher.",
         image: "https://i.pravatar.cc/150?u=12",
     },
 ];
@@ -40,10 +40,10 @@ export function Testimonials() {
             <div className="container mx-auto px-4">
                 <div className="mb-16 text-center max-w-2xl mx-auto">
                     <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-                        শিক্ষার্থীদের অভিজ্ঞতা
+                        Students Experience
                     </h2>
                     <p className="mt-4 text-lg text-muted-foreground">
-                        হাজারো শিক্ষার্থী তাদের স্বপ্নের পথে এগিয়ে যাচ্ছে আমার শিক্ষকের সাথে।
+                        Thousands of students are advancing on their dream path with my teacher.
                     </p>
                 </div>
 

@@ -22,10 +22,10 @@ export function HeroSection() {
         <section className="relative overflow-hidden bg-background py-16 lg:py-24">
             {/* Background decoration */}
             <div className="absolute top-0 right-0 -translate-y-12 translate-x-12 blur-3xl opacity-20">
-                <div className="h-64 w-64 rounded-full bg-primary" />
+                <div className="h-64 w-64 rounded-full" />
             </div>
             <div className="absolute bottom-0 left-0 translate-y-12 -translate-x-12 blur-3xl opacity-20">
-                <div className="h-48 w-48 rounded-full bg-secondary" />
+                <div className="h-48 w-48 rounded-full" />
             </div>
 
             <div className="container relative z-10 mx-auto px-4">
@@ -34,12 +34,12 @@ export function HeroSection() {
                     <div className="flex flex-col space-y-8">
                         <div className="space-y-4">
                             <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl text-foreground">
-                                নিখুঁত শিক্ষক খুঁজে নিন, <br />
-                                আপনার <span className="text-primary">ভবিষ্যৎ</span> গড়তে।
+                                Find the perfect tutor, <br />
+                                to build your <span className="text-primary">future</span>.
                             </h1>
                             <p className="max-w-lg text-lg text-muted-foreground sm:text-xl">
-                                আপনার পছন্দের বিষয়ে সেরা টিউটর খুঁজে নিন এবং আজই শিখা শুরু করুন।
-                                সহজ বুকিং এবং অনলাইন লার্নিং এর সেরা মাধ্যম।
+                                Find the best tutor in your favorite subject and start learning today.
+                                Easy booking and the best platform for online learning.
                             </p>
                         </div>
 
@@ -53,26 +53,26 @@ export function HeroSection() {
                                 <Input
                                     className="border-none bg-transparent shadow-none focus-visible:ring-0 px-0 h-10"
                                     type="text"
-                                    placeholder="বিষয় বা শিক্ষকের নাম দিয়ে সার্চ করুন..."
+                                    placeholder="Search by teacher name or subject..."
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
                                 />
                             </div>
                             <Button type="submit" className="rounded-full px-6">
-                                খুঁজুন
+                                Search
                             </Button>
                         </form>
 
                         {/* Stats/Badges */}
                         <div className="flex flex-wrap gap-4 pt-4">
                             <div className="flex items-center gap-2 rounded-full bg-muted px-4 py-2 text-sm font-medium">
-                                <span className="text-primary font-bold">৫০+</span> ক্যাটাগরি
+                                <span className="text-primary font-bold">50+</span> Categories
                             </div>
                             <div className="flex items-center gap-2 rounded-full bg-muted px-4 py-2 text-sm font-medium">
-                                <span className="text-primary font-bold">৫০০+</span> এক্সপার্ট টিউটর
+                                <span className="text-primary font-bold">500+</span> Expert Tutors
                             </div>
                             <div className="flex items-center gap-2 rounded-full bg-muted px-4 py-2 text-sm font-medium">
-                                <span className="text-primary font-bold">১০,০০০+</span> ক্লাস সম্পন্ন
+                                <span className="text-primary font-bold">10,000+</span> Classes Completed
                             </div>
                         </div>
                     </div>
@@ -85,7 +85,7 @@ export function HeroSection() {
                                 alt="Education"
                                 width={600}
                                 height={400}
-                                className="object-cover"
+                                className="object-cover w-full h-full"
                                 priority
                             />
                             <div className="absolute inset-0 bg-linear-to-t from-black/20 to-transparent" />
@@ -97,8 +97,8 @@ export function HeroSection() {
                                     <span className="text-green-600 dark:text-green-400">⭐</span>
                                 </div>
                                 <div>
-                                    <p className="text-sm font-bold text-foreground">সেরা রেটিং</p>
-                                    <p className="text-xs text-muted-foreground">৪.৯/৫ এভারেজ</p>
+                                    <p className="text-sm font-bold text-foreground">Best Rating</p>
+                                    <p className="text-xs text-muted-foreground">4.9/5 Average</p>
                                 </div>
                             </div>
                         </div>

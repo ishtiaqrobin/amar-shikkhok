@@ -15,12 +15,12 @@ export function CTASection() {
                     <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-12">
                         <div className="text-center lg:text-left space-y-6 max-w-2xl">
                             <h2 className="text-3xl md:text-5xl font-extrabold text-primary-foreground leading-tight">
-                                আপনি কি একজন দক্ষ শিক্ষক? <br />
-                                <span className="text-primary-foreground/80">আজই আমাদের সাথে যোগ দিন!</span>
+                                Are you a skilled teacher? <br />
+                                <span className="text-primary-foreground/80">Join us today!</span>
                             </h2>
                             <p className="text-lg md:text-xl text-primary-foreground/90 leading-relaxed">
-                                আপনার জ্ঞান ছড়িয়ে দিন হাজারো শিক্ষার্থীর মাঝে এবং নিজের ক্যারিয়ার গড়ুন।
-                                সেরা টিউটর হিসেবে নিজেকে প্রতিষ্ঠিত করার এখনই সুযোগ।
+                                Share your knowledge with thousands of students and build your career.
+                                This is your chance to establish yourself as a top tutor.
                             </p>
                         </div>
 
@@ -31,7 +31,7 @@ export function CTASection() {
                                 variant="secondary"
                                 className="rounded-full font-bold px-8 py-7 text-lg hover:scale-105 transition-transform shadow-lg"
                             >
-                                <Link href="/register">শিক্ষক হিসেবে যোগ দিন</Link>
+                                <Link href="/register">Join as a Teacher</Link>
                             </Button>
                             <Button
                                 asChild
@@ -39,7 +39,7 @@ export function CTASection() {
                                 variant="outline"
                                 className="rounded-full font-bold px-8 py-7 text-lg bg-white/10 border-white/20 text-white hover:bg-white/20 hover:text-white hover:scale-105 transition-transform"
                             >
-                                <Link href="/tutors">শিখা শুরু করুন</Link>
+                                <Link href="/tutors">Start Learning</Link>
                             </Button>
                         </div>
                     </div>

@@ -4,18 +4,18 @@ import { Search, CalendarCheck, GraduationCap } from "lucide-react";
 
 const steps = [
     {
-        title: "শিক্ষক খুঁজুন",
-        description: "আপনার পছন্দের বিষয় এবং লোকেশন অনুযায়ী সেরা টিউটর ফিল্টার করে পছন্দ করুন।",
+        title: "Find a Tutor",
+        description: "Filter and choose the best tutor according to your preferred subject and location.",
         icon: <Search className="h-8 w-8 text-primary" />,
     },
     {
-        title: "বুকিং নিশ্চিত করুন",
-        description: "শিক্ষকের প্রোফাইল দেখে আপনার সুবিধাজনক সময়ে সেশন বুক করুন।",
+        title: "Confirm Booking",
+        description: "Check the tutor's profile and book a session at your convenient time.",
         icon: <CalendarCheck className="h-8 w-8 text-primary" />,
     },
     {
-        title: "শিখা শুরু করুন",
-        description: "পেমেন্ট সম্পন্ন করে আপনার নির্ধারিত সময়ে টিউটরের সাথে ক্লাস শুরু করুন।",
+        title: "Start Learning",
+        description: "Complete the payment and start your class with the tutor at your scheduled time.",
         icon: <GraduationCap className="h-8 w-8 text-primary" />,
     },
 ];
@@ -26,10 +26,10 @@ export function HowItWorks() {
             <div className="container mx-auto px-4">
                 <div className="mb-16 text-center">
                     <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-                        কিভাবে আমারা কাজ করি?
+                        How It Works
                     </h2>
                     <p className="mt-4 text-lg text-muted-foreground">
-                        খুব সহজেই তিনটি ধাপে আপনার পছন্দের শিক্ষকের সাথে ক্লাস শুরু করতে পারেন।
+                        Easily start your class with your preferred tutor in three simple steps.
                     </p>
                 </div>
 
@@ -41,7 +41,7 @@ export function HowItWorks() {
                         <div key={index} className="flex flex-col items-center text-center space-y-6 bg-background px-4">
                             <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 border-4 border-background shadow-sm relative">
                                 <span className="absolute -top-2 -right-2 flex h-6 w-6 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
-                                    ০{index + 1}
+                                    {index + 1}
                                 </span>
                                 {step.icon}
                             </div>

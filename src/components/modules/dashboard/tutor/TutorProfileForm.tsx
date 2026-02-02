@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
+import { tutorsService } from "@/services/tutors.service";
 import type { Tutor } from "@/types/tutor.type";
 
 const profileSchema = z.object({
@@ -50,14 +51,18 @@ export function TutorProfileForm({ tutor, userToken }: TutorProfileFormProps) {
         try {
             const expertiseArray = data.expertise.split(",").map((s) => s.trim()).filter(Boolean);
 
-            // TODO: Call tutorsService.updateTutorProfile if tutor exists, or createTutorProfile
-            console.log("Submitting tutor data:", {
+            const payload = {
                 ...data,
                 expertise: expertiseArray,
-                userToken
-            });
+            };
 
-            toast.success("সফল!", { description: "প্রোফাইল আপডেট করা হয়েছে" });
+            const { error } = await tutorsService.updateProfile(userToken, payload);
+
+            if (error) {
+                toast.error("ত্রুটি", { description: error.message });
+            } else {
+                toast.success("সফল!", { description: "প্রোফাইল আপডেট করা হয়েছে" });
+            }
         } catch (error) {
             console.error("Profile update error:", error);
             toast.error("ত্রুটি", { description: "প্রোফাইল আপডেট করতে ব্যর্থ হয়েছে" });

@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { Save, Loader2 } from "lucide-react";
+import { tutorsService } from "@/services/tutors.service";
 import type { Availability } from "@/types/tutor.type";
 
 const DAYS = [
@@ -27,10 +28,11 @@ export function AvailabilityCalendar({ availabilities, userToken }: Availability
         Array.from({ length: 7 }, (_, i) => {
             const existing = availabilities?.find(a => parseInt(a.dayOfWeek) === i);
             return {
+                id: existing?.id,
                 dayOfWeek: i,
                 startTime: existing?.startTime || "09:00",
                 endTime: existing?.endTime || "17:00",
-                isAvailable: existing ? true : false,
+                isAvailable: !!existing,
             };
         })
     );
@@ -50,13 +52,34 @@ export function AvailabilityCalendar({ availabilities, userToken }: Availability
     const handleSave = async () => {
         setLoading(true);
         try {
-            // TODO: Call API to update availabilities
-            console.log("Saving schedule for token:", userToken);
-            console.log("Schedule data:", schedule.filter(s => s.isAvailable));
-            toast.success("সফল!", { description: "সময়সূচী আপডেট করা হয়েছে" });
+            const promises = schedule.map(async (item) => {
+                const payload = {
+                    dayOfWeek: item.dayOfWeek.toString(),
+                    startTime: item.startTime,
+                    endTime: item.endTime,
+                };
+
+                if (item.id) {
+                    // Update existing
+                    return await tutorsService.updateAvailability(userToken, payload);
+                } else if (item.isAvailable) {
+                    // Create new only if it's marked as available
+                    return await tutorsService.addAvailability(userToken, payload);
+                }
+                return null;
+            });
+
+            const results = await Promise.all(promises);
+            const errors = results.filter(r => r?.error);
+
+            if (errors.length > 0) {
+                toast.error("কিছু ত্রুটি হয়েছে", { description: "সবগুলো সময়সূচী আপডেট করা সম্ভব হয়নি" });
+            } else {
+                toast.success("সফল!", { description: "সময়সূচী আপডেট করা হয়েছে" });
+            }
         } catch (error) {
             console.error("Save availability error:", error);
-            toast.error("ত্রুটি", { description: "সময়সূচী আপডেট করতে ব্যর্থ হয়েছে" });
+            toast.error("ত্রুটি", { description: "সময়সূচী আপডেট করতে ব্যর্থ হয়েছে" });
         } finally {
             setLoading(false);
         }

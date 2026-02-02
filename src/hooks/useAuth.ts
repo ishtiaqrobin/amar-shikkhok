@@ -1,51 +1,26 @@
 "use client";
 
 import { authClient } from "@/lib/auth-client";
-import { Session, User } from "@/types";
+import { User } from "@/types";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
 
 export function useAuth() {
   const router = useRouter();
-  const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [session, setSession] = useState<Session | null>(null);
+  const { data: sessionData, isPending: isLoading } = authClient.useSession();
 
-  useEffect(() => {
-    const fetchSession = async () => {
-      try {
-        const { data } = await authClient.getSession();
-
-        if (data?.session && data?.user) {
-          setSession(data.session);
-          setUser(data.user as User);
-        } else {
-          setSession(null);
-          setUser(null);
-        }
-      } catch (error) {
-        console.error("Error fetching session:", error);
-        setSession(null);
-        setUser(null);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchSession();
-  }, []);
+  console.log(sessionData);
 
   const logout = async () => {
     try {
       await authClient.signOut();
-      setUser(null);
-      setSession(null);
       router.push("/login");
     } catch (error) {
       console.error("Logout error:", error);
     }
   };
 
+  const user = sessionData?.user ? (sessionData.user as User) : null;
+  const session = sessionData?.session || null;
   const isAuthenticated = !!user && !!session;
 
   return {

@@ -1,11 +1,18 @@
+"use client";
+
 import { HeroSection } from "@/components/modules/home/HeroSection";
 import { CategorySection } from "@/components/modules/home/CategorySection";
 import { HowItWorks } from "@/components/modules/home/HowItWorks";
 import { FeaturedTutors } from "@/components/modules/home/FeaturedTutors";
 import { Testimonials } from "@/components/modules/home/Testimonials";
 import { CTASection } from "@/components/modules/home/CTASection";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function Home() {
+  const { user } = useAuth();
+
+  console.log("User from useAuth", user);
+
   return (
     <div className="flex flex-col min-h-screen px-4 md:px-6">
       {/* Static Content */}

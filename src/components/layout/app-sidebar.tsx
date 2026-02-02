@@ -44,7 +44,7 @@ export function AppSidebar({
     <Sidebar {...props}>
       <SidebarHeader className="border-b">
         <div className="p-2 pb-4 font-bold">
-          <Link href="/">Blog App Dashboard</Link>
+          <Link href="/">Amar Shikkhok Dashboard</Link>
         </div>
       </SidebarHeader>
       <SidebarContent>

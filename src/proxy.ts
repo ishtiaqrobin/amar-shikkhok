@@ -9,6 +9,7 @@ export async function proxy(request: NextRequest) {
   let userRole: string | null = null;
 
   try {
+    // Server-side session check
     const { data } = await userService.getSession();
 
     if (data?.user) {
@@ -16,22 +17,21 @@ export async function proxy(request: NextRequest) {
       userRole = data.user.role || null;
     }
   } catch (error) {
-    console.error("Session fetch error:", error);
+    console.error("Session fetch error in middleware:", error);
   }
 
-  //* User is not authenticated - redirect to login
+  // 1. User is not authenticated - redirect to login
   if (!isAuthenticated) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  //* Role-based routing logic
+  // 2. Role-based routing logic
   const isAdmin = userRole === Roles.admin;
   const isStudent = userRole === Roles.student;
   const isTutor = userRole === Roles.tutor;
-  
-  // ADMIN users
+
+  // ADMIN protection
   if (isAdmin) {
-    // Admin trying to access student or tutor dashboard -> redirect to admin dashboard
     if (
       pathname.startsWith("/student-dashboard") ||
       pathname.startsWith("/tutor-dashboard")
@@ -40,9 +40,8 @@ export async function proxy(request: NextRequest) {
     }
   }
 
-  // STUDENT users
+  // STUDENT protection
   if (isStudent) {
-    // Student trying to access admin or tutor dashboard -> redirect to student dashboard
     if (
       pathname.startsWith("/admin-dashboard") ||
       pathname.startsWith("/tutor-dashboard")
@@ -51,9 +50,8 @@ export async function proxy(request: NextRequest) {
     }
   }
 
-  // TUTOR users
+  // TUTOR protection
   if (isTutor) {
-    // Tutor trying to access admin or student dashboard -> redirect to tutor dashboard
     if (
       pathname.startsWith("/admin-dashboard") ||
       pathname.startsWith("/student-dashboard")
@@ -62,17 +60,14 @@ export async function proxy(request: NextRequest) {
     }
   }
 
-  // Allow access if role matches the dashboard
   return NextResponse.next();
 }
 
+// Routes to be protected by this middleware
 export const config = {
   matcher: [
-    "/student-dashboard",
     "/student-dashboard/:path*",
-    "/tutor-dashboard",
     "/tutor-dashboard/:path*",
-    "/admin-dashboard",
     "/admin-dashboard/:path*",
   ],
 };

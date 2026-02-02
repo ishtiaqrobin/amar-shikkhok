@@ -33,12 +33,19 @@ export default function DashboardLayout({
       <SidebarInset>
         <DashboardHeader />
         <main className="flex-1 p-6">
+          {/* 
+            If user has a role, render that role's slot 
+            (Parallel routes naturally match the current URL)
+          */}
           {user?.role === "ADMIN" && admin}
           {user?.role === "STUDENT" && student}
           {user?.role === "TUTOR" && tutor}
+
+          {/* If no role is available or matched above, show the default children */}
           {!user?.role && children}
         </main>
       </SidebarInset>
     </SidebarProvider>
   );
 }
+

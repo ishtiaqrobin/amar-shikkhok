@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { bookingService } from "@/services/booking.service";
 import { BookingList } from "@/components/modules/booking/BookingList";
+import { useAuth } from "@/hooks/useAuth";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Loader2 } from "lucide-react";
@@ -10,49 +11,54 @@ import { toast } from "sonner";
 import type { Booking } from "@/types/booking.type";
 
 export default function TutorBookingsPage() {
+    const { session, isLoading: authLoading } = useAuth();
     const [bookings, setBookings] = useState<Booking[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [activeTab, setActiveTab] = useState("all");
 
-    // TODO: Get token from session
-    const userToken = ""; // Replace with actual token
+    const userToken = session?.token || "";
 
-    const fetchBookings = async (status?: string) => {
+    const fetchBookings = useCallback(async (status?: string) => {
+        if (!userToken) return;
         setIsLoading(true);
-        const { data, error } = await bookingService.getMyBookings(userToken, status);
+        try {
+            const { data, error } = await bookingService.getMyBookings(userToken, status);
 
-        if (error) {
-            toast.error("ত্রুটি", {
-                description: error.message,
-            });
-            setBookings([]);
-        } else {
-            setBookings(data || []);
+            if (error) {
+                toast.error("ত্রুটি", { description: error.message });
+                setBookings([]);
+            } else {
+                setBookings(data || []);
+            }
+        } catch (error) {
+            console.error("Fetch bookings error:", error);
+        } finally {
+            setIsLoading(false);
         }
-        setIsLoading(false);
-    };
+    }, [userToken]);
 
     useEffect(() => {
-        if (userToken) {
+        if (!authLoading && userToken) {
             const status = activeTab === "all" ? undefined : activeTab.toUpperCase();
+            // Delay fetch to avoid sync state update warnings if necessary
             fetchBookings(status);
         }
-    }, [activeTab, userToken]);
+    }, [activeTab, userToken, authLoading, fetchBookings]);
 
     const handleComplete = async (bookingId: string) => {
         if (!userToken) return;
 
-        const { error } = await bookingService.completeBooking(bookingId, userToken);
+        try {
+            const { error } = await bookingService.completeBooking(bookingId, userToken);
 
-        if (error) {
-            toast.error("ত্রুটি", {
-                description: error.message,
-            });
-        } else {
-            toast.success("সফল!", {
-                description: "সেশনটি সম্পন্ন হিসেবে চিহ্নিত করা হয়েছে",
-            });
-            fetchBookings(activeTab === "all" ? undefined : activeTab.toUpperCase());
+            if (error) {
+                toast.error("ত্রুটি", { description: error.message });
+            } else {
+                toast.success("সফল!", { description: "সেশনটি সম্পন্ন হিসেবে চিহ্নিত করা হয়েছে" });
+                fetchBookings(activeTab === "all" ? undefined : activeTab.toUpperCase());
+            }
+        } catch (error) {
+            toast.error("ত্রুটি", { description: "সেশন সম্পন্ন করতে সমস্যা হয়েছে" });
         }
     };
 
@@ -91,7 +97,6 @@ export default function TutorBookingsPage() {
                 </TabsContent>
             </Tabs>
 
-            {/* Stats */}
             <div className="grid gap-4 md:grid-cols-3">
                 <Card>
                     <CardHeader className="pb-2">

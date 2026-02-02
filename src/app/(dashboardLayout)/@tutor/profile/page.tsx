@@ -2,20 +2,25 @@
 
 import { useEffect, useState } from "react";
 import { TutorProfileForm } from "@/components/modules/dashboard/tutor/TutorProfileForm";
+import { ReviewList } from "@/components/modules/dashboard/tutor/ReviewList";
 import { tutorsService } from "@/services/tutors.service";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Loader2 } from "lucide-react";
 import type { Tutor } from "@/types/tutor.type";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function TutorProfilePage() {
+    const { user, session, isLoading: authLoading } = useAuth();
     const [tutor, setTutor] = useState<Tutor | null>(null);
     const [isLoading, setIsLoading] = useState(true);
 
-    // TODO: Get token and userId from session
-    const userToken = "";
-    const userId = "";
+    const userId = user?.id || "";
+    const userToken = session?.token || "";
 
     useEffect(() => {
         const fetchTutor = async () => {
+            if (authLoading) return;
+
             if (!userId) {
                 setIsLoading(false);
                 return;
@@ -35,7 +40,7 @@ export default function TutorProfilePage() {
         };
 
         fetchTutor();
-    }, [userId]);
+    }, [userId, authLoading]);
 
     if (isLoading) {
         return (
@@ -46,13 +51,24 @@ export default function TutorProfilePage() {
     }
 
     return (
-        <div className="space-y-6 max-w-2xl">
+        <div className="space-y-6 max-w-4xl">
             <div>
                 <h1 className="text-3xl font-bold">প্রোফাইল ব্যবস্থাপনা</h1>
-                <p className="text-muted-foreground mt-2">আপনার শিক্ষক প্রোফাইল আপডেট করুন</p>
+                <p className="text-muted-foreground mt-2">আপনার তথ্য আপডেট করুন যা শিক্ষার্থীরা দেখতে পাবে</p>
             </div>
 
-            <TutorProfileForm tutor={tutor} userToken={userToken} />
+            <Tabs defaultValue="profile" className="w-full">
+                <TabsList className="grid w-full grid-cols-2 max-w-[400px]">
+                    <TabsTrigger value="profile">প্রোফাইল তথ্য</TabsTrigger>
+                    <TabsTrigger value="reviews">রিভিউ সমূহ</TabsTrigger>
+                </TabsList>
+                <TabsContent value="profile" className="mt-6">
+                    <TutorProfileForm tutor={tutor} userToken={userToken} />
+                </TabsContent>
+                <TabsContent value="reviews" className="mt-6">
+                    <ReviewList reviews={tutor?.reviews} />
+                </TabsContent>
+            </Tabs>
         </div>
     );
 }

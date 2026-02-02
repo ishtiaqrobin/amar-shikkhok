@@ -1,9 +1,10 @@
 import { env } from "@/env";
-import type {
+import {
   GetTutorsParams,
-  Tutor,
-  TutorStats,
   TutorsResponse,
+  TutorStats,
+  Tutor,
+  Availability,
 } from "@/types/tutor.type";
 
 const API_URL = env.API_URL;
@@ -134,6 +135,126 @@ export const tutorsService = {
         data: null,
         error: {
           message: err instanceof Error ? err.message : "Error fetching stats",
+        },
+      };
+    }
+  },
+
+  /**
+   * Update tutor profile
+   */
+  updateProfile: async function (
+    token: string,
+    payload: Partial<Tutor> & { categoryIds?: string[] },
+  ): Promise<{ data: Tutor | null; error: ServiceError | null }> {
+    try {
+      const url = `${API_URL}/tutor/profile`;
+
+      const res = await fetch(url, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(
+          errorData.message || `HTTP error! status: ${res.status}`,
+        );
+      }
+
+      const response = await res.json();
+      return { data: response.data, error: null };
+    } catch (err) {
+      console.error("Error updating profile:", err);
+      return {
+        data: null,
+        error: {
+          message:
+            err instanceof Error ? err.message : "Error updating profile",
+        },
+      };
+    }
+  },
+
+  /**
+   * Add availability
+   */
+  addAvailability: async function (
+    token: string,
+    payload: Omit<Availability, "id" | "tutorId">,
+  ): Promise<{ data: Availability | null; error: ServiceError | null }> {
+    try {
+      const url = `${API_URL}/tutor/availability`;
+
+      const res = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(
+          errorData.message || `HTTP error! status: ${res.status}`,
+        );
+      }
+
+      const response = await res.json();
+      return { data: response.data, error: null };
+    } catch (err) {
+      console.error("Error adding availability:", err);
+      return {
+        data: null,
+        error: {
+          message:
+            err instanceof Error ? err.message : "Error adding availability",
+        },
+      };
+    }
+  },
+
+  /**
+   * Update availability
+   */
+  updateAvailability: async function (
+    token: string,
+    payload: Partial<Availability> & { dayOfWeek: string },
+  ): Promise<{ data: Availability | null; error: ServiceError | null }> {
+    try {
+      const url = `${API_URL}/tutor/availability`;
+
+      const res = await fetch(url, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(
+          errorData.message || `HTTP error! status: ${res.status}`,
+        );
+      }
+
+      const response = await res.json();
+      return { data: response.data, error: null };
+    } catch (err) {
+      console.error("Error updating availability:", err);
+      return {
+        data: null,
+        error: {
+          message:
+            err instanceof Error ? err.message : "Error updating availability",
         },
       };
     }

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { TutorStats } from "@/components/modules/dashboard/tutor/TutorStats";
 import { tutorsService } from "@/services/tutors.service";
 import { bookingService } from "@/services/booking.service";
+import { useAuth } from "@/hooks/useAuth";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import type { TutorStats as TutorStatsType } from "@/types/tutor.type";
@@ -11,15 +12,17 @@ import type { Booking } from "@/types/booking.type";
 import { BookingList } from "@/components/modules/booking/BookingList";
 
 export default function TutorDashboardPage() {
+    const { session, isLoading: authLoading } = useAuth();
     const [stats, setStats] = useState<TutorStatsType | null>(null);
     const [recentBookings, setRecentBookings] = useState<Booking[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 
-    // TODO: Get token from session
-    const userToken = ""; // Replace with actual token
+    const userToken = session?.token || "";
 
     useEffect(() => {
         const fetchData = async () => {
+            if (authLoading) return;
+
             if (!userToken) {
                 setIsLoading(false);
                 return;
@@ -51,7 +54,7 @@ export default function TutorDashboardPage() {
         };
 
         fetchData();
-    }, [userToken]);
+    }, [userToken, authLoading]);
 
     if (isLoading) {
         return (

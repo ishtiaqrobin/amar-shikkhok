@@ -1,11 +1,11 @@
+import { userService } from "@/services/user.service";
+
 export const dynamic = "force-dynamic";
 
 export default async function AboutPage() {
-  //* For simulating load time
-  await new Promise((resolve) => setTimeout(resolve, 4000));
+  // const { data } = await userService.getSession()
 
-  //* For simulating error
-  // throw new Error("Something went wrong");
+  // console.log("User from getSession", data)
 
   return (
     <div>

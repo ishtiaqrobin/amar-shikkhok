@@ -5,17 +5,20 @@ import { AvailabilityCalendar } from "@/components/modules/dashboard/tutor/Avail
 import { tutorsService } from "@/services/tutors.service";
 import { Loader2 } from "lucide-react";
 import type { Tutor } from "@/types/tutor.type";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function AvailabilityPage() {
+    const { user, session, isLoading: authLoading } = useAuth();
     const [tutor, setTutor] = useState<Tutor | null>(null);
     const [isLoading, setIsLoading] = useState(true);
 
-    // TODO: Get token and userId from session
-    const userToken = "";
-    const userId = "";
+    const userId = user?.id || "";
+    const userToken = session?.token || "";
 
     useEffect(() => {
         const fetchTutor = async () => {
+            if (authLoading) return;
+
             if (!userId) {
                 setIsLoading(false);
                 return;
@@ -32,7 +35,7 @@ export default function AvailabilityPage() {
         };
 
         fetchTutor();
-    }, [userId]);
+    }, [userId, authLoading]);
 
     if (isLoading) {
         return (

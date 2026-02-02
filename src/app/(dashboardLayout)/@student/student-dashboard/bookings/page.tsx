@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { bookingService } from "@/services/booking.service";
 import { BookingList } from "@/components/modules/booking/BookingList";
+import { useAuth } from "@/hooks/useAuth";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Loader2 } from "lucide-react";
@@ -10,34 +11,33 @@ import { toast } from "sonner";
 import type { Booking } from "@/types/booking.type";
 
 export default function StudentBookingsPage() {
+    const { session, isLoading: authLoading } = useAuth();
     const [bookings, setBookings] = useState<Booking[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [activeTab, setActiveTab] = useState("all");
 
-    // TODO: Get token from session
-    const userToken = ""; // Replace with actual token
+    const userToken = session?.token || "";
 
-    const fetchBookings = async (status?: string) => {
+    const fetchBookings = useCallback(async (status?: string) => {
+        if (!userToken) return;
         setIsLoading(true);
         const { data, error } = await bookingService.getMyBookings(userToken, status);
 
         if (error) {
-            toast.error("ত্রুটি", {
-                description: error.message,
-            });
+            toast.error("ত্রুটি", { description: error.message });
             setBookings([]);
         } else {
             setBookings(data || []);
         }
         setIsLoading(false);
-    };
+    }, [userToken]);
 
     useEffect(() => {
-        if (userToken) {
+        if (!authLoading && userToken) {
             const status = activeTab === "all" ? undefined : activeTab.toUpperCase();
-            fetchBookings(status);
+            Promise.resolve().then(() => fetchBookings(status));
         }
-    }, [activeTab, userToken]);
+    }, [activeTab, userToken, authLoading, fetchBookings]);
 
     const handleCancel = async (bookingId: string) => {
         if (!userToken) return;
@@ -45,13 +45,9 @@ export default function StudentBookingsPage() {
         const { error } = await bookingService.cancelBooking(bookingId, userToken);
 
         if (error) {
-            toast.error("ত্রুটি", {
-                description: error.message,
-            });
+            toast.error("ত্রুটি", { description: error.message });
         } else {
-            toast.success("সফল!", {
-                description: "বুকিং বাতিল করা হয়েছে",
-            });
+            toast.success("সফল!", { description: "বুকিং বাতিল করা হয়েছে" });
             fetchBookings(activeTab === "all" ? undefined : activeTab.toUpperCase());
         }
     };
@@ -77,7 +73,7 @@ export default function StudentBookingsPage() {
                 </TabsList>
 
                 <TabsContent value={activeTab} className="mt-6">
-                    {isLoading ? (
+                    {isLoading && bookings.length === 0 ? (
                         <div className="flex items-center justify-center py-12">
                             <Loader2 className="h-8 w-8 animate-spin text-primary" />
                         </div>
@@ -86,13 +82,13 @@ export default function StudentBookingsPage() {
                             bookings={filterBookings(activeTab)}
                             userRole="STUDENT"
                             onCancel={handleCancel}
+                            onComplete={() => fetchBookings(activeTab === "all" ? undefined : activeTab.toUpperCase())}
                         />
                     )}
                 </TabsContent>
             </Tabs>
 
-            {/* Stats */}
-            <div className="grid gap-4 md:grid-cols-4">
+            <div className="grid gap-4 md:grid-cols-3">
                 <Card>
                     <CardHeader className="pb-2">
                         <CardTitle className="text-sm font-medium text-muted-foreground">মোট বুকিং</CardTitle>

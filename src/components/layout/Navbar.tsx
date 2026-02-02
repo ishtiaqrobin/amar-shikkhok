@@ -6,18 +6,13 @@ import { cn } from "@/lib/utils";
 
 import {
   Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
-  NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
 import {
   Sheet,
@@ -68,23 +63,27 @@ const Navbar = ({
     title: "Amar Shikkhok",
   },
   menu = [
-    { title: "Home", url: "/" },
+    { title: "হোম", url: "/" },
     {
-      title: "Blogs",
-      url: "/blogs",
+      title: "বিষয়সমূহ",
+      url: "/categories",
     },
     {
-      title: "About",
+      title: "শিক্ষকগণ",
+      url: "/tutors",
+    },
+    {
+      title: "আমাদের সম্পর্কে",
       url: "/about",
     },
     {
-      title: "Dashboard",
-      url: "/student-dashboard",
+      title: "যোগাযোগ",
+      url: "/contact",
     },
   ],
   auth = {
-    login: { title: "Login", url: "/login" },
-    signup: { title: "Register", url: "/register" },
+    login: { title: "লগইন", url: "/login" },
+    signup: { title: "রেজিস্ট্রেশন", url: "/register" },
   },
   className,
 }: Navbar1Props) => {

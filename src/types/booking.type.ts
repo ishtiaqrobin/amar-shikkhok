@@ -1,3 +1,5 @@
+import type { Review } from "./tutor.type";
+
 export enum BookingStatus {
   CONFIRMED = "CONFIRMED",
   COMPLETED = "COMPLETED",
@@ -34,6 +36,7 @@ export interface Booking {
   updatedAt: string;
   student?: User;
   tutor?: Tutor;
+  review?: Review;
 }
 
 export interface CreateBookingInput {

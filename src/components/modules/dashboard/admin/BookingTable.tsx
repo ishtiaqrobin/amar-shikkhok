@@ -32,12 +32,6 @@ export function BookingTable({ bookings }: BookingTableProps) {
         }
     };
 
-    const getPaymentBadge = (status: string) => {
-        return status.toUpperCase() === "PAID"
-            ? <Badge className="bg-emerald-50 text-emerald-600 border-emerald-200">PAID</Badge>
-            : <Badge variant="outline" className="text-orange-600 border-orange-200 bg-orange-50">UNPAID</Badge>;
-    };
-
     return (
         <div className="rounded-xl border bg-card shadow-sm overflow-hidden">
             <Table>
@@ -47,7 +41,6 @@ export function BookingTable({ bookings }: BookingTableProps) {
                         <TableHead>Student & Tutor</TableHead>
                         <TableHead>Date & Time</TableHead>
                         <TableHead>Price</TableHead>
-                        <TableHead>Payment</TableHead>
                         <TableHead>Status</TableHead>
                     </TableRow>
                 </TableHeader>
@@ -82,11 +75,11 @@ export function BookingTable({ bookings }: BookingTableProps) {
                                     <div className="flex flex-col gap-1 text-xs">
                                         <div className="flex items-center gap-1.5">
                                             <Calendar className="h-3 w-3" />
-                                            {format(new Date(booking.startTime), "dd MMM, yyyy")}
+                                            {format(new Date(booking.sessionDate), "dd MMM, yyyy")}
                                         </div>
                                         <div className="flex items-center gap-1.5 text-muted-foreground">
                                             <Clock className="h-3 w-3" />
-                                            {format(new Date(booking.startTime), "hh:mm a")} - {format(new Date(booking.endTime), "hh:mm a")}
+                                            {format(new Date(`${booking.sessionDate.split('T')[0]}T${booking.startTime}`), "hh:mm a")} - {format(new Date(`${booking.sessionDate.split('T')[0]}T${booking.endTime}`), "hh:mm a")}
                                         </div>
                                     </div>
                                 </TableCell>
@@ -94,9 +87,6 @@ export function BookingTable({ bookings }: BookingTableProps) {
                                     <div className="flex items-center font-semibold text-sm">
                                         {formatPrice(booking.totalPrice)}
                                     </div>
-                                </TableCell>
-                                <TableCell>
-                                    {getPaymentBadge(booking.paymentStatus)}
                                 </TableCell>
                                 <TableCell>
                                     {getStatusBadge(booking.status)}

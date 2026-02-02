@@ -30,6 +30,7 @@ export interface AdminBooking {
   id: string;
   studentId: string;
   tutorId: string;
+  sessionDate: string;
   startTime: string;
   endTime: string;
   duration: number;

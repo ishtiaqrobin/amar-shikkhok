@@ -1,11 +1,7 @@
 import { env } from "@/env";
-import type {
-  Booking,
-  CreateBookingInput,
-  BookingsResponse,
-} from "@/types/booking.type";
+import type { Booking, CreateBookingInput } from "@/types/booking.type";
 
-const API_URL = env.API_URL;
+const API_URL = env.NEXT_PUBLIC_API_URL;
 
 interface ServiceError {
   message: string;

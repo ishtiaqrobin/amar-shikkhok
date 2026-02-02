@@ -20,7 +20,7 @@ export default function AdminCategoriesPage() {
         const { data, error } = await categoryService.getAllCategories();
 
         if (error) {
-            toast.error("ক্যাটাগরি লোড করতে সমস্যা হয়েছে", { description: error.message });
+            toast.error("Failed to load categories", { description: error.message });
             setCategories([]);
         } else {
             setCategories(data || []);
@@ -35,10 +35,10 @@ export default function AdminCategoriesPage() {
     }, [authLoading, fetchCategories]);
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 min-h-screen">
             <div>
-                <h1 className="text-3xl font-bold">বিষয় ব্যবস্থাপনা</h1>
-                <p className="text-muted-foreground mt-2">টিউটোরিং এর জন্য নতুন বিষয় যোগ বা এডিট করুন</p>
+                <h1 className="text-3xl font-bold">Category Management</h1>
+                <p className="text-muted-foreground mt-2">Create and manage tutoring subjects and descriptors</p>
             </div>
 
             {isLoading ? (

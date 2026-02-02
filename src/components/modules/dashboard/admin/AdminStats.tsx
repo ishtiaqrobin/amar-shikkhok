@@ -3,6 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, UserCheck, GraduationCap, Calendar, CheckCircle2, DollarSign, BookOpen } from "lucide-react";
 import { AdminStats as AdminStatsType } from "@/types/admin.type";
+import { formatPrice } from "@/lib/utils";
 
 interface AdminStatsProps {
     stats: AdminStatsType | null;
@@ -11,34 +12,34 @@ interface AdminStatsProps {
 export function AdminStats({ stats }: AdminStatsProps) {
     const cards = [
         {
-            title: "মোট ইউজার",
+            title: "Total Users",
             value: stats?.totalUsers || 0,
             icon: Users,
-            description: `${stats?.totalStudents || 0} ছাত্র, ${stats?.totalTutors || 0} শিক্ষক`,
+            description: `${stats?.totalStudents || 0} Students, ${stats?.totalTutors || 0} Tutors`,
             color: "text-blue-600",
             bg: "bg-blue-100",
         },
         {
-            title: "মোট বুকিং",
+            title: "Total Bookings",
             value: stats?.totalBookings || 0,
             icon: Calendar,
-            description: `${stats?.confirmedBookings || 0} নিশ্চিত, ${stats?.completedBookings || 0} সম্পন্ন`,
+            description: `${stats?.confirmedBookings || 0} Confirmed, ${stats?.completedBookings || 0} Completed`,
             color: "text-purple-600",
             bg: "bg-purple-100",
         },
         {
-            title: "মোট আয়",
-            value: `৳${stats?.totalRevenue || 0}`,
+            title: "Total Revenue",
+            value: formatPrice(stats?.totalRevenue || 0),
             icon: DollarSign,
-            description: "সম্পন্ন সেশন থেকে অর্জিত",
+            description: "Earnings from completed sessions",
             color: "text-green-600",
             bg: "bg-green-100",
         },
         {
-            title: "ক্যাটাগরি",
+            title: "Categories",
             value: stats?.totalCategories || 0,
             icon: BookOpen,
-            description: "সক্রিয় বিষয়সমূহ",
+            description: "Active subject categories",
             color: "text-orange-600",
             bg: "bg-orange-100",
         },
@@ -46,19 +47,19 @@ export function AdminStats({ stats }: AdminStatsProps) {
 
     const subCards = [
         {
-            title: "শিক্ষার্থী",
+            title: "Students",
             value: stats?.totalStudents || 0,
             icon: UserCheck,
             color: "text-indigo-600",
         },
         {
-            title: "শিক্ষক",
+            title: "Tutors",
             value: stats?.totalTutors || 0,
             icon: GraduationCap,
             color: "text-emerald-600",
         },
         {
-            title: "সম্পন্ন ক্লাস",
+            title: "Completed Classes",
             value: stats?.completedBookings || 0,
             icon: CheckCircle2,
             color: "text-cyan-600",

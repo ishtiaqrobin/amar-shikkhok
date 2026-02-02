@@ -1,7 +1,7 @@
 import { env } from "@/env";
 import { AdminStats, AdminUser, AdminBooking } from "@/types/admin.type";
 
-const API_URL = env.API_URL;
+const API_URL = env.NEXT_PUBLIC_API_URL;
 
 export interface ServiceError {
   message: string;

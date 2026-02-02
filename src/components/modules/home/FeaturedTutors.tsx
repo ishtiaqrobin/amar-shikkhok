@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Star, MapPin } from "lucide-react";
 import Link from "next/link";
+import { formatPrice } from "@/lib/utils";
 
 const tutors = [
     {
@@ -14,7 +15,7 @@ const tutors = [
         role: "Math Expert",
         rating: 4.9,
         reviews: 42,
-        price: "500",
+        price: 50,
         image: "https://i.pravatar.cc/150?u=1",
         location: "Dhaka",
         expertise: ["Algebra", "Calculus"],
@@ -25,7 +26,7 @@ const tutors = [
         role: "English Lecturer",
         rating: 4.8,
         reviews: 35,
-        price: "450",
+        price: 45,
         image: "https://i.pravatar.cc/150?u=2",
         location: "Chattogram",
         expertise: ["IELTS", "Spoken English"],
@@ -36,7 +37,7 @@ const tutors = [
         role: "Physics Teacher",
         rating: 5.0,
         reviews: 28,
-        price: "600",
+        price: 60,
         image: "https://i.pravatar.cc/150?u=3",
         location: "Rajshahi",
         expertise: ["Quantum Physics", "Mechanics"],
@@ -47,7 +48,7 @@ const tutors = [
         role: "Biology Expert",
         rating: 4.7,
         reviews: 19,
-        price: "400",
+        price: 40,
         image: "https://i.pravatar.cc/150?u=4",
         location: "Sylhet",
         expertise: ["Botany", "Genetics"],
@@ -67,22 +68,22 @@ export function FeaturedTutors() {
                             Our platform&apos;s best-rated experienced teachers.
                         </p>
                     </div>
-                    <Button asChild variant="outline" className="hidden md:flex">
+                    <Button asChild variant="outline" className="hidden md:flex rounded-full">
                         <Link href="/tutors">See All Tutors</Link>
                     </Button>
                 </div>
 
                 <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
                     {tutors.map((tutor) => (
-                        <Card key={tutor.id} className="overflow-hidden group hover:border-primary transition-all duration-300 shadow-sm hover:shadow-lg">
+                        <Card key={tutor.id} className="overflow-hidden group hover:border-primary transition-all duration-300 shadow-sm hover:shadow-lg rounded-3xl border-primary/5 bg-background">
                             <CardContent className="p-6">
                                 <div className="flex flex-col items-center text-center space-y-4">
                                     <div className="relative">
-                                        <Avatar className="h-24 w-24 border-4 border-background group-hover:border-primary/20 transition-colors">
+                                        <Avatar className="h-24 w-24 border-4 border-background group-hover:border-primary/20 transition-all shadow-md">
                                             <AvatarImage src={tutor.image} alt={tutor.name} />
                                             <AvatarFallback>{tutor.name[0]}</AvatarFallback>
                                         </Avatar>
-                                        <div className="absolute -bottom-2 right-1/2 translate-x-1/2 flex items-center gap-1 bg-yellow-400 text-black px-2 py-0.5 rounded-full text-[10px] font-bold">
+                                        <div className="absolute -bottom-2 right-1/2 translate-x-1/2 flex items-center gap-1 bg-yellow-400 text-black px-2 py-0.5 rounded-full text-[10px] font-bold shadow-sm">
                                             <Star className="h-3 w-3 fill-current" />
                                             {tutor.rating}
                                         </div>
@@ -91,7 +92,7 @@ export function FeaturedTutors() {
                                     <div className="space-y-1">
                                         <h3 className="font-bold text-lg group-hover:text-primary transition-colors">{tutor.name}</h3>
                                         <p className="text-sm text-primary font-medium">{tutor.role}</p>
-                                        <div className="flex items-center justify-center text-xs text-muted-foreground gap-1 pt-1">
+                                        <div className="flex items-center justify-center text-xs text-muted-foreground gap-1 pt-1 opacity-70">
                                             <MapPin className="h-3 w-3" />
                                             {tutor.location}
                                         </div>
@@ -99,19 +100,19 @@ export function FeaturedTutors() {
 
                                     <div className="flex flex-wrap items-center justify-center gap-1 mt-2">
                                         {tutor.expertise.map((exp) => (
-                                            <Badge key={exp} variant="secondary" className="text-[10px] py-0">
+                                            <Badge key={exp} variant="secondary" className="text-[10px] py-0 rounded-full bg-primary/5 text-primary">
                                                 {exp}
                                             </Badge>
                                         ))}
                                     </div>
                                 </div>
                             </CardContent>
-                            <CardFooter className="p-6 pt-0 flex items-center justify-between border-t bg-muted/10 mt-4 h-16">
+                            <CardFooter className="p-6 pt-4 flex items-center justify-between border-t border-primary/5 bg-muted/10 mt-2">
                                 <div className="flex flex-col">
-                                    <span className="text-xs text-muted-foreground">Per Hour</span>
-                                    <span className="text-lg font-bold text-foreground">৳{tutor.price}</span>
+                                    <span className="text-[10px] text-muted-foreground uppercase font-black">Per Hour</span>
+                                    <span className="text-xl font-black text-primary">{formatPrice(tutor.price)}</span>
                                 </div>
-                                <Button size="sm" asChild>
+                                <Button size="sm" asChild className="rounded-full shadow-md shadow-primary/20">
                                     <Link href={`/tutors/${tutor.id}`}>Profile</Link>
                                 </Button>
                             </CardFooter>
@@ -120,7 +121,7 @@ export function FeaturedTutors() {
                 </div>
 
                 <div className="mt-10 text-center md:hidden">
-                    <Button asChild variant="outline" className="w-full">
+                    <Button asChild variant="outline" className="w-full rounded-full">
                         <Link href="/tutors">See All Tutors</Link>
                     </Button>
                 </div>

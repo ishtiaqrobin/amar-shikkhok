@@ -2,23 +2,23 @@ import { Route } from "@/types";
 
 export const adminRoutes: Route[] = [
   {
-    title: "অ্যাডমিন মেনু",
+    title: "Admin Menu",
     items: [
       {
-        title: "ড্যাশবোর্ড",
-        url: "/dashboard",
+        title: "Dashboard",
+        url: "/admin-dashboard",
       },
       {
-        title: "ইউজার ব্যবস্থাপনা",
-        url: "/users",
+        title: "User Management",
+        url: "/admin-dashboard/users",
       },
       {
-        title: "বুকিং ব্যবস্থাপনা",
-        url: "/bookings",
+        title: "Booking Management",
+        url: "/admin-dashboard/bookings",
       },
       {
-        title: "বিষয় ব্যবস্থাপনা",
-        url: "/categories",
+        title: "Category Management",
+        url: "/admin-dashboard/categories",
       },
     ],
   },

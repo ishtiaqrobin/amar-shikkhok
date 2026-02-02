@@ -22,7 +22,7 @@ export default function AdminBookingsPage() {
         const { data, error } = await adminService.getAllBookings(userToken);
 
         if (error) {
-            toast.error("বুকিং লিস্ট লোড করতে সমস্যা হয়েছে", { description: error.message });
+            toast.error("Failed to load bookings", { description: error.message });
             setBookings([]);
         } else {
             setBookings(data || []);
@@ -37,15 +37,15 @@ export default function AdminBookingsPage() {
     }, [authLoading, userToken, fetchBookings]);
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 min-h-screen">
             <div className="flex justify-between items-center">
                 <div>
-                    <h1 className="text-3xl font-bold">বুকিং ব্যবস্থাপনা</h1>
-                    <p className="text-muted-foreground mt-2">প্ল্যাটফর্মের সকল টিউটোরিং সেশন দেখুন</p>
+                    <h1 className="text-3xl font-bold">Booking Management</h1>
+                    <p className="text-muted-foreground mt-2">Monitor all tutoring sessions across the platform</p>
                 </div>
-                <Button variant="outline" size="sm" onClick={fetchBookings} disabled={isLoading} className="gap-2">
+                <Button variant="outline" size="sm" onClick={fetchBookings} disabled={isLoading} className="gap-2 rounded-lg">
                     <RefreshCw className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`} />
-                    রিফ্রেশ করুন
+                    Refresh
                 </Button>
             </div>
 

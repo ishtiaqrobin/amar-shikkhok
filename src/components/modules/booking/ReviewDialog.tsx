@@ -37,7 +37,7 @@ export function ReviewDialog({
 
     const handleSubmit = async () => {
         if (rating === 0) {
-            toast.error("রটিং প্রদান করুন");
+            toast.error("Please provide a rating");
             return;
         }
 
@@ -49,25 +49,28 @@ export function ReviewDialog({
         });
 
         if (error) {
-            toast.error("ত্রুটি", { description: error.message });
+            toast.error("Error", { description: error.message });
         } else {
-            toast.success("রিভিউ প্রদান করা হয়েছে!");
+            toast.success("Review submitted successfully!");
             onOpenChange(false);
             if (onSuccess) onSuccess();
+            // Reset form
+            setRating(0);
+            setComment("");
         }
         setIsLoading(false);
     };
 
     return (
         <Dialog open={isOpen} onOpenChange={onOpenChange}>
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent className="sm:max-w-[425px] rounded-3xl">
                 <DialogHeader>
-                    <DialogTitle>সেশন রিভিউ দিন</DialogTitle>
+                    <DialogTitle className="text-2xl font-black">Rate Your Session</DialogTitle>
                 </DialogHeader>
-                <div className="grid gap-6 py-4">
-                    <div className="flex flex-col items-center gap-3">
-                        <Label className="text-center font-medium">আপনার কি মনে হয়?</Label>
-                        <div className="flex items-center gap-1">
+                <div className="grid gap-8 py-6">
+                    <div className="flex flex-col items-center gap-4">
+                        <Label className="text-center font-bold uppercase tracking-widest text-muted-foreground text-xs">How was your experience?</Label>
+                        <div className="flex items-center gap-2">
                             {[1, 2, 3, 4, 5].map((star) => (
                                 <button
                                     key={star}
@@ -75,41 +78,41 @@ export function ReviewDialog({
                                     onMouseEnter={() => setHoveredRating(star)}
                                     onMouseLeave={() => setHoveredRating(0)}
                                     onClick={() => setRating(star)}
-                                    className="transition-transform hover:scale-110"
+                                    className="transition-transform hover:scale-125 active:scale-90"
                                 >
                                     <Star
-                                        className={`h-8 w-8 ${(hoveredRating || rating) >= star
-                                                ? "fill-yellow-400 text-yellow-400"
-                                                : "text-muted-foreground"
+                                        className={`h-10 w-10 transition-colors ${(hoveredRating || rating) >= star
+                                            ? "fill-yellow-400 text-yellow-400"
+                                            : "text-muted-foreground/30"
                                             }`}
                                     />
                                 </button>
                             ))}
                         </div>
-                        <p className="text-sm text-balance text-muted-foreground text-center">
-                            স্টার রেটিং দিন যা টিউটরের দক্ষতা নির্দেশ করে
+                        <p className="text-xs font-medium text-muted-foreground text-center">
+                            Tap the stars to rate your tutor&apos;s teaching performance
                         </p>
                     </div>
 
-                    <div className="space-y-2">
-                        <Label htmlFor="comment">মন্তব্য (ঐচ্ছিক)</Label>
+                    <div className="space-y-3">
+                        <Label htmlFor="comment" className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Share Feedback (Optional)</Label>
                         <Textarea
                             id="comment"
-                            placeholder="আপনার অভিজ্ঞতা শেয়ার করুন..."
+                            placeholder="Tell us what you liked or how they can improve..."
                             value={comment}
                             onChange={(e) => setComment(e.target.value)}
-                            className="resize-none"
+                            className="resize-none rounded-2xl border-primary/20 focus:border-primary min-h-[120px]"
                             rows={4}
                         />
                     </div>
                 </div>
-                <DialogFooter>
-                    <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isLoading}>
-                        বাতিল
+                <DialogFooter className="flex gap-3">
+                    <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isLoading} className="rounded-full flex-1 font-bold uppercase tracking-widest text-[10px] h-11">
+                        Cancel
                     </Button>
-                    <Button onClick={handleSubmit} disabled={isLoading}>
+                    <Button onClick={handleSubmit} disabled={isLoading} className="rounded-full flex-1 font-bold uppercase tracking-widest text-[10px] h-11 shadow-lg shadow-primary/20">
                         {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                        রিভিউ সাবমিট করুন
+                        Submit Review
                     </Button>
                 </DialogFooter>
             </DialogContent>

@@ -41,7 +41,7 @@ export function TutorSearch() {
                 placeholder="Search by teacher name or subject..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
+                className="pl-10 h-12 rounded-xl border-primary/20 bg-muted/30 focus:bg-background transition-all"
             />
             {isPending && (
                 <div className="absolute right-3 top-1/2 -translate-y-1/2">

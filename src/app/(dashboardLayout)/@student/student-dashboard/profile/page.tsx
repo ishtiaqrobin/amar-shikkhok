@@ -1,119 +1,97 @@
 "use client";
 
+import { useAuth } from "@/hooks/useAuth";
+import { ProfileForm } from "@/components/modules/profile/ProfileForm";
+import { AvatarUpload } from "@/components/modules/profile/AvatarUpload";
+import { userService } from "@/services/user.service";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { useState } from "react";
+import { Loader2, Settings } from "lucide-react";
 import { toast } from "sonner";
+import { useState, useEffect, useCallback } from "react";
+import { User } from "@/types/tutor.type";
 
 export default function StudentProfilePage() {
-    // TODO: Fetch user data from session
-    const [isEditing, setIsEditing] = useState(false);
-    const [formData, setFormData] = useState({
-        name: "",
-        email: "",
-        phone: "",
-        bio: "",
-    });
+    const { session, isLoading: authLoading } = useAuth();
+    const [user, setUser] = useState<User | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
 
-    const handleSave = async () => {
-        // TODO: Implement save functionality
-        toast.success("সফল!", {
-            description: "প্রোফাইল আপডেট করা হয়েছে",
-        });
-        setIsEditing(false);
+    const userToken = session?.token || "";
+
+    const fetchProfile = useCallback(async () => {
+        if (!userToken) return;
+        setIsLoading(true);
+        const { data, error } = await userService.getMe(userToken);
+        if (!error) {
+            setUser(data);
+        }
+        setIsLoading(false);
+    }, [userToken]);
+
+    useEffect(() => {
+        if (!authLoading && userToken) {
+            Promise.resolve().then(() => fetchProfile());
+        }
+    }, [userToken, authLoading, fetchProfile]);
+
+    const handleAvatarUpdate = async (url: string) => {
+        if (!userToken) return;
+        const { error } = await userService.updateProfile(userToken, { image: url });
+        if (error) {
+            toast.error("Failed to update profile picture");
+        } else {
+            toast.success("Profile picture updated successfully");
+            fetchProfile();
+        }
     };
 
+    if (isLoading || authLoading) {
+        return (
+            <div className="flex items-center justify-center min-h-[400px]">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            </div>
+        );
+    }
+
+    if (!user) return null;
+
     return (
-        <div className="space-y-6">
+        <div className="container max-w-5xl mx-auto space-y-8 min-h-screen py-8">
             <div>
-                <h1 className="text-3xl font-bold">প্রোফাইল</h1>
-                <p className="text-muted-foreground mt-2">আপনার ব্যক্তিগত তথ্য দেখুন এবং আপডেট করুন</p>
+                <h1 className="text-3xl font-extrabold flex items-center gap-3">
+                    <Settings className="h-8 w-8 text-primary" /> Account Settings
+                </h1>
+                <p className="text-muted-foreground mt-2">Manage your personal information and profile</p>
             </div>
 
-            <div className="grid gap-6 lg:grid-cols-3">
-                {/* Profile Card */}
-                <Card className="lg:col-span-1">
-                    <CardHeader>
-                        <CardTitle>প্রোফাইল ছবি</CardTitle>
-                    </CardHeader>
-                    <CardContent className="flex flex-col items-center space-y-4">
-                        <Avatar className="h-32 w-32">
-                            <AvatarImage src="" />
-                            <AvatarFallback className="text-2xl">U</AvatarFallback>
-                        </Avatar>
-                        <Button variant="outline" size="sm">
-                            ছবি পরিবর্তন করুন
-                        </Button>
+            <div className="grid gap-8 lg:grid-cols-12">
+                <Card className="lg:col-span-4 border-primary/10 shadow-lg rounded-3xl overflow-hidden h-fit">
+                    <div className="h-24 bg-linear-to-r from-primary/20 to-primary/5" />
+                    <CardContent className="-mt-16 relative">
+                        <AvatarUpload
+                            currentImage={user.image}
+                            onUpdate={handleAvatarUpdate}
+                            name={user.name}
+                        />
+
+                        <div className="mt-8 space-y-4">
+                            <div className="p-4 rounded-2xl bg-muted/50 border border-muted flex items-center justify-between">
+                                <span className="text-sm text-muted-foreground">Account Status</span>
+                                <span className="text-xs font-bold px-2 py-1 rounded-full bg-green-500/10 text-green-600">ACTIVE</span>
+                            </div>
+                            <div className="p-4 rounded-2xl bg-muted/50 border border-muted flex items-center justify-between">
+                                <span className="text-sm text-muted-foreground">Joined Since</span>
+                                <span className="text-sm font-medium">{user.createdAt ? new Date(user.createdAt).toLocaleDateString() : "N/A"}</span>
+                            </div>
+                        </div>
                     </CardContent>
                 </Card>
 
-                {/* Info Card */}
-                <Card className="lg:col-span-2">
-                    <CardHeader className="flex flex-row items-center justify-between">
-                        <CardTitle>ব্যক্তিগত তথ্য</CardTitle>
-                        {!isEditing && (
-                            <Button onClick={() => setIsEditing(true)} variant="outline" size="sm">
-                                সম্পাদনা করুন
-                            </Button>
-                        )}
+                <Card className="lg:col-span-8 border-primary/10 shadow-lg rounded-3xl">
+                    <CardHeader>
+                        <CardTitle>Update Information</CardTitle>
                     </CardHeader>
-                    <CardContent className="space-y-4">
-                        <div className="space-y-2">
-                            <Label htmlFor="name">নাম</Label>
-                            <Input
-                                id="name"
-                                value={formData.name}
-                                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                disabled={!isEditing}
-                            />
-                        </div>
-
-                        <div className="space-y-2">
-                            <Label htmlFor="email">ইমেইল</Label>
-                            <Input
-                                id="email"
-                                type="email"
-                                value={formData.email}
-                                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                disabled={!isEditing}
-                            />
-                        </div>
-
-                        <div className="space-y-2">
-                            <Label htmlFor="phone">ফোন</Label>
-                            <Input
-                                id="phone"
-                                value={formData.phone}
-                                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                                disabled={!isEditing}
-                            />
-                        </div>
-
-                        <div className="space-y-2">
-                            <Label htmlFor="bio">বায়ো</Label>
-                            <Textarea
-                                id="bio"
-                                value={formData.bio}
-                                onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
-                                disabled={!isEditing}
-                                rows={4}
-                            />
-                        </div>
-
-                        {isEditing && (
-                            <div className="flex gap-3 pt-4">
-                                <Button onClick={() => setIsEditing(false)} variant="outline" className="flex-1">
-                                    বাতিল
-                                </Button>
-                                <Button onClick={handleSave} className="flex-1">
-                                    সংরক্ষণ করুন
-                                </Button>
-                            </div>
-                        )}
+                    <CardContent>
+                        <ProfileForm user={user} token={userToken} onSuccess={fetchProfile} />
                     </CardContent>
                 </Card>
             </div>

@@ -42,29 +42,29 @@ export function UserTable({ users, token, onRefresh }: UserTableProps) {
         if (error) {
             toast.error(error.message);
         } else {
-            toast.success(user.isBanned ? "ইউজার আনব্যান করা হয়েছে" : "ইউজার ব্যান করা হয়েছে");
+            toast.success(user.isBanned ? "User unbanned successfully" : "User banned successfully");
             onRefresh();
         }
         setLoadingId(null);
     };
 
     return (
-        <div className="rounded-md border bg-white shadow-sm overflow-hidden">
+        <div className="rounded-xl border bg-card shadow-sm overflow-hidden">
             <Table>
                 <TableHeader className="bg-muted/50">
                     <TableRow>
-                        <TableHead>ইউজার</TableHead>
-                        <TableHead>রোল</TableHead>
-                        <TableHead>স্ট্যাটাস</TableHead>
-                        <TableHead>জয়েন করেছেন</TableHead>
-                        <TableHead className="text-right">অ্যাকশন</TableHead>
+                        <TableHead>User</TableHead>
+                        <TableHead>Role</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead>Joined</TableHead>
+                        <TableHead className="text-right">Actions</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
                     {users.length === 0 ? (
                         <TableRow>
                             <TableCell colSpan={5} className="h-24 text-center">
-                                কোনো ইউজার পাওয়া যায়নি
+                                No users found
                             </TableCell>
                         </TableRow>
                     ) : (
@@ -92,11 +92,11 @@ export function UserTable({ users, token, onRefresh }: UserTableProps) {
                                 <TableCell>
                                     {user.isBanned ? (
                                         <Badge variant="destructive" className="flex w-fit items-center gap-1">
-                                            <Ban className="h-3 w-3" /> ব্যানড
+                                            <Ban className="h-3 w-3" /> Banned
                                         </Badge>
                                     ) : (
                                         <Badge variant="outline" className="flex w-fit items-center gap-1 border-green-500 text-green-600 bg-green-50">
-                                            সক্রিয়
+                                            Active
                                         </Badge>
                                     )}
                                 </TableCell>
@@ -117,11 +117,11 @@ export function UserTable({ users, token, onRefresh }: UserTableProps) {
                                             >
                                                 {user.isBanned ? (
                                                     <>
-                                                        <Unlock className="mr-2 h-4 w-4" /> আনব্যান করুন
+                                                        <Unlock className="mr-2 h-4 w-4" /> Unban User
                                                     </>
                                                 ) : (
                                                     <>
-                                                        <Ban className="mr-2 h-4 w-4" /> ব্যান করুন
+                                                        <Ban className="mr-2 h-4 w-4" /> Ban User
                                                     </>
                                                 )}
                                             </DropdownMenuItem>

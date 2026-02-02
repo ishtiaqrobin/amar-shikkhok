@@ -62,17 +62,19 @@ export default async function TutorsPage({ searchParams }: TutorsPageProps) {
     };
 
     return (
-        <div className="container mx-auto px-4 py-12">
+        <div className="container mx-auto px-4 py-12 min-h-screen">
             {/* Header */}
-            <div className="mb-8">
-                <h1 className="text-3xl font-bold mb-2">All Tutors</h1>
-                <p className="text-muted-foreground">
+            <div className="mb-12">
+                <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl mb-4 bg-linear-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+                    All Tutors
+                </h1>
+                <p className="text-xl text-muted-foreground">
                     Total {meta.total} tutors found
                 </p>
             </div>
 
             {/* Search */}
-            <div className="mb-8">
+            <div className="mb-12 max-w-3xl">
                 <TutorSearch />
             </div>
 
@@ -80,66 +82,77 @@ export default async function TutorsPage({ searchParams }: TutorsPageProps) {
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
                 {/* Filters Sidebar */}
                 <aside className="lg:col-span-1">
-                    <TutorFilter />
+                    <div className="sticky top-24">
+                        <TutorFilter />
+                    </div>
                 </aside>
 
                 {/* Tutors List */}
                 <main className="lg:col-span-3">
-                    <TutorList tutors={tutors} />
-
-                    {/* Pagination */}
-                    {totalPages > 1 && (
-                        <div className="mt-12 flex items-center justify-center gap-2">
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                asChild
-                                disabled={page <= 1}
-                            >
-                                <Link href={buildPageUrl(page - 1)}>
-                                    <ChevronLeft className="h-4 w-4 mr-1" />
-                                    Previous
-                                </Link>
-                            </Button>
-
-                            <div className="flex items-center gap-1">
-                                {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                                    let pageNum: number;
-                                    if (totalPages <= 5) {
-                                        pageNum = i + 1;
-                                    } else if (page <= 3) {
-                                        pageNum = i + 1;
-                                    } else if (page >= totalPages - 2) {
-                                        pageNum = totalPages - 4 + i;
-                                    } else {
-                                        pageNum = page - 2 + i;
-                                    }
-
-                                    return (
-                                        <Button
-                                            key={pageNum}
-                                            variant={page === pageNum ? "default" : "outline"}
-                                            size="sm"
-                                            asChild
-                                        >
-                                            <Link href={buildPageUrl(pageNum)}>{pageNum}</Link>
-                                        </Button>
-                                    );
-                                })}
-                            </div>
-
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                asChild
-                                disabled={page >= totalPages}
-                            >
-                                <Link href={buildPageUrl(page + 1)}>
-                                    Next
-                                    <ChevronRight className="h-4 w-4 ml-1" />
-                                </Link>
-                            </Button>
+                    {tutors.length === 0 ? (
+                        <div className="text-center py-24 border rounded-3xl bg-muted/20 border-border">
+                            <p className="text-xl font-medium text-muted-foreground uppercase tracking-wider">Sorry, no tutors found.</p>
                         </div>
+                    ) : (
+                        <>
+                            <TutorList tutors={tutors} />
+
+                            {/* Pagination */}
+                            {totalPages > 1 && (
+                                <div className="mt-16 flex items-center justify-center gap-2">
+                                    <Button
+                                        variant="outline"
+                                        size="icon"
+                                        asChild
+                                        disabled={page <= 1}
+                                        className="rounded-xl"
+                                    >
+                                        <Link href={buildPageUrl(page - 1)}>
+                                            <ChevronLeft className="h-4 w-4" />
+                                        </Link>
+                                    </Button>
+
+                                    <div className="flex items-center gap-1">
+                                        {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                                            let pageNum: number;
+                                            if (totalPages <= 5) {
+                                                pageNum = i + 1;
+                                            } else if (page <= 3) {
+                                                pageNum = i + 1;
+                                            } else if (page >= totalPages - 2) {
+                                                pageNum = totalPages - 4 + i;
+                                            } else {
+                                                pageNum = page - 2 + i;
+                                            }
+
+                                            return (
+                                                <Button
+                                                    key={pageNum}
+                                                    variant={page === pageNum ? "default" : "outline"}
+                                                    size="sm"
+                                                    asChild
+                                                    className="rounded-xl w-10"
+                                                >
+                                                    <Link href={buildPageUrl(pageNum)}>{pageNum}</Link>
+                                                </Button>
+                                            );
+                                        })}
+                                    </div>
+
+                                    <Button
+                                        variant="outline"
+                                        size="icon"
+                                        asChild
+                                        disabled={page >= totalPages}
+                                        className="rounded-xl"
+                                    >
+                                        <Link href={buildPageUrl(page + 1)}>
+                                            <ChevronRight className="h-4 w-4" />
+                                        </Link>
+                                    </Button>
+                                </div>
+                            )}
+                        </>
                     )}
                 </main>
             </div>

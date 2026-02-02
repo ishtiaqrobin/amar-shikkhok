@@ -10,7 +10,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { CalendarIcon, Clock } from "lucide-react";
 import { format } from "date-fns";
 import { useState } from "react";
-import { cn } from "@/lib/utils";
+import { cn, formatPrice } from "@/lib/utils";
 import type { CreateBookingInput } from "@/types/booking.type";
 
 interface BookingModalProps {
@@ -80,41 +80,42 @@ export function BookingModal({
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="sm:max-w-[500px]">
+            <DialogContent className="sm:max-w-[500px] rounded-3xl">
                 <DialogHeader>
-                    <DialogTitle>বুকিং করুন - {tutorName}</DialogTitle>
+                    <DialogTitle className="text-2xl font-black">Book a Session - {tutorName}</DialogTitle>
                 </DialogHeader>
 
-                <form onSubmit={handleSubmit} className="space-y-4">
+                <form onSubmit={handleSubmit} className="space-y-6 pt-4">
                     {/* Subject */}
                     <div className="space-y-2">
-                        <Label htmlFor="subject">বিষয়</Label>
+                        <Label htmlFor="subject" className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Subject</Label>
                         <Input
                             id="subject"
                             value={subject}
                             onChange={(e) => setSubject(e.target.value)}
-                            placeholder="যেমন: গণিত, ইংরেজি"
+                            placeholder="e.g. Mathematics, Physics..."
                             required
+                            className="h-12 rounded-xl border-primary/20 focus:border-primary"
                         />
                     </div>
 
                     {/* Date */}
                     <div className="space-y-2">
-                        <Label>তারিখ</Label>
+                        <Label className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Select Date</Label>
                         <Popover>
                             <PopoverTrigger asChild>
                                 <Button
                                     variant="outline"
                                     className={cn(
-                                        "w-full justify-start text-left font-normal",
+                                        "w-full h-12 justify-start text-left font-medium rounded-xl border-primary/20 hover:border-primary transition-all",
                                         !date && "text-muted-foreground"
                                     )}
                                 >
                                     <CalendarIcon className="mr-2 h-4 w-4" />
-                                    {date ? format(date, "PPP") : "তারিখ নির্বাচন করুন"}
+                                    {date ? format(date, "PPP") : "Choose a date"}
                                 </Button>
                             </PopoverTrigger>
-                            <PopoverContent className="w-auto p-0">
+                            <PopoverContent className="w-auto p-0 rounded-2xl border-primary/20 shadow-xl" align="start">
                                 <Calendar
                                     mode="single"
                                     selected={date}
@@ -129,7 +130,7 @@ export function BookingModal({
                     {/* Time */}
                     <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
-                            <Label htmlFor="startTime">শুরুর সময়</Label>
+                            <Label htmlFor="startTime" className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Start Time</Label>
                             <div className="relative">
                                 <Clock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                                 <Input
@@ -137,13 +138,13 @@ export function BookingModal({
                                     type="time"
                                     value={startTime}
                                     onChange={(e) => setStartTime(e.target.value)}
-                                    className="pl-10"
+                                    className="pl-10 h-10 rounded-xl border-primary/20"
                                     required
                                 />
                             </div>
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="endTime">শেষ সময়</Label>
+                            <Label htmlFor="endTime" className="text-sm font-bold uppercase tracking-widest text-muted-foreground">End Time</Label>
                             <div className="relative">
                                 <Clock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                                 <Input
@@ -151,7 +152,7 @@ export function BookingModal({
                                     type="time"
                                     value={endTime}
                                     onChange={(e) => setEndTime(e.target.value)}
-                                    className="pl-10"
+                                    className="pl-10 h-10 rounded-xl border-primary/20"
                                     required
                                 />
                             </div>
@@ -160,47 +161,48 @@ export function BookingModal({
 
                     {/* Duration & Price */}
                     {duration > 0 && (
-                        <div className="p-3 bg-muted rounded-lg space-y-1">
-                            <div className="flex justify-between text-sm">
-                                <span className="text-muted-foreground">সময়কাল:</span>
-                                <span className="font-medium">{duration} ঘণ্টা</span>
+                        <div className="p-4 bg-primary/5 rounded-2xl space-y-2 border border-primary/10">
+                            <div className="flex justify-between text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                                <span>Duration</span>
+                                <span>{duration} Hours</span>
                             </div>
-                            <div className="flex justify-between text-sm">
-                                <span className="text-muted-foreground">ঘণ্টায় মূল্য:</span>
-                                <span className="font-medium">৳{hourlyRate}</span>
+                            <div className="flex justify-between text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                                <span>Hourly Rate</span>
+                                <span>{formatPrice(hourlyRate)}</span>
                             </div>
-                            <div className="flex justify-between text-base font-bold pt-2 border-t">
-                                <span>মোট মূল্য:</span>
-                                <span className="text-primary">৳{totalPrice}</span>
+                            <div className="flex justify-between text-lg font-black pt-2 border-t border-primary/10 text-primary">
+                                <span>Total Payment</span>
+                                <span>{formatPrice(totalPrice)}</span>
                             </div>
                         </div>
                     )}
 
                     {/* Notes */}
                     <div className="space-y-2">
-                        <Label htmlFor="notes">নোট (ঐচ্ছিক)</Label>
+                        <Label htmlFor="notes" className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Instructions (Optional)</Label>
                         <Textarea
                             id="notes"
                             value={notes}
                             onChange={(e) => setNotes(e.target.value)}
-                            placeholder="বিশেষ কোনো নির্দেশনা..."
+                            placeholder="Any specific topics or notes for the tutor..."
                             rows={3}
+                            className="rounded-xl resize-none border-primary/20"
                         />
                     </div>
 
                     {/* Actions */}
-                    <div className="flex gap-3 pt-4">
+                    <div className="flex gap-4 pt-4">
                         <Button
                             type="button"
                             variant="outline"
                             onClick={onClose}
-                            className="flex-1"
+                            className="flex-1 h-12 rounded-full font-bold uppercase tracking-widest"
                             disabled={isSubmitting}
                         >
-                            বাতিল
+                            Cancel
                         </Button>
-                        <Button type="submit" className="flex-1" disabled={isSubmitting || !date}>
-                            {isSubmitting ? "বুকিং হচ্ছে..." : "নিশ্চিত করুন"}
+                        <Button type="submit" className="flex-1 h-12 rounded-full font-bold uppercase tracking-widest shadow-lg shadow-primary/20" disabled={isSubmitting || !date}>
+                            {isSubmitting ? "Booking..." : "Confirm Booking"}
                         </Button>
                     </div>
                 </form>

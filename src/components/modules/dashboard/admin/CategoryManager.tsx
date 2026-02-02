@@ -54,7 +54,7 @@ export function CategoryManager({ categories, token, onRefresh }: CategoryManage
 
     const handleSave = async () => {
         if (!name.trim()) {
-            toast.error("নাম আবশ্যক");
+            toast.error("Name is required");
             return;
         }
 
@@ -68,7 +68,7 @@ export function CategoryManager({ categories, token, onRefresh }: CategoryManage
         if (error) {
             toast.error(error.message);
         } else {
-            toast.success(editingCategory ? "ক্যাটাগরি আপডেট করা হয়েছে" : "নতুন ক্যাটাগরি যোগ করা হয়েছে");
+            toast.success(editingCategory ? "Category updated successfully" : "Category created successfully");
             setIsDialogOpen(false);
             onRefresh();
         }
@@ -76,14 +76,14 @@ export function CategoryManager({ categories, token, onRefresh }: CategoryManage
     };
 
     const handleDelete = async (id: string) => {
-        if (!confirm("আপনি কি নিশ্চিতভাবে এই ক্যাটাগরি মুছে ফেলতে চান?")) return;
+        if (!confirm("Are you sure you want to delete this category?")) return;
 
         setLoading(true);
         const { error } = await categoryService.deleteCategory(token, id);
         if (error) {
             toast.error(error.message);
         } else {
-            toast.success("ক্যাটাগরি মুছে ফেলা হয়েছে");
+            toast.success("Category deleted successfully");
             onRefresh();
         }
         setLoading(false);
@@ -94,16 +94,16 @@ export function CategoryManager({ categories, token, onRefresh }: CategoryManage
             <div className="flex justify-between items-center">
                 <h2 className="text-xl font-semibold flex items-center gap-2">
                     <BookOpen className="h-5 w-5 text-primary" />
-                    সকল ক্যাটাগরি ({categories.length})
+                    All Categories ({categories.length})
                 </h2>
-                <Button onClick={() => handleOpenDialog()} className="shadow-sm">
-                    <Plus className="mr-2 h-4 w-4" /> নতুন ক্যাটাগরি
+                <Button onClick={() => handleOpenDialog()} className="shadow-sm rounded-xl">
+                    <Plus className="mr-2 h-4 w-4" /> New Category
                 </Button>
             </div>
 
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {categories.map((category) => (
-                    <Card key={category.id} className="group hover:shadow-md transition-shadow border-none shadow-sm bg-muted/20">
+                    <Card key={category.id} className="group hover:shadow-md transition-shadow border-none shadow-sm bg-muted/20 rounded-2xl">
                         <CardHeader className="pb-2 flex flex-row items-start justify-between space-y-0">
                             <div className="space-y-1">
                                 <CardTitle className="text-lg">{category.name}</CardTitle>
@@ -129,52 +129,54 @@ export function CategoryManager({ categories, token, onRefresh }: CategoryManage
                         </CardHeader>
                         <CardContent>
                             <p className="text-sm text-muted-foreground line-clamp-2">
-                                {category.description || "কোনো বর্ণনা নেই"}
+                                {category.description || "No description provided"}
                             </p>
                         </CardContent>
                     </Card>
                 ))}
 
                 {categories.length === 0 && (
-                    <div className="col-span-full py-12 text-center border-2 border-dashed rounded-xl bg-muted/10">
-                        <p className="text-muted-foreground">কোনো ক্যাটাগরি পাওয়া যায়নি। নতুন একটি যোগ করুন।</p>
+                    <div className="col-span-full py-12 text-center border-2 border-dashed rounded-3xl bg-muted/10">
+                        <p className="text-muted-foreground">No categories found. Create your first category.</p>
                     </div>
                 )}
             </div>
 
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                <DialogContent>
+                <DialogContent className="rounded-3xl">
                     <DialogHeader>
-                        <DialogTitle>{editingCategory ? "ক্যাটাগরি এডিট করুন" : "নতুন ক্যাটাগরি যোগ করুন"}</DialogTitle>
+                        <DialogTitle>{editingCategory ? "Edit Category" : "New Category"}</DialogTitle>
                     </DialogHeader>
                     <div className="space-y-4 py-4">
                         <div className="space-y-2">
-                            <Label htmlFor="name">ক্যাটাগরির নাম</Label>
+                            <Label htmlFor="name">Category Name</Label>
                             <Input
                                 id="name"
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
-                                placeholder="যেমন: গণিত, প্রোগ্রামিং..."
+                                placeholder="e.g. Mathematics, Programming..."
+                                className="rounded-xl"
                             />
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="desc">বর্ণনা (ঐচ্ছিক)</Label>
+                            <Label htmlFor="desc">Description (Optional)</Label>
                             <Textarea
                                 id="desc"
                                 value={description}
                                 onChange={(e) => setDescription(e.target.value)}
-                                placeholder="ক্যাটাগরি সম্পর্কে কিছু লিখুন..."
+                                placeholder="Tell us more about this category..."
                                 rows={4}
+                                className="rounded-xl resize-none"
                             />
                         </div>
                     </div>
                     <DialogFooter>
-                        <Button variant="outline" onClick={() => setIsDialogOpen(false)} disabled={loading}>
-                            বাতিল
+                        <Button variant="outline" onClick={() => setIsDialogOpen(false)} disabled={loading} className="rounded-full px-6">
+                            Cancel
                         </Button>
-                        <Button onClick={handleSave} disabled={loading}>
+                        <Button onClick={handleSave} disabled={loading} className="rounded-full px-8">
                             {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                            {editingCategory ? "আপডেট করুন" : "যোগ করুন"}
+                            {editingCategory ? "Update" : "Save"}
                         </Button>
                     </DialogFooter>
                 </DialogContent>

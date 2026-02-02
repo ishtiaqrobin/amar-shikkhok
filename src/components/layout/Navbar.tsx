@@ -63,27 +63,27 @@ const Navbar = ({
     title: "Amar Shikkhok",
   },
   menu = [
-    { title: "হোম", url: "/" },
+    { title: "Home", url: "/" },
     {
-      title: "বিষয়সমূহ",
+      title: "Categories",
       url: "/categories",
     },
     {
-      title: "শিক্ষকগণ",
+      title: "Tutors",
       url: "/tutors",
     },
     {
-      title: "আমাদের সম্পর্কে",
+      title: "About Us",
       url: "/about",
     },
     {
-      title: "যোগাযোগ",
+      title: "Contact",
       url: "/contact",
     },
   ],
   auth = {
-    login: { title: "লগইন", url: "/login" },
-    signup: { title: "রেজিস্ট্রেশন", url: "/register" },
+    login: { title: "Login", url: "/login" },
+    signup: { title: "Register", url: "/register" },
   },
   className,
 }: Navbar1Props) => {

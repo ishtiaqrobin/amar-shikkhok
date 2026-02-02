@@ -1,6 +1,6 @@
 import { env } from "@/env";
 
-const API_URL = env.API_URL;
+const API_URL = env.NEXT_PUBLIC_API_URL;
 
 interface ServiceError {
   message: string;

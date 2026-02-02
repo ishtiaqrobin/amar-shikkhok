@@ -12,7 +12,7 @@ import type { Booking } from "@/types/booking.type";
 import { useAuth } from "@/hooks/useAuth";
 
 export default function StudentDashboardPage() {
-  const { sessionToken } = useAuth();
+  const { session } = useAuth();
   const [stats, setStats] = useState<StudentStats | null>(null);
   const [upcomingBookings, setUpcomingBookings] = useState<Booking[]>([]);
   const [recentBookings, setRecentBookings] = useState<Booking[]>([]);
@@ -20,7 +20,7 @@ export default function StudentDashboardPage() {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!sessionToken) {
+      if (!session?.token) {
         // If token is not yet available, wait
         if (isLoading) return;
         setIsLoading(false);
@@ -29,8 +29,8 @@ export default function StudentDashboardPage() {
 
       try {
         const [statsRes, bookingsRes] = await Promise.all([
-          studentService.getStats(sessionToken),
-          bookingService.getMyBookings(sessionToken)
+          studentService.getStats(session?.token),
+          bookingService.getMyBookings(session?.token)
         ]);
 
         if (statsRes.error) {
@@ -55,14 +55,14 @@ export default function StudentDashboardPage() {
         }
       } catch (error) {
         console.error("Dashboard fetch error:", error);
-        toast.error("ত্রুটি", { description: "ড্যাশবোর্ড তথ্য লোড করতে ব্যর্থ হয়েছে" });
+        toast.error("Error", { description: "Failed to load dashboard data" });
       } finally {
         setIsLoading(false);
       }
     };
 
     fetchData();
-  }, [sessionToken, isLoading]);
+  }, [session?.token, isLoading]);
 
   if (isLoading) {
     return (
@@ -73,36 +73,36 @@ export default function StudentDashboardPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 min-h-screen">
       <div>
-        <h1 className="text-3xl font-bold">ড্যাশবোর্ড</h1>
-        <p className="text-muted-foreground mt-2">আপনার শিক্ষা কার্যক্রমের সারসংক্ষেপ</p>
+        <h1 className="text-3xl font-bold">Student Dashboard</h1>
+        <p className="text-muted-foreground mt-2">Personal learning activity overview and performance</p>
       </div>
 
       {/* Stats Grid */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <StatsCard
-          title="মোট বুকিং"
+          title="Total Bookings"
           value={stats?.totalBookings || 0}
-          description="সর্বমোট বুকিং সংখ্যা"
+          description="Total sessions requested"
           icon={BookOpen}
         />
         <StatsCard
-          title="আসন্ন ক্লাস"
+          title="Upcoming Classes"
           value={stats?.upcomingClasses || 0}
-          description="আগামী সপ্তাহে"
+          description="Scheduled for this week"
           icon={Calendar}
         />
         <StatsCard
-          title="সম্পন্ন ক্লাস"
+          title="Completed Classes"
           value={stats?.completedClasses || 0}
-          description="এ পর্যন্ত সম্পন্ন"
+          description="Total sessions attended"
           icon={CheckCircle}
         />
         <StatsCard
-          title="মোট ঘণ্টা"
+          title="Total Hours"
           value={stats?.totalHours || 0}
-          description="শিক্ষা গ্রহণ করা হয়েছে"
+          description="Total learning time"
           icon={Clock}
         />
       </div>

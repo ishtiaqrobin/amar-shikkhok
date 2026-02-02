@@ -22,7 +22,7 @@ export default function AdminDashboardPage() {
         const { data, error } = await adminService.getStats(userToken);
 
         if (error) {
-            toast.error("স্ট্যাটাস লোড করতে সমস্যা হয়েছে", { description: error.message });
+            toast.error("Failed to load statistics", { description: error.message });
         } else {
             setStats(data);
         }
@@ -44,15 +44,15 @@ export default function AdminDashboardPage() {
     }
 
     return (
-        <div className="space-y-8">
+        <div className="space-y-8 min-h-screen">
             <div className="flex justify-between items-end">
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight">অ্যাডমিন ড্যাশবোর্ড</h1>
-                    <p className="text-muted-foreground mt-2 text-lg">প্ল্যাটফর্মের একটি সামগ্রিক চিত্র</p>
+                    <h1 className="text-3xl font-bold tracking-tight">Admin Dashboard</h1>
+                    <p className="text-muted-foreground mt-2 text-lg">Overall platform statistics and insights</p>
                 </div>
                 <Button variant="outline" size="sm" onClick={fetchStats} disabled={isLoading} className="gap-2">
                     <RefreshCcw className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`} />
-                    রিফ্রেশ করুন
+                    Refresh Stats
                 </Button>
             </div>
 

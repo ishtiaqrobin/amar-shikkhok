@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { userService } from "./services/user.service";
+import { sessionService } from "./services/session.service";
 import { Roles } from "./constants/roles";
 
 export async function proxy(request: NextRequest) {
@@ -10,7 +10,7 @@ export async function proxy(request: NextRequest) {
 
   try {
     // Server-side session check
-    const { data } = await userService.getSession();
+    const { data } = await sessionService.getSession();
 
     if (data?.user) {
       isAuthenticated = true;

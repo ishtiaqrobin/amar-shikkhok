@@ -59,34 +59,34 @@ export function TutorProfileForm({ tutor, userToken }: TutorProfileFormProps) {
             const { error } = await tutorsService.updateProfile(userToken, payload);
 
             if (error) {
-                toast.error("ত্রুটি", { description: error.message });
+                toast.error("Error", { description: error.message });
             } else {
-                toast.success("সফল!", { description: "প্রোফাইল আপডেট করা হয়েছে" });
+                toast.success("Success!", { description: "Tutor profile updated successfully" });
             }
         } catch (error) {
             console.error("Profile update error:", error);
-            toast.error("ত্রুটি", { description: "প্রোফাইল আপডেট করতে ব্যর্থ হয়েছে" });
+            toast.error("Error", { description: "Failed to update tutor profile" });
         }
     }
 
     return (
-        <Card>
+        <Card className="border-primary/10 shadow-sm rounded-2xl">
             <CardHeader>
-                <CardTitle>শিক্ষক প্রোফাইল</CardTitle>
+                <CardTitle>Professional Profile</CardTitle>
             </CardHeader>
             <CardContent>
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                         <FormField
                             control={form.control}
                             name="bio"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>বায়ো</FormLabel>
+                                    <FormLabel>Short Bio</FormLabel>
                                     <FormControl>
                                         <Textarea
-                                            placeholder="আপনার যোগ্যতা এবং অভিজ্ঞতা সম্পর্কে বিস্তারিত লিখুন..."
-                                            className="min-h-[120px]"
+                                            placeholder="Write a few words about your qualifications and teaching style..."
+                                            className="min-h-[120px] rounded-xl resize-none"
                                             {...field}
                                         />
                                     </FormControl>
@@ -100,26 +100,27 @@ export function TutorProfileForm({ tutor, userToken }: TutorProfileFormProps) {
                             name="expertise"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>দক্ষতাসমূহ ( Expertise )</FormLabel>
+                                    <FormLabel>Areas of Expertise</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="Math, Physics, English (কমা দিয়ে আলাদা করুন)" {...field} />
+                                        <Input placeholder="Math, Physics, English..." className="rounded-xl" {...field} />
                                     </FormControl>
-                                    <FormDescription>আপনার দক্ষতাসমূহ কমা দিয়ে লিখুন</FormDescription>
+                                    <FormDescription>Separate multiple subjects with commas</FormDescription>
                                     <FormMessage />
                                 </FormItem>
                             )}
                         />
 
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-2 gap-6">
                             <FormField
                                 control={form.control}
                                 name="hourlyRate"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>ঘণ্টাপ্রতি ফি (৳)</FormLabel>
+                                        <FormLabel>Hourly Rate ($)</FormLabel>
                                         <FormControl>
                                             <Input
                                                 type="number"
+                                                className="rounded-xl"
                                                 {...field}
                                                 onChange={e => field.onChange(Number(e.target.value))}
                                             />
@@ -134,10 +135,11 @@ export function TutorProfileForm({ tutor, userToken }: TutorProfileFormProps) {
                                 name="experience"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>অভিজ্ঞতা (বছর)</FormLabel>
+                                        <FormLabel>Years of Experience</FormLabel>
                                         <FormControl>
                                             <Input
                                                 type="number"
+                                                className="rounded-xl"
                                                 {...field}
                                                 onChange={e => field.onChange(Number(e.target.value))}
                                             />
@@ -153,16 +155,16 @@ export function TutorProfileForm({ tutor, userToken }: TutorProfileFormProps) {
                             name="education"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>শিক্ষা</FormLabel>
+                                    <FormLabel>Educational Qualification</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="B.Sc in Computer Science" {...field} />
+                                        <Input placeholder="e.g. B.Sc in Computer Science" className="rounded-xl" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )}
                         />
 
-                        <Button type="submit" className="w-full md:w-auto">সংরক্ষণ করুন</Button>
+                        <Button type="submit" className="w-full md:w-auto px-8 rounded-full h-11 shadow-lg shadow-primary/20">Save Changes</Button>
                     </form>
                 </Form>
             </CardContent>

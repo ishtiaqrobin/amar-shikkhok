@@ -1,43 +1,75 @@
 import { env } from "@/env";
-import { cookies } from "next/headers";
+import { User } from "@/types/tutor.type";
 
-const AUTH_URL = env.AUTH_URL;
+const API_URL = env.NEXT_PUBLIC_API_URL;
+
+interface ServiceError {
+  message: string;
+}
 
 export const userService = {
-  getSession: async function () {
+  getMe: async function (
+    token: string,
+  ): Promise<{ data: User | null; error: ServiceError | null }> {
     try {
-      const cookieStore = await cookies();
-
-      console.log(cookieStore.toString());
-
-      const res = await fetch(`${AUTH_URL}/get-session`, {
+      const res = await fetch(`${API_URL}/users/me`, {
         headers: {
-          Cookie: cookieStore.toString(),
+          Authorization: `Bearer ${token}`,
         },
         cache: "no-store",
       });
 
-      const session = await res.json();
-
-      if (session === null) {
-        return {
-          data: null,
-          error: {
-            message: "No active session",
-          },
-        };
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
       }
 
-      return {
-        data: session,
-        error: null,
-      };
+      const response = await res.json();
+      return { data: response.data, error: null };
     } catch (err) {
-      console.error("Error fetching session:", err);
+      console.error("Error fetching user profile:", err);
       return {
         data: null,
         error: {
-          message: "Error fetching session",
+          message:
+            err instanceof Error ? err.message : "Error fetching profile",
+        },
+      };
+    }
+  },
+
+  /**
+   * Update user profile
+   */
+  updateProfile: async function (
+    token: string,
+    payload: { name?: string; phone?: string; image?: string },
+  ): Promise<{ data: User | null; error: ServiceError | null }> {
+    try {
+      const res = await fetch(`${API_URL}/users/profile`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(
+          errorData.message || `HTTP error! status: ${res.status}`,
+        );
+      }
+
+      const response = await res.json();
+      return { data: response.data, error: null };
+    } catch (err) {
+      console.error("Error updating profile:", err);
+      return {
+        data: null,
+        error: {
+          message:
+            err instanceof Error ? err.message : "Error updating profile",
         },
       };
     }

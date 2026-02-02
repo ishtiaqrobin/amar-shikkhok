@@ -7,6 +7,8 @@ export interface User {
   phone?: string | null;
   isActive?: boolean;
   isBanned?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface Category {

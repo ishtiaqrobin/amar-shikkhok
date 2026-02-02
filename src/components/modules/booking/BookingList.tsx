@@ -13,14 +13,14 @@ interface BookingListProps {
 export function BookingList({ bookings, userRole, onCancel, onComplete }: BookingListProps) {
     if (bookings.length === 0) {
         return (
-            <div className="text-center py-12">
-                <p className="text-muted-foreground text-lg">কোনো বুকিং পাওয়া যায়নি।</p>
+            <div className="text-center py-20 border-2 border-dashed rounded-3xl bg-muted/20 border-primary/5">
+                <p className="text-muted-foreground text-lg font-medium">No bookings found in your history.</p>
             </div>
         );
     }
 
     return (
-        <div className="grid gap-4 sm:grid-cols-1 lg:grid-cols-2">
+        <div className="grid gap-6 sm:grid-cols-1 lg:grid-cols-2">
             {bookings.map((booking) => (
                 <BookingCard
                     key={booking.id}

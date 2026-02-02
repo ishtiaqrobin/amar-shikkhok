@@ -13,7 +13,7 @@ export function CategoryCard({ category }: CategoryCardProps) {
     return (
         <Link href={`/tutors?category=${category.id}`}>
             <Card className="group relative overflow-hidden transition-all hover:shadow-xl hover:-translate-y-1 border-primary/10 bg-card/50 backdrop-blur-sm">
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent group-hover:from-primary/10 transition-colors" />
+                <div className="absolute inset-0 bg-linear-to-br from-primary/5 to-transparent group-hover:from-primary/10 transition-colors" />
 
                 <CardContent className="p-6">
                     <div className="flex items-center gap-4">

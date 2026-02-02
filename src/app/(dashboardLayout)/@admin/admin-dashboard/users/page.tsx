@@ -32,7 +32,7 @@ export default function AdminUsersPage() {
         const { data, error } = await adminService.getAllUsers(userToken, role);
 
         if (error) {
-            toast.error("ইউজার লিস্ট লোড করতে সমস্যা হয়েছে", { description: error.message });
+            toast.error("Failed to load users", { description: error.message });
             setUsers([]);
         } else {
             setUsers(data || []);
@@ -52,18 +52,18 @@ export default function AdminUsersPage() {
     );
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 min-h-screen">
             <div>
-                <h1 className="text-3xl font-bold">ইউজার ব্যবস্থাপনা</h1>
-                <p className="text-muted-foreground mt-2">প্ল্যাটফর্মের সকল ছাত্র এবং শিক্ষকদের পরিচালনা করুন</p>
+                <h1 className="text-3xl font-bold">User Management</h1>
+                <p className="text-muted-foreground mt-2">Manage all registered students, tutors, and administrators</p>
             </div>
 
-            <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
+            <div className="flex flex-col md:flex-row gap-4 items-center justify-between bg-card p-4 rounded-2xl border border-primary/5 shadow-sm">
                 <div className="relative w-full md:max-w-sm">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input
-                        placeholder="নাম বা ইমেইল দিয়ে খুঁজুন..."
-                        className="pl-9"
+                        placeholder="Search by name or email..."
+                        className="pl-9 rounded-xl border-primary/10"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                     />
@@ -71,14 +71,14 @@ export default function AdminUsersPage() {
                 <div className="flex items-center gap-3 w-full md:w-auto">
                     <Filter className="h-4 w-4 text-muted-foreground" />
                     <Select value={roleFilter} onValueChange={setRoleFilter}>
-                        <SelectTrigger className="w-[160px]">
-                            <SelectValue placeholder="রোল সিলেক্ট করুন" />
+                        <SelectTrigger className="w-[160px] rounded-xl border-primary/10">
+                            <SelectValue placeholder="Select Role" />
                         </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="ALL">সব ইউজার</SelectItem>
-                            <SelectItem value="ADMIN">অ্যাডমিন</SelectItem>
-                            <SelectItem value="TUTOR">শিক্ষক</SelectItem>
-                            <SelectItem value="STUDENT">শিক্ষার্থী</SelectItem>
+                        <SelectContent className="rounded-xl">
+                            <SelectItem value="ALL">All Users</SelectItem>
+                            <SelectItem value="ADMIN">Admin</SelectItem>
+                            <SelectItem value="TUTOR">Tutor</SelectItem>
+                            <SelectItem value="STUDENT">Student</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>

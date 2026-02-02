@@ -16,7 +16,7 @@ export function FeaturedTutors() {
     useEffect(() => {
         const fetchTopTutors = async () => {
             const { data } = await tutorsService.getTutors({
-                limit: 20,
+                limit: 4,
                 minRating: 4,
             });
 

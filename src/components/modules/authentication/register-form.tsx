@@ -47,8 +47,10 @@ export function RegisterForm({ ...props }: React.ComponentProps<typeof Card>) {
         password: formData.password,
         name: formData.name,
         image: undefined,
+        role: formData.role,
+        phone: formData.phone,
         callbackURL: "http://localhost:3000",
-      });
+      } as Parameters<typeof authClient.signUp.email>[0] & { role: string; phone: string });
 
       if (error) {
         toast.error(error.message || "Registration failed");
@@ -56,7 +58,13 @@ export function RegisterForm({ ...props }: React.ComponentProps<typeof Card>) {
       }
 
       toast.success("Registration successful! 🎉");
-      router.push("/student-dashboard");
+
+      // Redirect based on role
+      if (formData.role === "TUTOR") {
+        router.push("/tutor-dashboard");
+      } else {
+        router.push("/student-dashboard");
+      }
     } catch (error) {
       console.error("Registration error:", error);
       toast.error("Registration failed");

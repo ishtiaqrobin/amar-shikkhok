@@ -13,7 +13,10 @@ export function useAuth() {
   const logout = async () => {
     try {
       await authClient.signOut();
-      router.push("/login");
+      router.refresh();
+      setTimeout(() => {
+        window.location.href = "/login";
+      }, 100);
     } catch (error) {
       console.error("Logout error:", error);
     }

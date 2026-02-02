@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { authClient } from "@/lib/auth-client";
+import { User } from "@/types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,7 +14,6 @@ import { useRouter } from "next/navigation";
 import { GoogleAuthButton } from "./GoogleAuthButton";
 
 export function LoginForm({
-  className,
   ...props
 }: React.ComponentProps<"div">) {
   const router = useRouter();
@@ -46,7 +46,17 @@ export function LoginForm({
       }
 
       toast.success("Login successful! 🎉");
-      router.push("/student-dashboard");
+
+      const { data: userSession } = await authClient.getSession();
+      const userRole = (userSession?.user as User)?.role;
+
+      if (userRole === "ADMIN") {
+        router.push("/admin-dashboard");
+      } else if (userRole === "TUTOR") {
+        router.push("/tutor-dashboard");
+      } else {
+        router.push("/student-dashboard");
+      }
     } catch (error) {
       console.error("Login error:", error);
       toast.error("Login failed");

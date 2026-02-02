@@ -29,18 +29,22 @@ export function LogoutButton({
                 fetchOptions: {
                     onSuccess: () => {
                         toast.success("Logged out successfully");
-                        router.push("/login");
+                        // Force refresh and redirect
+                        router.refresh();
+                        setTimeout(() => {
+                            window.location.href = "/login";
+                        }, 100);
                     },
                     onError: (ctx) => {
                         toast.error("Logout failed");
                         console.error("Logout error:", ctx.error);
+                        setIsLoading(false);
                     },
                 },
             });
         } catch (error) {
             console.error("Logout error:", error);
             toast.error("Logout failed");
-        } finally {
             setIsLoading(false);
         }
     };

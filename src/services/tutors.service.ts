@@ -2,6 +2,7 @@ import { env } from "@/env";
 import type {
   GetTutorsParams,
   Tutor,
+  TutorStats,
   TutorsResponse,
 } from "@/types/tutor.type";
 
@@ -100,6 +101,39 @@ export const tutorsService = {
         data: null,
         error: {
           message: err instanceof Error ? err.message : "Error fetching tutor",
+        },
+      };
+    }
+  },
+
+  /**
+   * Get tutor dashboard stats
+   */
+  getStats: async function (
+    token: string,
+  ): Promise<{ data: TutorStats | null; error: ServiceError | null }> {
+    try {
+      const url = `${API_URL}/tutor/stats`;
+
+      const res = await fetch(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        cache: "no-store",
+      });
+
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+
+      const response = await res.json();
+      return { data: response.data, error: null };
+    } catch (err) {
+      console.error("Error fetching tutor stats:", err);
+      return {
+        data: null,
+        error: {
+          message: err instanceof Error ? err.message : "Error fetching stats",
         },
       };
     }

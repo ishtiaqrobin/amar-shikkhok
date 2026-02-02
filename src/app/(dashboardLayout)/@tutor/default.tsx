@@ -1,7 +1,3 @@
-import React from "react";
-
-const TutorDefault = () => {
+export default function Default() {
   return null;
-};
-
-export default TutorDefault;
+}

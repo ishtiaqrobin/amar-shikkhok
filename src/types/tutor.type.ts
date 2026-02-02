@@ -41,6 +41,8 @@ export interface Tutor {
   bio?: string | null;
   expertise: string[];
   hourlyRate: number;
+  experience: number;
+  education?: string | null;
   rating: number;
   totalReviews: number;
   categoryId?: string | null;
@@ -90,4 +92,12 @@ export interface TutorsResponse {
     total: number;
     totalPages: number;
   };
+}
+
+export interface TutorStats {
+  totalBookings: number;
+  upcomingBookings: number;
+  totalSessions: number;
+  totalRevenue: number;
+  rating: number;
 }

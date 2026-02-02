@@ -1,0 +1,127 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { bookingService } from "@/services/booking.service";
+import { BookingList } from "@/components/modules/booking/BookingList";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
+import type { Booking } from "@/types/booking.type";
+
+export default function StudentBookingsPage() {
+    const [bookings, setBookings] = useState<Booking[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [activeTab, setActiveTab] = useState("all");
+
+    // TODO: Get token from session
+    const userToken = ""; // Replace with actual token
+
+    const fetchBookings = async (status?: string) => {
+        setIsLoading(true);
+        const { data, error } = await bookingService.getMyBookings(userToken, status);
+
+        if (error) {
+            toast.error("ত্রুটি", {
+                description: error.message,
+            });
+            setBookings([]);
+        } else {
+            setBookings(data || []);
+        }
+        setIsLoading(false);
+    };
+
+    useEffect(() => {
+        if (userToken) {
+            const status = activeTab === "all" ? undefined : activeTab.toUpperCase();
+            fetchBookings(status);
+        }
+    }, [activeTab, userToken]);
+
+    const handleCancel = async (bookingId: string) => {
+        if (!userToken) return;
+
+        const { error } = await bookingService.cancelBooking(bookingId, userToken);
+
+        if (error) {
+            toast.error("ত্রুটি", {
+                description: error.message,
+            });
+        } else {
+            toast.success("সফল!", {
+                description: "বুকিং বাতিল করা হয়েছে",
+            });
+            fetchBookings(activeTab === "all" ? undefined : activeTab.toUpperCase());
+        }
+    };
+
+    const filterBookings = (status?: string) => {
+        if (!status || status === "all") return bookings;
+        return bookings.filter((b) => b.status === status.toUpperCase());
+    };
+
+    return (
+        <div className="space-y-6">
+            <div>
+                <h1 className="text-3xl font-bold">আমার বুকিং</h1>
+                <p className="text-muted-foreground mt-2">আপনার সকল বুকিং দেখুন এবং পরিচালনা করুন</p>
+            </div>
+
+            <Tabs value={activeTab} onValueChange={setActiveTab}>
+                <TabsList>
+                    <TabsTrigger value="all">সব</TabsTrigger>
+                    <TabsTrigger value="confirmed">নিশ্চিত</TabsTrigger>
+                    <TabsTrigger value="completed">সম্পন্ন</TabsTrigger>
+                    <TabsTrigger value="cancelled">বাতিল</TabsTrigger>
+                </TabsList>
+
+                <TabsContent value={activeTab} className="mt-6">
+                    {isLoading ? (
+                        <div className="flex items-center justify-center py-12">
+                            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                        </div>
+                    ) : (
+                        <BookingList
+                            bookings={filterBookings(activeTab)}
+                            userRole="STUDENT"
+                            onCancel={handleCancel}
+                        />
+                    )}
+                </TabsContent>
+            </Tabs>
+
+            {/* Stats */}
+            <div className="grid gap-4 md:grid-cols-4">
+                <Card>
+                    <CardHeader className="pb-2">
+                        <CardTitle className="text-sm font-medium text-muted-foreground">মোট বুকিং</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="text-2xl font-bold">{bookings.length}</div>
+                    </CardContent>
+                </Card>
+                <Card>
+                    <CardHeader className="pb-2">
+                        <CardTitle className="text-sm font-medium text-muted-foreground">নিশ্চিত</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="text-2xl font-bold">
+                            {bookings.filter((b) => b.status === "CONFIRMED").length}
+                        </div>
+                    </CardContent>
+                </Card>
+                <Card>
+                    <CardHeader className="pb-2">
+                        <CardTitle className="text-sm font-medium text-muted-foreground">সম্পন্ন</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="text-2xl font-bold">
+                            {bookings.filter((b) => b.status === "COMPLETED").length}
+                        </div>
+                    </CardContent>
+                </Card>
+            </div>
+        </div>
+    );
+}

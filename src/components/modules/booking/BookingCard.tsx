@@ -16,14 +16,12 @@ interface BookingCardProps {
 }
 
 const statusColors: Record<BookingStatus, string> = {
-    PENDING: "bg-yellow-500",
     CONFIRMED: "bg-blue-500",
     COMPLETED: "bg-green-500",
     CANCELLED: "bg-red-500",
 };
 
 const statusLabels: Record<BookingStatus, string> = {
-    PENDING: "অপেক্ষমাণ",
     CONFIRMED: "নিশ্চিত",
     COMPLETED: "সম্পন্ন",
     CANCELLED: "বাতিল",
@@ -31,7 +29,7 @@ const statusLabels: Record<BookingStatus, string> = {
 
 export function BookingCard({ booking, userRole, onCancel, onComplete }: BookingCardProps) {
     const otherUser = userRole === "STUDENT" ? booking.tutor?.user : booking.student;
-    const canCancel = userRole === "STUDENT" && booking.status === "PENDING";
+    const canCancel = userRole === "STUDENT" && booking.status === "CONFIRMED";
     const canComplete = userRole === "TUTOR" && booking.status === "CONFIRMED";
 
     return (

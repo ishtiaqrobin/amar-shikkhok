@@ -23,6 +23,7 @@ export interface Availability {
   dayOfWeek: string;
   startTime: string;
   endTime: string;
+  isAvailable: boolean;
 }
 
 export interface Review {
@@ -50,6 +51,7 @@ export interface Tutor {
   categoryId?: string | null;
   category?: Category | null;
   availability?: Availability[];
+  availabilities?: Availability[];
   reviews?: Review[];
   createdAt: string;
   updatedAt: string;
@@ -81,8 +83,8 @@ export interface GetTutorsParams {
   limit?: number;
   search?: string;
   categoryId?: string;
-  minRate?: number;
-  maxRate?: number;
+  minPrice?: number;
+  maxPrice?: number;
   minRating?: number;
 }
 

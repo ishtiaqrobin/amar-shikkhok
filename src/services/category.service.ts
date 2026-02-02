@@ -55,8 +55,11 @@ export const categoryService = {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
+        credentials: "include",
         body: JSON.stringify(payload),
       });
+
+      console.log("token from category manger", token);
 
       if (!res.ok) {
         const errorData = await res.json();
@@ -94,6 +97,7 @@ export const categoryService = {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
+        credentials: "include",
         body: JSON.stringify(payload),
       });
 
@@ -131,6 +135,7 @@ export const categoryService = {
         headers: {
           Authorization: `Bearer ${token}`,
         },
+        credentials: "include",
       });
 
       if (!res.ok) {

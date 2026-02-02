@@ -10,8 +10,8 @@ interface TutorsPageProps {
     searchParams: {
         page?: string;
         search?: string;
-        minRate?: string;
-        maxRate?: string;
+        minPrice?: string;
+        maxPrice?: string;
         minRating?: string;
         categoryId?: string;
     };
@@ -27,8 +27,8 @@ export default async function TutorsPage({ searchParams }: TutorsPageProps) {
             page,
             limit,
             search: params.search,
-            minRate: params.minRate ? parseInt(params.minRate) : undefined,
-            maxRate: params.maxRate ? parseInt(params.maxRate) : undefined,
+            minPrice: params.minPrice ? parseInt(params.minPrice) : undefined,
+            maxPrice: params.maxPrice ? parseInt(params.maxPrice) : undefined,
             minRating: params.minRating ? parseFloat(params.minRating) : undefined,
             categoryId: params.categoryId,
         },
@@ -54,8 +54,8 @@ export default async function TutorsPage({ searchParams }: TutorsPageProps) {
         const urlParams = new URLSearchParams();
         urlParams.set("page", newPage.toString());
         if (params.search) urlParams.set("search", params.search);
-        if (params.minRate) urlParams.set("minRate", params.minRate);
-        if (params.maxRate) urlParams.set("maxRate", params.maxRate);
+        if (params.minPrice) urlParams.set("minPrice", params.minPrice);
+        if (params.maxPrice) urlParams.set("maxPrice", params.maxPrice);
         if (params.minRating) urlParams.set("minRating", params.minRating);
         if (params.categoryId) urlParams.set("categoryId", params.categoryId);
         return `/tutors?${urlParams.toString()}`;

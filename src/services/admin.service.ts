@@ -19,6 +19,7 @@ export const adminService = {
         headers: {
           Authorization: `Bearer ${token}`,
         },
+        credentials: "include",
         cache: "no-store",
       });
 
@@ -58,6 +59,7 @@ export const adminService = {
         headers: {
           Authorization: `Bearer ${token}`,
         },
+        credentials: "include",
         cache: "no-store",
       });
 
@@ -94,6 +96,7 @@ export const adminService = {
         headers: {
           Authorization: `Bearer ${token}`,
         },
+        credentials: "include",
       });
 
       if (!res.ok) {
@@ -129,6 +132,7 @@ export const adminService = {
         headers: {
           Authorization: `Bearer ${token}`,
         },
+        credentials: "include",
       });
 
       if (!res.ok) {
@@ -162,6 +166,7 @@ export const adminService = {
         headers: {
           Authorization: `Bearer ${token}`,
         },
+        credentials: "include",
         cache: "no-store",
       });
 

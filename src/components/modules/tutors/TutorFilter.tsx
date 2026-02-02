@@ -21,11 +21,11 @@ export function TutorFilter() {
     const searchParams = useSearchParams();
     const { categories } = useCategories();
 
-    const [minRate, setMinRate] = useState<number>(
-        parseInt(searchParams.get("minRate") || "0")
+    const [minPrice, setMinPrice] = useState<number>(
+        parseInt(searchParams.get("minPrice") || "0")
     );
-    const [maxRate, setMaxRate] = useState<number>(
-        parseInt(searchParams.get("maxRate") || "2000")
+    const [maxPrice, setMaxPrice] = useState<number>(
+        parseInt(searchParams.get("maxPrice") || "2000")
     );
     const [minRating, setMinRating] = useState<number>(
         parseFloat(searchParams.get("minRating") || "0")
@@ -37,16 +37,16 @@ export function TutorFilter() {
     const applyFilters = () => {
         const params = new URLSearchParams(searchParams.toString());
 
-        if (minRate > 0) {
-            params.set("minRate", minRate.toString());
+        if (minPrice > 0) {
+            params.set("minPrice", minPrice.toString());
         } else {
-            params.delete("minRate");
+            params.delete("minPrice");
         }
 
-        if (maxRate < 2000) {
-            params.set("maxRate", maxRate.toString());
+        if (maxPrice < 2000) {
+            params.set("maxPrice", maxPrice.toString());
         } else {
-            params.delete("maxRate");
+            params.delete("maxPrice");
         }
 
         if (minRating > 0) {
@@ -67,8 +67,8 @@ export function TutorFilter() {
     };
 
     const clearFilters = () => {
-        setMinRate(0);
-        setMaxRate(2000);
+        setMinPrice(0);
+        setMaxPrice(2000);
         setMinRating(0);
         setCategoryId("all");
 
@@ -79,18 +79,18 @@ export function TutorFilter() {
         router.push(`/tutors?${params.toString()}`);
     };
 
-    const hasActiveFilters = minRate > 0 || maxRate < 2000 || minRating > 0 || (categoryId && categoryId !== "all");
+    const hasActiveFilters = minPrice > 0 || maxPrice < 2000 || minRating > 0 || (categoryId && categoryId !== "all");
 
     return (
         <Card className="border-primary/10 shadow-lg rounded-2xl overflow-hidden">
-            <CardHeader className="bg-muted/30 pb-4">
+            <CardHeader className="bg-muted/30 pb-">
                 <div className="flex items-center justify-between">
                     <CardTitle className="text-lg flex items-center gap-2">
                         <Filter className="h-4 w-4" /> Filter
                     </CardTitle>
                     {hasActiveFilters && (
                         <Button
-                            variant="ghost"
+                            variant="outline"
                             size="sm"
                             onClick={clearFilters}
                             className="h-8 px-2 text-xs text-destructive hover:bg-destructive/10"
@@ -101,7 +101,7 @@ export function TutorFilter() {
                     )}
                 </div>
             </CardHeader>
-            <CardContent className="space-y-6 pt-6">
+            <CardContent className="space-y-6">
                 {/* Category Filter */}
                 <div className="space-y-3">
                     <Label className="text-sm font-semibold">Category</Label>
@@ -128,16 +128,16 @@ export function TutorFilter() {
                             min={0}
                             max={2000}
                             step={50}
-                            value={[minRate, maxRate]}
+                            value={[minPrice, maxPrice]}
                             onValueChange={([min, max]) => {
-                                setMinRate(min);
-                                setMaxRate(max);
+                                setMinPrice(min);
+                                setMaxPrice(max);
                             }}
                             className="w-full"
                         />
                         <div className="flex items-center justify-between text-xs font-medium text-muted-foreground p-2 bg-muted/50 rounded-lg">
-                            <span>৳{minRate}</span>
-                            <span>৳{maxRate}</span>
+                            <span>৳{minPrice}</span>
+                            <span>৳{maxPrice}</span>
                         </div>
                     </div>
                 </div>

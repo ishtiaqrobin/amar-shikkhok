@@ -25,7 +25,7 @@ export default function TutorBookingsPage() {
             const { data, error } = await bookingService.getMyBookings(userToken, status);
 
             if (error) {
-                toast.error("ত্রুটি", { description: error.message });
+                toast.error("Error", { description: error.message });
                 setBookings([]);
             } else {
                 setBookings(data || []);
@@ -52,13 +52,13 @@ export default function TutorBookingsPage() {
             const { error } = await bookingService.completeBooking(bookingId, userToken);
 
             if (error) {
-                toast.error("ত্রুটি", { description: error.message });
+                toast.error("Error", { description: error.message });
             } else {
-                toast.success("সফল!", { description: "সেশনটি সম্পন্ন হিসেবে চিহ্নিত করা হয়েছে" });
+                toast.success("Success!", { description: "Session completed successfully" });
                 fetchBookings(activeTab === "all" ? undefined : activeTab.toUpperCase());
             }
         } catch (error) {
-            toast.error("ত্রুটি", { description: "সেশন সম্পন্ন করতে সমস্যা হয়েছে" });
+            toast.error("Error", { description: "Failed to complete session" });
         }
     };
 
@@ -70,16 +70,16 @@ export default function TutorBookingsPage() {
     return (
         <div className="space-y-6">
             <div>
-                <h1 className="text-3xl font-bold">বুকিং ব্যবস্থাপনা</h1>
-                <p className="text-muted-foreground mt-2">আপনার সকল টিউটোরিং সেশন পরিচালনা করুন</p>
+                <h1 className="text-3xl font-bold">Booking Management</h1>
+                <p className="text-muted-foreground mt-2">Manage all your tutoring sessions</p>
             </div>
 
             <Tabs value={activeTab} onValueChange={setActiveTab}>
                 <TabsList>
-                    <TabsTrigger value="all">সব</TabsTrigger>
-                    <TabsTrigger value="confirmed">নিশ্চিত</TabsTrigger>
-                    <TabsTrigger value="completed">সম্পন্ন</TabsTrigger>
-                    <TabsTrigger value="cancelled">বাতিল</TabsTrigger>
+                    <TabsTrigger value="all">All</TabsTrigger>
+                    <TabsTrigger value="confirmed">Confirmed</TabsTrigger>
+                    <TabsTrigger value="completed">Completed</TabsTrigger>
+                    <TabsTrigger value="cancelled">Cancelled</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value={activeTab} className="mt-6">
@@ -100,7 +100,7 @@ export default function TutorBookingsPage() {
             <div className="grid gap-4 md:grid-cols-3">
                 <Card>
                     <CardHeader className="pb-2">
-                        <CardTitle className="text-sm font-medium text-muted-foreground">মোট বুকিং</CardTitle>
+                        <CardTitle className="text-sm font-medium text-muted-foreground">Total Bookings</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold">{bookings.length}</div>
@@ -108,7 +108,7 @@ export default function TutorBookingsPage() {
                 </Card>
                 <Card>
                     <CardHeader className="pb-2">
-                        <CardTitle className="text-sm font-medium text-muted-foreground">নিশ্চিত</CardTitle>
+                        <CardTitle className="text-sm font-medium text-muted-foreground">Confirmed</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold">
@@ -118,7 +118,7 @@ export default function TutorBookingsPage() {
                 </Card>
                 <Card>
                     <CardHeader className="pb-2">
-                        <CardTitle className="text-sm font-medium text-muted-foreground">সম্পন্ন</CardTitle>
+                        <CardTitle className="text-sm font-medium text-muted-foreground">Completed</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold">

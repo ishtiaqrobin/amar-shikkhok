@@ -15,7 +15,7 @@ export default function CategoriesPage() {
     );
 
     return (
-        <div className="container mx-auto px-4 py-12 min-h-[70vh]">
+        <div className="container mx-auto px-4 md:px-6 lg:px-8 py-12 min-h-[70vh]">
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
                 <div className="max-w-2xl">
                     <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl mb-4 bg-linear-to-r from-primary to-primary/60 bg-clip-text text-transparent">

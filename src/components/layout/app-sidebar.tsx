@@ -54,13 +54,19 @@ export function AppSidebar({
             <SidebarGroupLabel>{item.title}</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
-                {item.items.map((item) => (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild>
-                      <Link href={item.url}>{item.title}</Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
+                {item.items.map((menuItem) => {
+                  const Icon = menuItem.icon;
+                  return (
+                    <SidebarMenuItem key={menuItem.title}>
+                      <SidebarMenuButton asChild>
+                        <Link href={menuItem.url}>
+                          {Icon && <Icon className="h-4 w-4" />}
+                          <span>{menuItem.title}</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  );
+                })}
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>

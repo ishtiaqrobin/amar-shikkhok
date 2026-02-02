@@ -53,14 +53,14 @@ export default function TutorProfilePage() {
     return (
         <div className="space-y-6 max-w-4xl">
             <div>
-                <h1 className="text-3xl font-bold">প্রোফাইল ব্যবস্থাপনা</h1>
-                <p className="text-muted-foreground mt-2">আপনার তথ্য আপডেট করুন যা শিক্ষার্থীরা দেখতে পাবে</p>
+                <h1 className="text-3xl font-bold">Profile Management</h1>
+                <p className="text-muted-foreground mt-2">Update your information that students will see</p>
             </div>
 
             <Tabs defaultValue="profile" className="w-full">
                 <TabsList className="grid w-full grid-cols-2 max-w-[400px]">
-                    <TabsTrigger value="profile">প্রোফাইল তথ্য</TabsTrigger>
-                    <TabsTrigger value="reviews">রিভিউ সমূহ</TabsTrigger>
+                    <TabsTrigger value="profile">Profile Information</TabsTrigger>
+                    <TabsTrigger value="reviews">Reviews</TabsTrigger>
                 </TabsList>
                 <TabsContent value="profile" className="mt-6">
                     <TutorProfileForm tutor={tutor} userToken={userToken} />

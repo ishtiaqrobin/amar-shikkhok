@@ -14,7 +14,7 @@ interface TutorCardProps {
 export function TutorCard({ tutor }: TutorCardProps) {
     return (
         <Card className="overflow-hidden group hover:border-primary/50 transition-all duration-500 shadow-sm hover:shadow-2xl border-primary/10 bg-card/50 backdrop-blur-sm rounded-3xl">
-            <CardContent className="p-8">
+            <CardContent className="">
                 <div className="flex flex-col items-center text-center space-y-6">
                     <div className="relative">
                         <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full group-hover:bg-primary/30 transition-all duration-500" />
@@ -42,7 +42,7 @@ export function TutorCard({ tutor }: TutorCardProps) {
                     </div>
 
                     {tutor.expertise && tutor.expertise.length > 0 && (
-                        <div className="flex flex-wrap items-center justify-center gap-1.5 mt-2">
+                        <div className="flex flex-wrap items-center justify-center gap-1.5 mt-1">
                             {tutor.expertise.slice(0, 3).map((exp) => (
                                 <Badge key={exp} variant="secondary" className="text-[10px] py-0 px-2 rounded-lg bg-muted/50">
                                     {exp}
@@ -52,13 +52,13 @@ export function TutorCard({ tutor }: TutorCardProps) {
                     )}
 
                     {tutor.bio && (
-                        <p className="text-xs text-muted-foreground line-clamp-2 mt-2 italic leading-relaxed">
+                        <p className="text-xs text-muted-foreground line-clamp-2 mt-1 italic leading-relaxed">
                             &ldquo;{tutor.bio}&rdquo;
                         </p>
                     )}
                 </div>
             </CardContent>
-            <CardFooter className="p-6 pt-0 flex items-center justify-between border-t border-primary/5 bg-primary/5 mt-2 h-20">
+            <CardFooter className="p-6 pt-0 flex items-center justify-between border-t border-primary/5 bg-primary/5 mt- h-20">
                 <div className="flex flex-col">
                     <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest">Hourly Fee</span>
                     <span className="text-xl font-black text-primary">{formatPrice(tutor.hourlyRate)}</span>

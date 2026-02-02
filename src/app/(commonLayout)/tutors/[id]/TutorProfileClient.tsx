@@ -167,24 +167,29 @@ export function TutorProfileClient({ tutor, userToken }: TutorProfileClientProps
                         )}
 
                         {/* Availability */}
-                        {availability && availability.length > 0 && (
+                        {availability && availability.some(a => a.isAvailable) && (
                             <Card className="rounded-3xl border-primary/5 shadow-sm border overflow-hidden">
                                 <CardHeader className="bg-muted/30">
                                     <CardTitle className="text-sm font-black uppercase tracking-widest">Availability Schedule</CardTitle>
                                 </CardHeader>
                                 <CardContent className="pt-4">
                                     <div className="grid gap-3">
-                                        {availability.map((slot) => (
-                                            <div key={slot.id} className="flex items-center justify-between p-4 bg-muted/20 rounded-2xl border border-primary/5 group hover:bg-muted/30 transition-all">
-                                                <div className="flex items-center gap-3">
-                                                    <Clock className="h-4 w-4 text-primary/60" />
-                                                    <span className="font-bold text-muted-foreground uppercase tracking-wider text-xs">{slot.dayOfWeek}</span>
+                                        {availability
+                                            .filter(slot => slot.isAvailable)
+                                            .sort((a, b) => Number(a.dayOfWeek) - Number(b.dayOfWeek))
+                                            .map((slot) => (
+                                                <div key={slot.id} className="flex items-center justify-between p-4 bg-muted/20 rounded-2xl border border-primary/5 group hover:bg-muted/30 transition-all">
+                                                    <div className="flex items-center gap-3">
+                                                        <Clock className="h-4 w-4 text-primary/60" />
+                                                        <span className="font-bold text-muted-foreground uppercase tracking-wider text-xs">
+                                                            {["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][Number(slot.dayOfWeek)]}
+                                                        </span>
+                                                    </div>
+                                                    <span className="text-xs font-black text-primary">
+                                                        {slot.startTime} - {slot.endTime}
+                                                    </span>
                                                 </div>
-                                                <span className="text-xs font-black text-primary">
-                                                    {slot.startTime} - {slot.endTime}
-                                                </span>
-                                            </div>
-                                        ))}
+                                            ))}
                                     </div>
                                 </CardContent>
                             </Card>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
@@ -18,24 +18,41 @@ const DAYS = [
 interface AvailabilityCalendarProps {
     availabilities?: Availability[];
     userToken: string;
+    onSuccess?: () => void;
 }
 
-export function AvailabilityCalendar({ availabilities, userToken }: AvailabilityCalendarProps) {
+export function AvailabilityCalendar({ availabilities, userToken, onSuccess }: AvailabilityCalendarProps) {
     const [loading, setLoading] = useState(false);
 
     // Initialize with existing or defaults
     const [schedule, setSchedule] = useState(
         Array.from({ length: 7 }, (_, i) => {
-            const existing = availabilities?.find(a => parseInt(a.dayOfWeek) === i);
+            const existing = availabilities?.find(a => Number(a.dayOfWeek) === i);
             return {
                 id: existing?.id,
                 dayOfWeek: i,
                 startTime: existing?.startTime || "09:00",
                 endTime: existing?.endTime || "17:00",
-                isAvailable: !!existing,
+                isAvailable: existing ? existing.isAvailable : false,
             };
         })
     );
+
+    // Sync state when props change
+    useEffect(() => {
+        if (availabilities) {
+            setSchedule(Array.from({ length: 7 }, (_, i) => {
+                const existing = availabilities.find(a => Number(a.dayOfWeek) === i);
+                return {
+                    id: existing?.id,
+                    dayOfWeek: i,
+                    startTime: existing?.startTime || "09:00",
+                    endTime: existing?.endTime || "17:00",
+                    isAvailable: existing ? String(existing.isAvailable) === "true" || existing.isAvailable === true : false,
+                };
+            }));
+        }
+    }, [availabilities]);
 
     const toggleDay = (index: number) => {
         setSchedule(prev => prev.map((item, i) =>
@@ -57,16 +74,16 @@ export function AvailabilityCalendar({ availabilities, userToken }: Availability
                     dayOfWeek: item.dayOfWeek.toString(),
                     startTime: item.startTime,
                     endTime: item.endTime,
+                    isAvailable: item.isAvailable,
                 };
 
                 if (item.id) {
                     // Update existing
                     return await tutorsService.updateAvailability(userToken, payload);
-                } else if (item.isAvailable) {
-                    // Create new only if it's marked as available
+                } else {
+                    // Create new
                     return await tutorsService.addAvailability(userToken, payload);
                 }
-                return null;
             });
 
             const results = await Promise.all(promises);
@@ -76,6 +93,7 @@ export function AvailabilityCalendar({ availabilities, userToken }: Availability
                 toast.error("Error", { description: "Some schedules could not be updated" });
             } else {
                 toast.success("Success!", { description: "Weekly schedule updated successfully" });
+                if (onSuccess) onSuccess();
             }
         } catch (error) {
             console.error("Save availability error:", error);

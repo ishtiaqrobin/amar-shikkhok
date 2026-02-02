@@ -15,6 +15,7 @@ export const sessionService = {
         headers: {
           Cookie: cookieStore.toString(),
         },
+        credentials: "include",
         cache: "no-store",
       });
 

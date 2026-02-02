@@ -15,6 +15,9 @@ export default function AdminCategoriesPage() {
 
     const userToken = session?.token || "";
 
+    console.log("Session from category manager admin page", session)
+    console.log("Token from category manger", userToken);
+
     const fetchCategories = useCallback(async () => {
         setIsLoading(true);
         const { data, error } = await categoryService.getAllCategories();

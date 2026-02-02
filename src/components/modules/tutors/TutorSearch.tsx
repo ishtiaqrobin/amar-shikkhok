@@ -29,9 +29,9 @@ export function TutorSearch() {
         });
     }, [router, searchParams]);
 
-    useEffect(() => {
-        updateSearch(debouncedSearch);
-    }, [debouncedSearch, updateSearch]);
+    // useEffect(() => {
+    //     updateSearch(debouncedSearch);
+    // }, [debouncedSearch, updateSearch]);
 
     return (
         <div className="relative w-full">

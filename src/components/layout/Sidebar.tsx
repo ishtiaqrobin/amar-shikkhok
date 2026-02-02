@@ -21,15 +21,6 @@ import { tutorRoutes } from "@/routes/tutorRoutes";
 import { Route } from "@/types";
 import { useAuth } from "@/hooks/useAuth";
 import { LogoutButton } from "@/components/modules/authentication/LogoutButton";
-import { Home, BookOpen, Users, Settings, LayoutDashboard } from "lucide-react";
-
-const iconMap: Record<string, React.ReactNode> = {
-    Dashboard: <LayoutDashboard className="h-4 w-4" />,
-    Home: <Home className="h-4 w-4" />,
-    Tutors: <Users className="h-4 w-4" />,
-    Bookings: <BookOpen className="h-4 w-4" />,
-    Settings: <Settings className="h-4 w-4" />,
-};
 
 export function DashboardSidebar(props: React.ComponentProps<typeof SidebarPrimitive>) {
     const { user } = useAuth();
@@ -37,7 +28,7 @@ export function DashboardSidebar(props: React.ComponentProps<typeof SidebarPrimi
 
     // Determine routes based on user role
     if (user?.role === "ADMIN") {
-        routes = adminRoutes;
+        routes = adminRoutes
     } else if (user?.role === "TUTOR") {
         routes = tutorRoutes;
     } else if (user?.role === "STUDENT") {
@@ -47,10 +38,10 @@ export function DashboardSidebar(props: React.ComponentProps<typeof SidebarPrimi
     return (
         <SidebarPrimitive {...props}>
             <SidebarHeader className="border-b">
-                <div className="p-4 font-bold">
+                <div className="px-4 py-2.5 font-bold">
                     <Link href="/" className="flex items-center gap-2">
                         <span className="text-xl">📚</span>
-                        <span>AmarShikkhok</span>
+                        <span>Amar Shikkhok</span>
                     </Link>
                 </div>
             </SidebarHeader>
@@ -61,16 +52,19 @@ export function DashboardSidebar(props: React.ComponentProps<typeof SidebarPrimi
                         <SidebarGroupLabel>{group.title}</SidebarGroupLabel>
                         <SidebarGroupContent>
                             <SidebarMenu>
-                                {group.items.map((item) => (
-                                    <SidebarMenuItem key={item.title}>
-                                        <SidebarMenuButton asChild>
-                                            <Link href={item.url} className="flex items-center gap-2">
-                                                {iconMap[item.title] || <LayoutDashboard className="h-4 w-4" />}
-                                                <span>{item.title}</span>
-                                            </Link>
-                                        </SidebarMenuButton>
-                                    </SidebarMenuItem>
-                                ))}
+                                {group.items.map((item) => {
+                                    const Icon = item.icon;
+                                    return (
+                                        <SidebarMenuItem key={item.title}>
+                                            <SidebarMenuButton asChild>
+                                                <Link href={item.url} className="flex items-center gap-2">
+                                                    {Icon && <Icon className="h-4 w-4" />}
+                                                    <span>{item.title}</span>
+                                                </Link>
+                                            </SidebarMenuButton>
+                                        </SidebarMenuItem>
+                                    );
+                                })}
                             </SidebarMenu>
                         </SidebarGroupContent>
                     </SidebarGroup>

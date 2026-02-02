@@ -49,9 +49,9 @@ export const tutorsService = {
 
       const res = await fetch(url.toString(), config);
 
-      // if (!res.ok) {
-      //   throw new Error(`HTTP error! status: ${res.status}`);
-      // }
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
 
       const data = await res.json();
 
@@ -120,6 +120,7 @@ export const tutorsService = {
         headers: {
           Authorization: `Bearer ${token}`,
         },
+        credentials: "include",
         cache: "no-store",
       });
 
@@ -156,6 +157,7 @@ export const tutorsService = {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
+        credentials: "include",
         body: JSON.stringify(payload),
       });
 
@@ -196,6 +198,7 @@ export const tutorsService = {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
+        credentials: "include",
         body: JSON.stringify(payload),
       });
 
@@ -236,6 +239,7 @@ export const tutorsService = {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
+        credentials: "include",
         body: JSON.stringify(payload),
       });
 
@@ -255,6 +259,41 @@ export const tutorsService = {
         error: {
           message:
             err instanceof Error ? err.message : "Error updating availability",
+        },
+      };
+    }
+  },
+
+  /**
+   * Get availability
+   */
+  getAvailability: async function (
+    token: string,
+  ): Promise<{ data: Availability[] | null; error: ServiceError | null }> {
+    try {
+      const url = `${API_URL}/tutor/availability`;
+
+      const res = await fetch(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        credentials: "include",
+        cache: "no-store",
+      });
+
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+
+      const response = await res.json();
+      return { data: response.data, error: null };
+    } catch (err) {
+      console.error("Error fetching availability:", err);
+      return {
+        data: null,
+        error: {
+          message:
+            err instanceof Error ? err.message : "Error fetching availability",
         },
       };
     }

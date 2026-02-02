@@ -1,4 +1,5 @@
 import { Route } from "@/types";
+import { LayoutDashboard, Users, Calendar, FolderKanban } from "lucide-react";
 
 export const adminRoutes: Route[] = [
   {
@@ -7,18 +8,22 @@ export const adminRoutes: Route[] = [
       {
         title: "Dashboard",
         url: "/admin-dashboard",
+        icon: LayoutDashboard,
       },
       {
         title: "User Management",
         url: "/admin-dashboard/users",
+        icon: Users,
       },
       {
         title: "Booking Management",
         url: "/admin-dashboard/bookings",
+        icon: Calendar,
       },
       {
         title: "Category Management",
         url: "/admin-dashboard/categories",
+        icon: FolderKanban,
       },
     ],
   },

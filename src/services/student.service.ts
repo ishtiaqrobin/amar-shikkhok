@@ -25,6 +25,7 @@ export const studentService = {
         headers: {
           Authorization: `Bearer ${token}`,
         },
+        credentials: "include",
         cache: "no-store",
       });
 

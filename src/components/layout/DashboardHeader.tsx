@@ -2,6 +2,7 @@
 
 import { useAuth } from "@/hooks/useAuth";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -10,9 +11,19 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+    Sheet,
+    SheetContent,
+    SheetHeader,
+    SheetTitle,
+    SheetTrigger,
+} from "@/components/ui/sheet";
 import { LogoutButton } from "@/components/modules/authentication/LogoutButton";
-import { User, Settings } from "lucide-react";
+import { User, Settings, Menu } from "lucide-react";
 import Link from "next/link";
+import { adminRoutes } from "@/routes/adminRoutes";
+import { tutorRoutes } from "@/routes/tutorRoutes";
+import { studentRoutes } from "@/routes/studentRoutes";
 
 export function DashboardHeader() {
     const { user } = useAuth();
@@ -23,10 +34,60 @@ export function DashboardHeader() {
         return "/student-dashboard";
     };
 
+    const getUserRoutes = () => {
+        if (user?.role === "ADMIN") return adminRoutes[0]?.items || [];
+        if (user?.role === "TUTOR") return tutorRoutes[0]?.items || [];
+        if (user?.role === "STUDENT") return studentRoutes[0]?.items || [];
+        return [];
+    };
+
     return (
         <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
             <div className="container flex h-16 items-center justify-between px-4">
                 <div className="flex items-center gap-4">
+                    {/* Mobile Hamburger Menu */}
+                    <Sheet>
+                        <SheetTrigger asChild>
+                            <Button variant="outline" size="icon" className="lg:hidden rounded-full w-9 h-9">
+                                <Menu className="h-5 w-5" />
+                                <span className="sr-only">Toggle menu</span>
+                            </Button>
+                        </SheetTrigger>
+                        <SheetContent side="left" className="w-64">
+                            <SheetHeader>
+                                <SheetTitle>
+                                    <Link href="/" className="font-bold">
+                                        Amar Shikkhok
+                                    </Link>
+                                </SheetTitle>
+                            </SheetHeader>
+                            <div className="flex flex-col gap-4 mt-6">
+                                <div className="space-y-1">
+                                    <h3 className="text-sm font-semibold text-muted-foreground px-2">
+                                        {user?.role === "ADMIN" && "Admin Menu"}
+                                        {user?.role === "TUTOR" && "Tutor Dashboard"}
+                                        {user?.role === "STUDENT" && "Student Dashboard"}
+                                    </h3>
+                                    <nav className="space-y-1">
+                                        {getUserRoutes().map((route) => {
+                                            const Icon = route.icon;
+                                            return (
+                                                <Link
+                                                    key={route.url}
+                                                    href={route.url}
+                                                    className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium hover:bg-muted transition-colors"
+                                                >
+                                                    {Icon && <Icon className="h-4 w-4" />}
+                                                    <span>{route.title}</span>
+                                                </Link>
+                                            );
+                                        })}
+                                    </nav>
+                                </div>
+                            </div>
+                        </SheetContent>
+                    </Sheet>
+
                     <h2 className="text-lg font-semibold">
                         {user?.role === "ADMIN" && "Admin Dashboard"}
                         {user?.role === "TUTOR" && "Tutor Dashboard"}
@@ -34,6 +95,7 @@ export function DashboardHeader() {
                     </h2>
                 </div>
 
+                {/* Profile Menu */}
                 <div className="flex items-center gap-4">
                     {/* User Menu */}
                     <DropdownMenu>

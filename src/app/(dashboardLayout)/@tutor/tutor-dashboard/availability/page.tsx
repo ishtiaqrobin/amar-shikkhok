@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { AvailabilityCalendar } from "@/components/modules/dashboard/tutor/AvailabilityCalendar";
 import { tutorsService } from "@/services/tutors.service";
 import { Loader2 } from "lucide-react";
@@ -15,15 +15,13 @@ export default function AvailabilityPage() {
     const userId = user?.id || "";
     const userToken = session?.token || "";
 
-    useEffect(() => {
-        const fetchTutor = async () => {
-            if (authLoading) return;
+    const fetchTutorData = useCallback(async () => {
+        if (authLoading || !userId) {
+            if (!authLoading && !userId) setIsLoading(false);
+            return;
+        }
 
-            if (!userId) {
-                setIsLoading(false);
-                return;
-            }
-
+        try {
             const { data } = await tutorsService.getTutors({ search: userId });
             const myTutor = data?.data.find(t => t.userId === userId);
 
@@ -31,11 +29,17 @@ export default function AvailabilityPage() {
                 const { data: fullTutor } = await tutorsService.getTutorById(myTutor.id);
                 setTutor(fullTutor);
             }
+        } catch (error) {
+            console.error("Error fetching tutor:", error);
+        } finally {
             setIsLoading(false);
-        };
-
-        fetchTutor();
+        }
     }, [userId, authLoading]);
+
+    useEffect(() => {
+        // We use a small timeout or just ensure it's handled in the async function
+        fetchTutorData();
+    }, [fetchTutorData]);
 
     if (isLoading) {
         return (
@@ -48,13 +52,14 @@ export default function AvailabilityPage() {
     return (
         <div className="space-y-6 max-w-3xl">
             <div>
-                <h1 className="text-3xl font-bold">সময়সূচী ব্যবস্থাপনা</h1>
-                <p className="text-muted-foreground mt-2">আপনার পড়ানোর সময় নির্ধারণ করুন</p>
+                <h1 className="text-3xl font-bold">Availability Management</h1>
+                <p className="text-muted-foreground mt-2">Set your teaching schedule</p>
             </div>
 
             <AvailabilityCalendar
-                availabilities={tutor?.availability}
+                availabilities={tutor?.availabilities || tutor?.availability}
                 userToken={userToken}
+                onSuccess={fetchTutorData}
             />
         </div>
     );

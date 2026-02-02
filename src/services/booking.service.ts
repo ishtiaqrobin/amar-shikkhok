@@ -25,6 +25,7 @@ export const bookingService = {
         headers: {
           Authorization: `Bearer ${token}`,
         },
+        credentials: "include",
         cache: "no-store",
       });
 
@@ -60,6 +61,7 @@ export const bookingService = {
         headers: {
           Authorization: `Bearer ${token}`,
         },
+        credentials: "include",
         cache: "no-store",
       });
 
@@ -95,6 +97,7 @@ export const bookingService = {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
+        credentials: "include",
         body: JSON.stringify(data),
       });
 
@@ -129,6 +132,7 @@ export const bookingService = {
         headers: {
           Authorization: `Bearer ${token}`,
         },
+        credentials: "include",
       });
 
       if (!res.ok) {
@@ -162,6 +166,7 @@ export const bookingService = {
         headers: {
           Authorization: `Bearer ${token}`,
         },
+        credentials: "include",
       });
 
       if (!res.ok) {

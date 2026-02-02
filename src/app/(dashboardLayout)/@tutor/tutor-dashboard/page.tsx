@@ -12,10 +12,12 @@ import { BookingList } from "@/components/modules/booking/BookingList";
 import { useAuth } from "@/hooks/useAuth";
 
 export default function TutorDashboardPage() {
-  const { sessionToken } = useAuth();
+  const { session } = useAuth();
   const [stats, setStats] = useState<TutorStatsType | null>(null);
   const [recentBookings, setRecentBookings] = useState<Booking[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  const sessionToken = session?.token || "";
 
   useEffect(() => {
     const fetchData = async () => {
@@ -62,21 +64,21 @@ export default function TutorDashboardPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 min-h-screen">
       <div>
-        <h1 className="text-3xl font-bold">শিক্ষক ড্যাশবোর্ড</h1>
-        <p className="text-muted-foreground mt-2">আপনার টিউটোরিং কার্যক্রমের সারসংক্ষেপ</p>
+        <h1 className="text-3xl font-bold">Tutor Dashboard</h1>
+        <p className="text-muted-foreground mt-2">Summary of your tutoring activities and progress</p>
       </div>
 
       <TutorStats stats={stats} />
 
       <div className="space-y-4">
-        <h2 className="text-xl font-semibold">সাম্প্রতিক বুকিং</h2>
+        <h2 className="text-xl font-semibold">Recent Bookings</h2>
         {recentBookings.length > 0 ? (
           <BookingList bookings={recentBookings} userRole="TUTOR" />
         ) : (
-          <div className="text-center py-12 border rounded-lg bg-muted/50">
-            <p className="text-muted-foreground">কোনো সাম্প্রতিক বুকিং নেই</p>
+          <div className="text-center py-12 border rounded-2xl bg-muted/30 border-primary/5">
+            <p className="text-muted-foreground">No recent bookings found</p>
           </div>
         )}
       </div>

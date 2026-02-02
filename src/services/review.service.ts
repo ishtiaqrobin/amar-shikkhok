@@ -83,4 +83,35 @@ export const reviewService = {
       };
     }
   },
+  /**
+   * Get all reviews (Public, latest first)
+   */
+  getAllReviews: async function (
+    limit: number = 10,
+  ): Promise<{ data: Review[] | null; error: ServiceError | null }> {
+    try {
+      const res = await fetch(`${API_URL}/reviews?limit=${limit}`, {
+        cache: "no-store",
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(
+          errorData.message || `HTTP error! status: ${res.status}`,
+        );
+      }
+
+      const response = await res.json();
+      return { data: response.data, error: null };
+    } catch (err) {
+      console.error("Error fetching all reviews:", err);
+      return {
+        data: null,
+        error: {
+          message:
+            err instanceof Error ? err.message : "Error fetching all reviews",
+        },
+      };
+    }
+  },
 };

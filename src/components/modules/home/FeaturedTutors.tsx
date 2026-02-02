@@ -1,61 +1,49 @@
-"use client";
-
+import { useEffect, useState } from "react";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Star, MapPin } from "lucide-react";
+import { Star, MapPin, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { formatPrice } from "@/lib/utils";
-
-const tutors = [
-    {
-        id: "1",
-        name: "Mehdi Hasan",
-        role: "Math Expert",
-        rating: 4.9,
-        reviews: 42,
-        price: 50,
-        image: "https://i.pravatar.cc/150?u=1",
-        location: "Dhaka",
-        expertise: ["Algebra", "Calculus"],
-    },
-    {
-        id: "2",
-        name: "Sadia Islam",
-        role: "English Lecturer",
-        rating: 4.8,
-        reviews: 35,
-        price: 45,
-        image: "https://i.pravatar.cc/150?u=2",
-        location: "Chattogram",
-        expertise: ["IELTS", "Spoken English"],
-    },
-    {
-        id: "3",
-        name: "Foysal Ahmed",
-        role: "Physics Teacher",
-        rating: 5.0,
-        reviews: 28,
-        price: 60,
-        image: "https://i.pravatar.cc/150?u=3",
-        location: "Rajshahi",
-        expertise: ["Quantum Physics", "Mechanics"],
-    },
-    {
-        id: "4",
-        name: "Tanjila Akter",
-        role: "Biology Expert",
-        rating: 4.7,
-        reviews: 19,
-        price: 40,
-        image: "https://i.pravatar.cc/150?u=4",
-        location: "Sylhet",
-        expertise: ["Botany", "Genetics"],
-    },
-];
+import { tutorsService } from "@/services/tutors.service";
+import { TutorListItem } from "@/types/tutor.type";
 
 export function FeaturedTutors() {
+    const [tutors, setTutors] = useState<TutorListItem[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchTopTutors = async () => {
+            const { data } = await tutorsService.getTutors({
+                limit: 20,
+                minRating: 4,
+            });
+
+            if (data?.data) {
+                // Sort by rating descending and take top 4
+                const sorted = [...data.data]
+                    .sort((a, b) => b.rating - a.rating)
+                    .slice(0, 4);
+                setTutors(sorted);
+            }
+            setIsLoading(false);
+        };
+
+        fetchTopTutors();
+    }, []);
+
+    if (isLoading) {
+        return (
+            <section className="py-20 bg-muted/20">
+                <div className="container mx-auto px-4 text-center">
+                    <Loader2 className="h-10 w-10 animate-spin mx-auto text-primary" />
+                    <p className="mt-4 text-muted-foreground font-medium">Loading top tutors...</p>
+                </div>
+            </section>
+        );
+    }
+
     return (
         <section className="py-20 bg-muted/20">
             <div className="container mx-auto px-4">
@@ -75,31 +63,31 @@ export function FeaturedTutors() {
 
                 <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
                     {tutors.map((tutor) => (
-                        <Card key={tutor.id} className="overflow-hidden group hover:border-primary transition-all duration-300 shadow-sm hover:shadow-lg rounded-3xl border-primary/5 bg-background">
-                            <CardContent className="p-6">
+                        <Card key={tutor.id} className="overflow-hidden group hover:border-primary transition-all duration-300 shadow-sm hover:shadow-lg rounded-3xl border-primary/5 bg-background h-full flex flex-col">
+                            <CardContent className="p-6 flex-grow">
                                 <div className="flex flex-col items-center text-center space-y-4">
                                     <div className="relative">
                                         <Avatar className="h-24 w-24 border-4 border-background group-hover:border-primary/20 transition-all shadow-md">
-                                            <AvatarImage src={tutor.image} alt={tutor.name} />
-                                            <AvatarFallback>{tutor.name[0]}</AvatarFallback>
+                                            <AvatarImage src={tutor.user.image || ""} alt={tutor.user.name} />
+                                            <AvatarFallback>{tutor.user.name[0]}</AvatarFallback>
                                         </Avatar>
                                         <div className="absolute -bottom-2 right-1/2 translate-x-1/2 flex items-center gap-1 bg-yellow-400 text-black px-2 py-0.5 rounded-full text-[10px] font-bold shadow-sm">
                                             <Star className="h-3 w-3 fill-current" />
-                                            {tutor.rating}
+                                            {tutor.rating.toFixed(1)}
                                         </div>
                                     </div>
 
                                     <div className="space-y-1">
-                                        <h3 className="font-bold text-lg group-hover:text-primary transition-colors">{tutor.name}</h3>
-                                        <p className="text-sm text-primary font-medium">{tutor.role}</p>
+                                        <h3 className="font-bold text-lg group-hover:text-primary transition-colors line-clamp-1">{tutor.user.name}</h3>
+                                        <p className="text-sm text-primary font-medium line-clamp-1">{tutor.category?.name || "Expert Tutor"}</p>
                                         <div className="flex items-center justify-center text-xs text-muted-foreground gap-1 pt-1 opacity-70">
                                             <MapPin className="h-3 w-3" />
-                                            {tutor.location}
+                                            Verified Tutor
                                         </div>
                                     </div>
 
                                     <div className="flex flex-wrap items-center justify-center gap-1 mt-2">
-                                        {tutor.expertise.map((exp) => (
+                                        {tutor.expertise.slice(0, 3).map((exp) => (
                                             <Badge key={exp} variant="secondary" className="text-[10px] py-0 rounded-full bg-primary/5 text-primary">
                                                 {exp}
                                             </Badge>
@@ -107,10 +95,10 @@ export function FeaturedTutors() {
                                     </div>
                                 </div>
                             </CardContent>
-                            <CardFooter className="p-6 pt-4 flex items-center justify-between border-t border-primary/5 bg-muted/10 mt-2">
+                            <CardFooter className="p-6 pt-4 flex items-center justify-between border-t border-primary/5 bg-muted/10 mt-auto">
                                 <div className="flex flex-col">
                                     <span className="text-[10px] text-muted-foreground uppercase font-black">Per Hour</span>
-                                    <span className="text-xl font-black text-primary">{formatPrice(tutor.price)}</span>
+                                    <span className="text-xl font-black text-primary">{formatPrice(tutor.hourlyRate)}</span>
                                 </div>
                                 <Button size="sm" asChild className="rounded-full shadow-md shadow-primary/20">
                                     <Link href={`/tutors/${tutor.id}`}>Profile</Link>

@@ -19,8 +19,5 @@ export default async function TutorProfilePage({ params }: TutorProfilePageProps
         notFound();
     }
 
-    // TODO: Get user token from session
-    const userToken = undefined;
-
-    return <TutorProfileClient tutor={tutor} userToken={userToken} />;
+    return <TutorProfileClient tutor={tutor} />;
 }

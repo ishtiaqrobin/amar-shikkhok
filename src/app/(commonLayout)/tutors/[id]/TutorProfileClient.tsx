@@ -16,13 +16,14 @@ import type { Tutor, Review } from "@/types/tutor.type";
 import type { CreateBookingInput } from "@/types/booking.type";
 import { formatPrice } from "@/lib/utils";
 import { useEffect } from "react";
+import { useAuth } from "@/hooks/useAuth";
 
 interface TutorProfileClientProps {
     tutor: Tutor;
-    userToken?: string;
 }
 
-export function TutorProfileClient({ tutor, userToken }: TutorProfileClientProps) {
+export function TutorProfileClient({ tutor }: TutorProfileClientProps) {
+    const { user: authUser, session: authSession, isLoading: authLoading } = useAuth();
     const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
     const [reviews, setReviews] = useState<Review[]>(tutor.reviews || []);
     const [isReviewsLoading, setIsReviewsLoading] = useState(!tutor.reviews);
@@ -30,8 +31,28 @@ export function TutorProfileClient({ tutor, userToken }: TutorProfileClientProps
 
     const { user, bio, expertise, hourlyRate, rating, totalReviews, category, availability } = tutor;
 
+    const handleBookClick = () => {
+        if (!authLoading && !authUser) {
+            toast.info("Login Required", {
+                description: "Please login as a student to book a session",
+            });
+            router.push("/login?redirect=" + encodeURIComponent(window.location.pathname));
+            return;
+        }
+
+        if (authUser && authUser.role !== "STUDENT") {
+            toast.error("Access Denied", {
+                description: "Only students can book tutoring sessions",
+            });
+            return;
+        }
+
+        setIsBookingModalOpen(true);
+    };
+
     const handleBooking = async (data: CreateBookingInput) => {
-        if (!userToken) {
+        const token = authSession?.token;
+        if (!token) {
             toast.error("Login Required", {
                 description: "Please login to book a session",
             });
@@ -39,7 +60,7 @@ export function TutorProfileClient({ tutor, userToken }: TutorProfileClientProps
             return;
         }
 
-        const { error } = await bookingService.createBooking(data, userToken);
+        const { error } = await bookingService.createBooking(data, token);
 
         if (error) {
             toast.error("Error", {
@@ -102,9 +123,10 @@ export function TutorProfileClient({ tutor, userToken }: TutorProfileClientProps
                                     <Button
                                         className="w-full h-14 rounded-full text-lg font-black uppercase tracking-widest shadow-lg shadow-primary/20 transition-all hover:scale-[1.02]"
                                         size="lg"
-                                        onClick={() => setIsBookingModalOpen(true)}
+                                        onClick={handleBookClick}
+                                        disabled={!authLoading && !!authUser && authUser.role !== "STUDENT"}
                                     >
-                                        Book a Session
+                                        {authLoading ? "Checking..." : (authUser && authUser.role !== "STUDENT" ? "Only Students Can Book" : "Book a Session")}
                                     </Button>
                                 </div>
                             </CardContent>

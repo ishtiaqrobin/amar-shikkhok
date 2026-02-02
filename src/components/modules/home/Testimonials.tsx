@@ -1,31 +1,38 @@
-"use client";
-
+import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Quote } from "lucide-react";
+import { Quote, Loader2 } from "lucide-react";
+import { reviewService } from "@/services/review.service";
+import { Review } from "@/types/tutor.type";
 
-const testimonials = [
-    {
-        name: "Tanvir Rahman",
-        role: "HSC Student",
-        content: "Through this platform, I was able to understand difficult physics concepts very easily. The teachers explain things wonderfully.",
-        image: "https://i.pravatar.cc/150?u=10",
-    },
-    {
-        name: "Faria Islam",
-        role: "Medical Admission Candidate",
-        content: "I found the best tutor for biology preparation here. The doubt clearing sessions were very helpful.",
-        image: "https://i.pravatar.cc/150?u=11",
-    },
-    {
-        name: "Asif Zaman",
-        role: "9th Grade Student",
-        content: "I used to be very afraid of math, but after studying with a tutor here, it has become my favorite subject. Thank you to my teacher.",
-        image: "https://i.pravatar.cc/150?u=12",
-    },
-];
+interface ReviewWithTutor extends Review {
+    tutor?: {
+        user: {
+            name: string;
+        };
+    };
+}
 
-export function Testimonials() {
+interface TestimonialsProps {
+    limit?: number;
+}
+
+export function Testimonials({ limit = 3 }: TestimonialsProps) {
+    const [reviews, setReviews] = useState<ReviewWithTutor[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchReviews = async () => {
+            const { data } = await reviewService.getAllReviews(limit);
+            if (data) {
+                setReviews(data as ReviewWithTutor[]);
+            }
+            setIsLoading(false);
+        };
+
+        fetchReviews();
+    }, [limit]);
+
     return (
         <section className="py-20 bg-background relative overflow-hidden">
             {/* Decorative dots */}
@@ -43,36 +50,52 @@ export function Testimonials() {
                         Students Experience
                     </h2>
                     <p className="mt-4 text-lg text-muted-foreground">
-                        Thousands of students are advancing on their dream path with my teacher.
+                        Thousands of students are advancing on their dream path with our platform.
                     </p>
                 </div>
 
-                <div className="grid gap-8 md:grid-cols-3">
-                    {testimonials.map((testimonial, index) => (
-                        <Card key={index} className="relative overflow-visible border-none bg-muted/40 shadow-none hover:bg-muted/60 transition-colors">
-                            <CardContent className="pt-12 pb-8 px-6">
-                                <div className="absolute -top-6 left-6">
-                                    <Avatar className="h-14 w-14 border-4 border-background shadow-md">
-                                        <AvatarImage src={testimonial.image} alt={testimonial.name} />
-                                        <AvatarFallback>{testimonial.name[0]}</AvatarFallback>
-                                    </Avatar>
-                                </div>
-                                <div className="absolute top-4 right-6 text-primary/20">
-                                    <Quote className="h-8 w-8 fill-current" />
-                                </div>
-                                <div className="space-y-4">
-                                    <p className="text-foreground italic leading-relaxed">
-                                        &quot;{testimonial.content}&quot;
-                                    </p>
-                                    <div className="space-y-0.5">
-                                        <h4 className="font-bold text-foreground">{testimonial.name}</h4>
-                                        <p className="text-xs text-muted-foreground">{testimonial.role}</p>
-                                    </div>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    ))}
-                </div>
+                {isLoading ? (
+                    <div className="flex justify-center items-center py-10">
+                        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                    </div>
+                ) : (
+                    <div className="grid gap-8 md:grid-cols-3">
+                        {reviews.length > 0 ? (
+                            reviews.map((review) => (
+                                <Card key={review.id} className="relative overflow-visible border-none bg-muted/40 shadow-none hover:bg-muted/60 transition-colors h-full">
+                                    <CardContent className="pt-12 pb-8 px-6 flex flex-col h-full">
+                                        <div className="absolute -top-6 left-6">
+                                            <Avatar className="h-14 w-14 border-4 border-background shadow-md">
+                                                <AvatarImage src={review.student.image || ""} alt={review.student.name} />
+                                                <AvatarFallback>{review.student.name[0]}</AvatarFallback>
+                                            </Avatar>
+                                        </div>
+                                        <div className="absolute top-4 right-6 text-primary/20">
+                                            <Quote className="h-8 w-8 fill-current" />
+                                        </div>
+                                        <div className="space-y-4 grow">
+                                            <p className="text-foreground italic leading-relaxed line-clamp-4">
+                                                &quot;{review.comment || "Great experience with the tutor!"}&quot;
+                                            </p>
+                                        </div>
+                                        <div className="pt-4 mt-auto border-t border-primary/5">
+                                            <div className="flex flex-col">
+                                                <h4 className="font-bold text-foreground line-clamp-1">{review.student.name}</h4>
+                                                <p className="text-[10px] text-primary font-black uppercase tracking-widest mt-1">
+                                                    Studied with {review.tutor?.user?.name || "Tutor"}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            ))
+                        ) : (
+                            <div className="col-span-3 text-center py-10 text-muted-foreground italic">
+                                No reviews available yet.
+                            </div>
+                        )}
+                    </div>
+                )}
             </div>
         </section>
     );

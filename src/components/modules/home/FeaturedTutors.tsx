@@ -3,7 +3,8 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Star, MapPin, Loader2 } from "lucide-react";
+import { Star, MapPin } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
 import { formatPrice } from "@/lib/utils";
 import { tutorsService } from "@/services/tutors.service";
@@ -36,9 +37,43 @@ export function FeaturedTutors() {
     if (isLoading) {
         return (
             <section className="py-20 bg-muted/20">
-                <div className="container mx-auto px-4 text-center">
-                    <Loader2 className="h-10 w-10 animate-spin mx-auto text-primary" />
-                    <p className="mt-4 text-muted-foreground font-medium">Loading top tutors...</p>
+                <div className="container mx-auto px-4">
+                    <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6 text-center md:text-left">
+                        <div className="space-y-4 flex flex-col items-center md:items-start">
+                            <Skeleton className="h-10 w-64 rounded-lg" />
+                            <Skeleton className="h-6 w-80 rounded-lg" />
+                        </div>
+                        <Skeleton className="h-10 w-32 rounded-full hidden md:block" />
+                    </div>
+
+                    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                        {[...Array(4)].map((_, i) => (
+                            <Card key={i} className="overflow-hidden rounded-3xl border-primary/5 bg-background h-full flex flex-col">
+                                <CardContent className="p-6 grow">
+                                    <div className="flex flex-col items-center text-center space-y-4">
+                                        <Skeleton className="h-24 w-24 rounded-full" />
+                                        <div className="space-y-2 flex flex-col items-center w-full">
+                                            <Skeleton className="h-6 w-3/4 rounded-md" />
+                                            <Skeleton className="h-4 w-1/2 rounded-md" />
+                                            <Skeleton className="h-3 w-1/3 rounded-md mt-1" />
+                                        </div>
+                                        <div className="flex flex-wrap items-center justify-center gap-1 mt-2">
+                                            <Skeleton className="h-5 w-12 rounded-full" />
+                                            <Skeleton className="h-5 w-16 rounded-full" />
+                                            <Skeleton className="h-5 w-14 rounded-full" />
+                                        </div>
+                                    </div>
+                                </CardContent>
+                                <CardFooter className="p-6 pt-4 flex items-center justify-between border-t border-primary/5 bg-muted/10 mt-auto">
+                                    <div className="space-y-1">
+                                        <Skeleton className="h-3 w-12 rounded-sm" />
+                                        <Skeleton className="h-7 w-20 rounded-md" />
+                                    </div>
+                                    <Skeleton className="h-9 w-20 rounded-full" />
+                                </CardFooter>
+                            </Card>
+                        ))}
+                    </div>
                 </div>
             </section>
         );

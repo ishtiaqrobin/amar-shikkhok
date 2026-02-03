@@ -4,6 +4,7 @@ import { BookOpen, Code, FlaskConical, Languages, Music, Palette, Pi, Atom, Grad
 import Link from "next/link";
 import { categoryService } from "@/services/category.service";
 import { Category } from "@/types/tutor.type";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const ICON_MAP: Record<string, React.ReactNode> = {
     "Mathematics": <Pi className="h-8 w-8 text-blue-500" />,
@@ -48,9 +49,24 @@ export function CategorySection() {
         return (
             <section className="py-16 bg-muted/30">
                 <div className="container mx-auto px-4">
+                    <div className="mb-12 text-center">
+                        <div className="space-y-2 flex flex-col items-center">
+                            <Skeleton className="h-10 w-64 rounded-lg" />
+                            <Skeleton className="h-6 w-80 rounded-lg" />
+                        </div>
+                    </div>
+
                     <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
                         {[...Array(8)].map((_, i) => (
-                            <Card key={i} className="h-32 animate-pulse bg-muted" />
+                            <Card key={i} className="h-full border-muted/50">
+                                <CardContent className="flex flex-col items-center justify-center p-6 text-center space-y-4">
+                                    <Skeleton className="h-16 w-16 rounded-2xl" />
+                                    <div className="space-y-2 flex flex-col items-center">
+                                        <Skeleton className="h-5 w-24 rounded-md" />
+                                        <Skeleton className="h-3 w-20 rounded-md" />
+                                    </div>
+                                </CardContent>
+                            </Card>
                         ))}
                     </div>
                 </div>

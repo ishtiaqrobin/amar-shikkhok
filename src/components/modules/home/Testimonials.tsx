@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Quote, Loader2 } from "lucide-react";
+import { Quote } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 import { reviewService } from "@/services/review.service";
 import { Review } from "@/types/tutor.type";
 
@@ -55,8 +56,30 @@ export function Testimonials({ limit = 3 }: TestimonialsProps) {
                 </div>
 
                 {isLoading ? (
-                    <div className="flex justify-center items-center py-10">
-                        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                    <div className="grid gap-8 md:grid-cols-3">
+                        {[...Array(limit)].map((_, i) => (
+                            <Card key={i} className="relative overflow-visible border-none bg-muted/40 shadow-none h-[250px]">
+                                <CardContent className="pt-12 pb-8 px-6 flex flex-col h-full">
+                                    <div className="absolute -top-6 left-6">
+                                        <Skeleton className="h-14 w-14 rounded-full border-4 border-background" />
+                                    </div>
+                                    <div className="absolute top-4 right-6 opacity-10">
+                                        <Quote className="h-8 w-8 fill-current" />
+                                    </div>
+                                    <div className="space-y-3 grow mt-4">
+                                        <Skeleton className="h-4 w-full rounded-md" />
+                                        <Skeleton className="h-4 w-[90%] rounded-md" />
+                                        <Skeleton className="h-4 w-[95%] rounded-md" />
+                                    </div>
+                                    <div className="pt-4 mt-auto border-t border-primary/5">
+                                        <div className="space-y-2">
+                                            <Skeleton className="h-5 w-24 rounded-md" />
+                                            <Skeleton className="h-3 w-40 rounded-md" />
+                                        </div>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        ))}
                     </div>
                 ) : (
                     <div className="grid gap-8 md:grid-cols-3">

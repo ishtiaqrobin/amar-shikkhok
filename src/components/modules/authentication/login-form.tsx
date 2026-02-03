@@ -167,6 +167,7 @@ export function LoginForm({
           </form>
         </Form>
 
+        {/* Google auth button */}
         <GoogleAuthButton mode="login" />
       </CardContent>
       <CardFooter>

@@ -183,6 +183,47 @@ export const tutorsService = {
   },
 
   /**
+   * Create tutor profile
+   */
+  createProfile: async function (
+    token: string,
+    payload: Partial<Tutor> & { categoryIds?: string[] },
+  ): Promise<{ data: Tutor | null; error: ServiceError | null }> {
+    try {
+      const url = `${API_URL}/tutor/profile`;
+
+      const res = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        credentials: "include",
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(
+          errorData.message || `HTTP error! status: ${res.status}`,
+        );
+      }
+
+      const response = await res.json();
+      return { data: response.data, error: null };
+    } catch (err) {
+      console.error("Error creating profile:", err);
+      return {
+        data: null,
+        error: {
+          message:
+            err instanceof Error ? err.message : "Error creating profile",
+        },
+      };
+    }
+  },
+
+  /**
    * Add availability
    */
   addAvailability: async function (

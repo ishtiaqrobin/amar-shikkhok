@@ -48,8 +48,7 @@ export interface Tutor {
   education?: string | null;
   rating: number;
   totalReviews: number;
-  categoryId?: string | null;
-  category?: Category | null;
+  categories?: Category[];
   availability?: Availability[];
   availabilities?: Availability[];
   reviews?: Review[];

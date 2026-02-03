@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -18,7 +19,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { tutorsService } from "@/services/tutors.service";
-import type { Tutor } from "@/types/tutor.type";
+import { categoryService } from "@/services/category.service";
+import { Checkbox } from "@/components/ui/checkbox";
+import type { Tutor, Category } from "@/types/tutor.type";
 
 const profileSchema = z.object({
     bio: z.string().min(10, { message: "Bio must be at least 10 characters" }),
@@ -26,6 +29,7 @@ const profileSchema = z.object({
     hourlyRate: z.number().min(0, { message: "Hourly rate must be a positive number" }),
     experience: z.number().min(0, { message: "Experience must be a positive number" }),
     education: z.string().optional(),
+    categoryIds: z.array(z.string()).min(1, { message: "Select at least one category" }),
 });
 
 type ProfileFormValues = z.infer<typeof profileSchema>;
@@ -36,6 +40,16 @@ interface TutorProfileFormProps {
 }
 
 export function TutorProfileForm({ tutor, userToken }: TutorProfileFormProps) {
+    const [categories, setCategories] = useState<Category[]>([]);
+
+    useEffect(() => {
+        const fetchCategories = async () => {
+            const { data } = await categoryService.getAllCategories();
+            if (data) setCategories(data);
+        };
+        fetchCategories();
+    }, []);
+
     const form = useForm<ProfileFormValues>({
         resolver: zodResolver(profileSchema),
         defaultValues: {
@@ -44,6 +58,7 @@ export function TutorProfileForm({ tutor, userToken }: TutorProfileFormProps) {
             hourlyRate: tutor?.hourlyRate || 0,
             experience: tutor?.experience || 0,
             education: tutor?.education || "",
+            categoryIds: tutor?.categories?.map((c: Category) => c.id) || [],
         },
     });
 
@@ -56,16 +71,22 @@ export function TutorProfileForm({ tutor, userToken }: TutorProfileFormProps) {
                 expertise: expertiseArray,
             };
 
-            const { error } = await tutorsService.updateProfile(userToken, payload);
+            const response = tutor
+                ? await tutorsService.updateProfile(userToken, payload)
+                : await tutorsService.createProfile(userToken, payload);
+
+            const { error } = response;
 
             if (error) {
                 toast.error("Error", { description: error.message });
             } else {
-                toast.success("Success!", { description: "Tutor profile updated successfully" });
+                toast.success("Success!", {
+                    description: tutor ? "Tutor profile updated successfully" : "Tutor profile created successfully"
+                });
             }
         } catch (error) {
-            console.error("Profile update error:", error);
-            toast.error("Error", { description: "Failed to update tutor profile" });
+            console.error("Profile operation error:", error);
+            toast.error("Error", { description: "Failed to save tutor profile" });
         }
     }
 
@@ -105,6 +126,57 @@ export function TutorProfileForm({ tutor, userToken }: TutorProfileFormProps) {
                                         <Input placeholder="Math, Physics, English..." className="rounded-xl" {...field} />
                                     </FormControl>
                                     <FormDescription>Separate multiple subjects with commas</FormDescription>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
+                        <FormField
+                            control={form.control}
+                            name="categoryIds"
+                            render={() => (
+                                <FormItem>
+                                    <div className="mb-4">
+                                        <FormLabel className="text-base">Subject Categories</FormLabel>
+                                        <FormDescription>
+                                            Select the categories you belong to.
+                                        </FormDescription>
+                                    </div>
+                                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4 border p-4 rounded-xl border-primary/10">
+                                        {categories.map((category) => (
+                                            <FormField
+                                                key={category.id}
+                                                control={form.control}
+                                                name="categoryIds"
+                                                render={({ field }) => {
+                                                    return (
+                                                        <FormItem
+                                                            key={category.id}
+                                                            className="flex flex-row items-start space-x-3 space-y-0"
+                                                        >
+                                                            <FormControl>
+                                                                <Checkbox
+                                                                    checked={field.value?.includes(category.id)}
+                                                                    onCheckedChange={(checked) => {
+                                                                        return checked
+                                                                            ? field.onChange([...field.value, category.id])
+                                                                            : field.onChange(
+                                                                                field.value?.filter(
+                                                                                    (value) => value !== category.id
+                                                                                )
+                                                                            )
+                                                                    }}
+                                                                />
+                                                            </FormControl>
+                                                            <FormLabel className="font-normal cursor-pointer">
+                                                                {category.name}
+                                                            </FormLabel>
+                                                        </FormItem>
+                                                    )
+                                                }}
+                                            />
+                                        ))}
+                                    </div>
                                     <FormMessage />
                                 </FormItem>
                             )}

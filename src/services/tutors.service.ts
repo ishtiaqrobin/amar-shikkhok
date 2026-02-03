@@ -53,9 +53,18 @@ export const tutorsService = {
         throw new Error(`HTTP error! status: ${res.status}`);
       }
 
-      const data = await res.json();
+      const json = await res.json();
 
-      return { data: data, error: null };
+      // Map categories to category (singular) and availabilities to availability
+      if (json.data && Array.isArray(json.data)) {
+        json.data = json.data.map((tutor: Tutor) => ({
+          ...tutor,
+          category: tutor.categories?.[0] || null,
+          availability: tutor.availabilities || tutor.availability || [],
+        }));
+      }
+
+      return { data: json, error: null };
     } catch (err) {
       console.error("Error fetching tutors:", err);
       return {
@@ -94,8 +103,15 @@ export const tutorsService = {
       }
 
       const response = await res.json();
+      const tutor = response.data;
 
-      return { data: response.data, error: null };
+      // Map categories to category (singular) and availabilities to availability
+      if (tutor) {
+        tutor.category = tutor.categories?.[0] || null;
+        tutor.availability = tutor.availabilities || tutor.availability || [];
+      }
+
+      return { data: tutor, error: null };
     } catch (err) {
       console.error("Error fetching tutor:", err);
       return {

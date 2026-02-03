@@ -21,6 +21,8 @@ import { tutorRoutes } from "@/routes/tutorRoutes";
 import { Route } from "@/types";
 import { useAuth } from "@/hooks/useAuth";
 import { LogoutButton } from "@/components/modules/authentication/LogoutButton";
+import logo from "@/assets/images/logo.webp";
+import Image from "next/image";
 
 export function DashboardSidebar(props: React.ComponentProps<typeof SidebarPrimitive>) {
     const { user } = useAuth();
@@ -38,10 +40,18 @@ export function DashboardSidebar(props: React.ComponentProps<typeof SidebarPrimi
     return (
         <SidebarPrimitive {...props}>
             <SidebarHeader className="border-b">
-                <div className="px-4 py-2.5 font-bold">
+                <div className="px-4 py-2 font-bold">
                     <Link href="/" className="flex items-center gap-2">
-                        <span className="text-xl">📚</span>
-                        <span>Amar Shikkhok</span>
+                        <Image
+                            src={logo}
+                            className="max-h-10 dark:invert"
+                            alt="Amar Shikkhok"
+                            width={32}
+                            height={32}
+                        />
+                        <span className="text-lg font-bold tracking-tighter">
+                            Amar <span className="text-primary">Shikkhok</span>
+                        </span>
                     </Link>
                 </div>
             </SidebarHeader>

@@ -24,6 +24,9 @@ import Link from "next/link";
 import { adminRoutes } from "@/routes/adminRoutes";
 import { tutorRoutes } from "@/routes/tutorRoutes";
 import { studentRoutes } from "@/routes/studentRoutes";
+import Image from "next/image";
+import logo from "@/assets/images/logo.webp";
+
 
 export function DashboardHeader() {
     const { user } = useAuth();
@@ -54,14 +57,23 @@ export function DashboardHeader() {
                             </Button>
                         </SheetTrigger>
                         <SheetContent side="left" className="w-64">
-                            <SheetHeader>
+                            <SheetHeader className="px-4 pt-4 pb-1">
                                 <SheetTitle>
-                                    <Link href="/" className="font-bold">
-                                        Amar Shikkhok
+                                    <Link href="/" className="flex items-center gap-2">
+                                        <Image
+                                            src={logo}
+                                            className="max-h-10 dark:invert"
+                                            alt="Amar Shikkhok"
+                                            width={32}
+                                            height={32}
+                                        />
+                                        <span className="text-lg font-bold tracking-tighter">
+                                            Amar <span className="text-primary">Shikkhok</span>
+                                        </span>
                                     </Link>
                                 </SheetTitle>
                             </SheetHeader>
-                            <div className="flex flex-col gap-4 mt-6">
+                            <div className="flex flex-col gap-4">
                                 <div className="space-y-1">
                                     <h3 className="text-sm font-semibold text-muted-foreground px-2">
                                         {user?.role === "ADMIN" && "Admin Menu"}

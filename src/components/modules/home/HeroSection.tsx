@@ -6,6 +6,7 @@ import { Search } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import heroImage from "@/assets/images/hero_section.webp";
 
 export function HeroSection() {
     const [searchQuery, setSearchQuery] = useState("");
@@ -58,7 +59,7 @@ export function HeroSection() {
                                     onChange={(e) => setSearchQuery(e.target.value)}
                                 />
                             </div>
-                            <Button type="submit" className="rounded-full px-6">
+                            <Button type="submit" className="rounded-full px-6 mr-1">
                                 Search
                             </Button>
                         </form>
@@ -81,7 +82,7 @@ export function HeroSection() {
                     <div className="relative hidden lg:block">
                         <div className="relative z-10 overflow-hidden rounded-2xl shadow-2xl transition-transform hover:scale-[1.02] duration-500">
                             <Image
-                                src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1000&auto=format&fit=crop"
+                                src={heroImage}
                                 alt="Education"
                                 width={600}
                                 height={400}

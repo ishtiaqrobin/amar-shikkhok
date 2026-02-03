@@ -2,22 +2,23 @@
 
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
-import { useState, useEffect, useTransition, useCallback } from "react";
+import { useState, useTransition } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useDebounce } from "@/hooks/useDebounce";
+import { Button } from "@/components/ui/button";
 
 export function TutorSearch() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const [isPending, startTransition] = useTransition();
     const [searchQuery, setSearchQuery] = useState(searchParams.get("search") || "");
-    const debouncedSearch = useDebounce(searchQuery, 500);
 
-    const updateSearch = useCallback((search: string) => {
+    const handleSearch = (e: React.FormEvent) => {
+        e.preventDefault();
+
         const params = new URLSearchParams(searchParams.toString());
 
-        if (search) {
-            params.set("search", search);
+        if (searchQuery.trim()) {
+            params.set("search", searchQuery.trim());
         } else {
             params.delete("search");
         }
@@ -27,27 +28,33 @@ export function TutorSearch() {
         startTransition(() => {
             router.push(`/tutors?${params.toString()}`);
         });
-    }, [router, searchParams]);
-
-    // useEffect(() => {
-    //     updateSearch(debouncedSearch);
-    // }, [debouncedSearch, updateSearch]);
+    };
 
     return (
-        <div className="relative w-full">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-                type="text"
-                placeholder="Search by teacher name or subject..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 h-12 rounded-xl border-primary/20 bg-muted/30 focus:bg-background transition-all"
-            />
-            {isPending && (
-                <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-                </div>
-            )}
-        </div>
+        <form onSubmit={handleSearch} className="relative w-full flex gap-2">
+            <div className="relative flex-grow">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                    type="text"
+                    placeholder="Search by teacher name or subject..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-10 h-12 rounded-xl border-primary/20 bg-muted/30 focus:bg-background transition-all"
+                />
+                {(isPending) && (
+                    <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                        <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+                    </div>
+                )}
+            </div>
+            <Button
+                type="submit"
+                size="icon"
+                className="h-12 w-12 rounded-xl shrink-0"
+                disabled={isPending}
+            >
+                <Search className="h-5 w-5" />
+            </Button>
+        </form>
     );
 }

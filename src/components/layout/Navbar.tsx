@@ -35,6 +35,7 @@ import Image from "next/image";
 import { ModeToggle } from "./ModeToggle";
 import { useAuth } from "@/hooks/useAuth";
 import { LogoutButton } from "@/components/modules/authentication/LogoutButton";
+import logo from "@/assets/images/logo.webp";
 
 interface MenuItem {
   title: string;
@@ -67,12 +68,6 @@ interface Navbar1Props {
 }
 
 const Navbar = ({
-  logo = {
-    url: "/",
-    src: "https://deifkwefumgah.cloudfront.net/shadcnblocks/block/logos/shadcnblockscom-icon.svg",
-    alt: "logo",
-    title: "Amar Shikkhok",
-  },
   menu = [
     { title: "Home", url: "/" },
     {
@@ -106,25 +101,23 @@ const Navbar = ({
     return "/student-dashboard";
   };
 
-
-
   return (
-    <section className={cn("py-4", className)}>
+    <section className={cn("py-4 border-b", className)}>
       <div className="container mx-auto px-4">
         {/* Desktop Menu */}
-        <nav className="hidden items-center justify-between lg:flex">
+        <nav className="hidden items-center justify-between lg:flex ">
           <div className="flex items-center gap-6">
             {/* Logo */}
-            <Link href={logo.url} className="flex items-center gap-2">
+            <Link href="/" className="flex items-center gap-2">
               <Image
-                src={logo.src}
-                className="max-h-8 dark:invert"
-                alt={logo.alt}
+                src={logo}
+                className="max-h- dark:invert"
+                alt="Amar Shikkhok"
                 width={32}
                 height={32}
               />
-              <span className="text-lg font-semibold tracking-tighter">
-                {logo.title}
+              <span className="text-lg font-bold tracking-tighter">
+                Amar <span className="text-primary">Shikkhok</span>
               </span>
             </Link>
             <div className="flex items-center">
@@ -197,21 +190,24 @@ const Navbar = ({
         <div className="block lg:hidden">
           <div className="flex items-center justify-between">
             {/* Logo */}
-            <Link href={logo.url} className="flex items-center gap-2">
+            <Link href="/" className="flex items-center gap-2">
               <Image
-                src={logo.src}
+                src={logo}
                 className="max-h-8 dark:invert"
-                alt={logo.alt}
+                alt="Amar Shikkhok"
                 width={32}
                 height={32}
               />
+              <span className="text-lg font-bold tracking-tighter">
+                Amar <span className="text-primary">Shikkhok</span>
+              </span>
             </Link>
             <div className="flex items-center gap-2">
               <ModeToggle />
               {isAuthenticated ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <button className="flex items-center gap-2 rounded-full focus:outline-none focus:ring-2 focus:ring-primary">
+                    <button className="flex items-center gap-2 rounded-full  focus:outline-none focus:ring-2 focus:ring-primary">
                       <Avatar className="h-9 w-9">
                         <AvatarImage src={user?.image || undefined} alt={user?.name} />
                         <AvatarFallback>
@@ -261,14 +257,17 @@ const Navbar = ({
                   <SheetContent className="overflow-y-auto">
                     <SheetHeader>
                       <SheetTitle>
-                        <Link href={logo.url} className="flex items-center gap-2">
+                        <Link href="/" className="flex items-center gap-2">
                           <Image
-                            src={logo.src}
+                            src={logo}
                             className="max-h-8 dark:invert"
-                            alt={logo.alt}
+                            alt="Amar Shikkhok"
                             width={32}
                             height={32}
                           />
+                          <span className="text-lg font-bold tracking-tighter">
+                            Amar <span className="text-primary">Shikkhok</span>
+                          </span>
                         </Link>
                       </SheetTitle>
                     </SheetHeader>

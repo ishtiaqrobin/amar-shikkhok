@@ -88,7 +88,7 @@ export function AdminProfileClient({ userToken }: AdminProfileClientProps) {
 
             <div className="grid gap-8 lg:grid-cols-12">
                 <Card className="lg:col-span-4 border-primary/10 shadow-lg rounded-3xl overflow-hidden h-fit">
-                    <div className="h-24 bg-gradient-to-r from-primary/20 to-primary/5" />
+                    <div className="h-24 bg-linear-to-r from-primary/20 to-primary/5" />
                     <CardContent className="-mt-16 relative">
                         <AvatarUpload
                             currentImage={user.image}
@@ -98,7 +98,7 @@ export function AdminProfileClient({ userToken }: AdminProfileClientProps) {
 
                         <div className="mt-8 space-y-4">
                             {/* Admin Badge */}
-                            <div className="p-4 rounded-2xl bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20 flex items-center justify-between">
+                            <div className="p-4 rounded-2xl bg-linear-to-br from-primary/10 to-primary/5 border border-primary/20 flex items-center justify-between">
                                 <div className="flex items-center gap-2">
                                     <Shield className="h-4 w-4 text-primary" />
                                     <span className="text-sm font-semibold text-foreground">Role</span>

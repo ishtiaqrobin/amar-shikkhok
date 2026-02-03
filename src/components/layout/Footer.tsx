@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { GraduationCap, Mail, MapPin, Phone, Facebook, Twitter, Linkedin, Instagram } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import Image from "next/image";
+import logo from "@/assets/images/logo.webp";
 
 export function Footer() {
     const currentYear = new Date().getFullYear();
@@ -34,20 +36,15 @@ export function Footer() {
     ];
 
     return (
-        <footer className="bg-gradient-to-br from-muted/30 via-background to-muted/20 border-t border-primary/10">
+        <footer className="bg-linear-to-br from-muted/30 via-background to-muted/20 border-t border-primary/10">
             <div className="container mx-auto px-4 py-16">
                 {/* Main Footer Content */}
                 <div className="grid grid-cols-1 gap-12 lg:grid-cols-12">
                     {/* Brand Section */}
                     <div className="lg:col-span-4 space-y-6">
                         <Link href="/" className="flex items-center gap-3 group">
-                            <div className="relative">
-                                <div className="absolute inset-0 bg-primary/20 blur-xl rounded-full group-hover:bg-primary/30 transition-all" />
-                                <div className="relative bg-primary text-primary-foreground p-3 rounded-2xl shadow-lg group-hover:scale-110 transition-transform">
-                                    <GraduationCap className="h-7 w-7" />
-                                </div>
-                            </div>
-                            <span className="text-2xl font-black bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+                            <Image src={logo} alt="Logo" width={50} height={50} />
+                            <span className="text-3xl font-black bg-linear-to-r from-primary to-primary/60 bg-clip-text text-transparent">
                                 Amar Shikkhok
                             </span>
                         </Link>

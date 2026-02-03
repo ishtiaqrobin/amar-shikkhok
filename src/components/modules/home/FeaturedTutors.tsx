@@ -64,7 +64,7 @@ export function FeaturedTutors() {
                 <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
                     {tutors.map((tutor) => (
                         <Card key={tutor.id} className="overflow-hidden group hover:border-primary transition-all duration-300 shadow-sm hover:shadow-lg rounded-3xl border-primary/5 bg-background h-full flex flex-col">
-                            <CardContent className="p-6 flex-grow">
+                            <CardContent className="p-6 grow">
                                 <div className="flex flex-col items-center text-center space-y-4">
                                     <div className="relative">
                                         <Avatar className="h-24 w-24 border-4 border-background group-hover:border-primary/20 transition-all shadow-md">

@@ -50,7 +50,7 @@ export function RegisterForm({ ...props }: React.ComponentProps<typeof Card>) {
         image: undefined,
         role: values.role,
         phone: values.phone,
-        callbackURL: "http://localhost:3000",
+        callbackURL: "https://amar-shikkhok.vercel.app",
       } as Parameters<typeof authClient.signUp.email>[0] & { role: string; phone: string });
 
       if (error) {

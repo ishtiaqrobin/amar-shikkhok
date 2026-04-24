@@ -103,5 +103,6 @@ export interface TutorStats {
   upcomingBookings: number;
   totalSessions: number;
   totalRevenue: number;
+  totalEarnings: number;
   rating: number;
 }

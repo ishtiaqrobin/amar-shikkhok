@@ -111,7 +111,7 @@ export function ProfileForm({ user, token, onSuccess }: ProfileFormProps) {
                     </FormItem>
                 </div>
 
-                <Button type="submit" className="w-full md:w-auto px-8 rounded-full h-11" disabled={isLoading}>
+                <Button type="submit" className="w-full px-8 rounded-full h-11" disabled={isLoading}>
                     {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     {isLoading ? "Saving..." : "Save Changes"}
                 </Button>

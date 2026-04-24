@@ -6,7 +6,7 @@ import { Mail, Phone, MapPin, Send } from "lucide-react";
 
 export default function ContactPage() {
     return (
-        <div className="container mx-auto px-4 py-20 min-h-screen">
+        <div className="container mx-auto px-4 md:px-6 lg:px-10 py-12 min-h-screen">
             <div className="max-w-2xl mx-auto text-center mb-16">
                 <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl mb-4 bg-linear-to-r from-primary to-primary/60 bg-clip-text text-transparent">Get in Touch</h1>
                 <p className="text-xl text-muted-foreground">
@@ -22,7 +22,7 @@ export default function ContactPage() {
                         { icon: Phone, label: "Phone", value: "+880 1800 300 300" },
                         { icon: MapPin, label: "Address", value: "Banani, Dhaka, Bangladesh" },
                     ].map((info, i) => (
-                        <Card key={i} className="border-primary/10 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                        <Card key={i} className="border-primary/10 overflow-hidden shadow-sm hover:shadow-md transition-shadow p-0">
                             <CardContent className="p-6 flex items-start gap-4">
                                 <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
                                     <info.icon className="h-5 w-5 text-primary" />
@@ -37,8 +37,8 @@ export default function ContactPage() {
                 </div>
 
                 {/* Contact Form */}
-                <Card className="lg:col-span-2 border-primary/10 shadow-xl rounded-3xl">
-                    <CardContent className="p-8 md:p-12">
+                <Card className="lg:col-span-2 border-primary/10 shadow-xl rounded-3xl p-0">
+                    <CardContent className="p-6 md:p-8">
                         <form className="space-y-6">
                             <div className="grid md:grid-cols-2 gap-6">
                                 <div className="space-y-2">

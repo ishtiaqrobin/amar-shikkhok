@@ -4,7 +4,9 @@ import { useEffect, useState, useCallback } from "react";
 import { UserTable } from "@/components/modules/dashboard/admin/UserTable";
 import { adminService } from "@/services/admin.service";
 import { useAuth } from "@/hooks/useAuth";
-import { Loader2, Search, Filter } from "lucide-react";
+import { Search, Filter } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { toast } from "sonner";
 import { AdminUser } from "@/types/admin.type";
 import { Input } from "@/components/ui/input";
@@ -85,8 +87,37 @@ export default function AdminUsersPage() {
             </div>
 
             {isLoading ? (
-                <div className="flex items-center justify-center py-20">
-                    <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                <div className="rounded-xl border bg-card shadow-sm overflow-hidden">
+                    <Table>
+                        <TableHeader className="bg-muted/50">
+                            <TableRow>
+                                <TableHead>User</TableHead>
+                                <TableHead>Role</TableHead>
+                                <TableHead>Status</TableHead>
+                                <TableHead>Joined</TableHead>
+                                <TableHead className="text-right">Actions</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {[...Array(5)].map((_, i) => (
+                                <TableRow key={i}>
+                                    <TableCell>
+                                        <div className="flex items-center gap-3">
+                                            <Skeleton className="h-10 w-10 rounded-full" />
+                                            <div className="space-y-2">
+                                                <Skeleton className="h-4 w-[120px]" />
+                                                <Skeleton className="h-3 w-[150px]" />
+                                            </div>
+                                        </div>
+                                    </TableCell>
+                                    <TableCell><Skeleton className="h-6 w-16 rounded-full" /></TableCell>
+                                    <TableCell><Skeleton className="h-6 w-20 rounded-full" /></TableCell>
+                                    <TableCell><Skeleton className="h-4 w-24" /></TableCell>
+                                    <TableCell className="text-right"><Skeleton className="h-8 w-8 rounded-md ml-auto" /></TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
                 </div>
             ) : (
                 <UserTable users={filteredUsers} token={userToken} onRefresh={fetchUsers} />

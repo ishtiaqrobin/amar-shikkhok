@@ -1,4 +1,7 @@
+"use client";
+
 import * as React from "react";
+import { usePathname } from "next/navigation";
 
 import {
   Sidebar,
@@ -40,6 +43,9 @@ export function AppSidebar({
       routes = [];
       break;
   }
+
+  const pathname = usePathname();
+
   return (
     <Sidebar {...props}>
       <SidebarHeader className="border-b">
@@ -56,9 +62,10 @@ export function AppSidebar({
               <SidebarMenu>
                 {item.items.map((menuItem) => {
                   const Icon = menuItem.icon;
+                  const isActive = pathname === menuItem.url;
                   return (
                     <SidebarMenuItem key={menuItem.title}>
-                      <SidebarMenuButton asChild>
+                      <SidebarMenuButton asChild isActive={isActive}>
                         <Link href={menuItem.url}>
                           {Icon && <Icon className="h-4 w-4" />}
                           <span>{menuItem.title}</span>

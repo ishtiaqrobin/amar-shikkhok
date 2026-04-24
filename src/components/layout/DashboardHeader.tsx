@@ -1,6 +1,9 @@
 "use client";
 
+import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -30,6 +33,8 @@ import logo from "@/assets/images/logo.webp";
 
 export function DashboardHeader() {
     const { user } = useAuth();
+    const pathname = usePathname();
+    const [isSheetOpen, setIsSheetOpen] = useState(false);
 
     const getDashboardUrl = () => {
         if (user?.role === "ADMIN") return "/admin-dashboard";
@@ -49,7 +54,7 @@ export function DashboardHeader() {
             <div className="container flex h-16 items-center justify-between px-4">
                 <div className="flex items-center gap-4">
                     {/* Mobile Hamburger Menu */}
-                    <Sheet>
+                    <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
                         <SheetTrigger asChild>
                             <Button variant="outline" size="icon" className="lg:hidden rounded-full w-9 h-9">
                                 <Menu className="h-5 w-5" />
@@ -59,7 +64,7 @@ export function DashboardHeader() {
                         <SheetContent side="left" className="w-64">
                             <SheetHeader className="px-4 pt-4 pb-1">
                                 <SheetTitle>
-                                    <Link href="/" className="flex items-center gap-2">
+                                    <Link href="/" onClick={() => setIsSheetOpen(false)} className="flex items-center gap-2">
                                         <Image
                                             src={logo}
                                             className="max-h-10 dark:invert"
@@ -83,11 +88,16 @@ export function DashboardHeader() {
                                     <nav className="space-y-1">
                                         {getUserRoutes().map((route) => {
                                             const Icon = route.icon;
+                                            const isActive = pathname === route.url;
                                             return (
                                                 <Link
                                                     key={route.url}
                                                     href={route.url}
-                                                    className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium hover:bg-muted transition-colors"
+                                                    onClick={() => setIsSheetOpen(false)}
+                                                    className={cn(
+                                                        "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                                                        isActive ? "bg-muted text-primary" : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                                                    )}
                                                 >
                                                     {Icon && <Icon className="h-4 w-4" />}
                                                     <span>{route.title}</span>
@@ -140,12 +150,12 @@ export function DashboardHeader() {
                                     Dashboard
                                 </Link>
                             </DropdownMenuItem>
-                            <DropdownMenuItem asChild>
+                            {/* <DropdownMenuItem asChild>
                                 <Link href="/profile" className="cursor-pointer">
                                     <Settings className="mr-2 h-4 w-4" />
                                     Settings
                                 </Link>
-                            </DropdownMenuItem>
+                            </DropdownMenuItem> */}
                             <DropdownMenuSeparator />
                             <DropdownMenuItem asChild>
                                 <LogoutButton variant="ghost" className="w-full justify-start px-2" />

@@ -4,7 +4,9 @@ import { useEffect, useState, useCallback } from "react";
 import { BookingTable } from "@/components/modules/dashboard/admin/BookingTable";
 import { adminService } from "@/services/admin.service";
 import { useAuth } from "@/hooks/useAuth";
-import { Loader2, RefreshCw } from "lucide-react";
+import { RefreshCw } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { toast } from "sonner";
 import { AdminBooking } from "@/types/admin.type";
 import { Button } from "@/components/ui/button";
@@ -50,8 +52,39 @@ export default function AdminBookingsPage() {
             </div>
 
             {isLoading ? (
-                <div className="flex items-center justify-center py-20">
-                    <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                <div className="rounded-xl border bg-card shadow-sm overflow-hidden">
+                    <Table>
+                        <TableHeader className="bg-muted/50">
+                            <TableRow>
+                                <TableHead>Booking ID</TableHead>
+                                <TableHead>Student & Tutor</TableHead>
+                                <TableHead>Date & Time</TableHead>
+                                <TableHead>Price</TableHead>
+                                <TableHead>Status</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {[...Array(5)].map((_, i) => (
+                                <TableRow key={i}>
+                                    <TableCell><Skeleton className="h-6 w-20 rounded" /></TableCell>
+                                    <TableCell>
+                                        <div className="space-y-2">
+                                            <Skeleton className="h-4 w-[140px]" />
+                                            <Skeleton className="h-4 w-[120px]" />
+                                        </div>
+                                    </TableCell>
+                                    <TableCell>
+                                        <div className="space-y-2">
+                                            <Skeleton className="h-3 w-24" />
+                                            <Skeleton className="h-3 w-32" />
+                                        </div>
+                                    </TableCell>
+                                    <TableCell><Skeleton className="h-5 w-16" /></TableCell>
+                                    <TableCell><Skeleton className="h-6 w-24 rounded-full" /></TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
                 </div>
             ) : (
                 <BookingTable bookings={bookings} />

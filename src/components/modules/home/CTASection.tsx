@@ -5,7 +5,7 @@ import Link from "next/link";
 
 export function CTASection() {
     return (
-        <section className="py-20 bg-background px-4">
+        <section className="py-20 bg-background ">
             <div className="container mx-auto">
                 <div className="bg-primary rounded-3xl p-8 md:p-16 relative overflow-hidden shadow-2xl">
                     {/* Background shapes */}
@@ -29,7 +29,7 @@ export function CTASection() {
                                 asChild
                                 size="lg"
                                 variant="secondary"
-                                className="rounded-full font-bold px-8 py-7 text-lg hover:scale-105 transition-transform shadow-lg"
+                                className="rounded-full font-bold px-8 py-7 text-lg duration-300 transition-transform shadow-lg"
                             >
                                 <Link href="/register">Join as a Teacher</Link>
                             </Button>
@@ -37,7 +37,7 @@ export function CTASection() {
                                 asChild
                                 size="lg"
                                 variant="outline"
-                                className="rounded-full font-bold px-8 py-7 text-lg bg-white/10 border-white/20 text-white hover:bg-white/20 hover:text-white hover:scale-105 transition-transform"
+                                className="rounded-full font-bold px-8 py-7 text-lg bg-white/10 border-white/20 text-white hover:bg-white/20 hover:text-white duration-300 transition-transform"
                             >
                                 <Link href="/tutors">Start Learning</Link>
                             </Button>

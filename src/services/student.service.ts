@@ -11,6 +11,7 @@ export interface StudentStats {
   upcomingClasses: number;
   completedClasses: number;
   totalHours: number;
+  totalSpent: number;
 }
 
 export const studentService = {

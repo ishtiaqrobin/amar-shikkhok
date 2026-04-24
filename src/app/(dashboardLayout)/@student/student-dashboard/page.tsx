@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { BookOpen, Calendar, CheckCircle, Clock, Loader2 } from "lucide-react";
+import { BookOpen, Calendar, CheckCircle, Clock, CreditCard } from "lucide-react";
 import { StatsCard } from "@/components/modules/student/StatsCard";
 import { UpcomingClasses } from "@/components/modules/student/UpcomingClasses";
 import { RecentActivity } from "@/components/modules/student/RecentActivity";
@@ -10,6 +10,7 @@ import { bookingService } from "@/services/booking.service";
 import { toast } from "sonner";
 import type { Booking } from "@/types/booking.type";
 import { useAuth } from "@/hooks/useAuth";
+import { formatPrice } from "@/lib/utils";
 
 export default function StudentDashboardPage() {
   const { session } = useAuth();
@@ -64,13 +65,6 @@ export default function StudentDashboardPage() {
     fetchData();
   }, [session?.token, isLoading]);
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
-  }
 
   return (
     <div className="space-y-6 min-h-screen">
@@ -86,24 +80,32 @@ export default function StudentDashboardPage() {
           value={stats?.totalBookings || 0}
           description="Total sessions requested"
           icon={BookOpen}
+          color="text-blue-600"
+          bg="bg-blue-100"
         />
         <StatsCard
           title="Upcoming Classes"
           value={stats?.upcomingClasses || 0}
           description="Scheduled for this week"
           icon={Calendar}
+          color="text-purple-600"
+          bg="bg-purple-100"
         />
         <StatsCard
           title="Completed Classes"
           value={stats?.completedClasses || 0}
           description="Total sessions attended"
           icon={CheckCircle}
+          color="text-emerald-600"
+          bg="bg-emerald-100"
         />
         <StatsCard
-          title="Total Hours"
-          value={stats?.totalHours || 0}
-          description="Total learning time"
-          icon={Clock}
+          title="Total Spent"
+          value={formatPrice(stats?.totalSpent || 0)}
+          description="Total investment in learning"
+          icon={CreditCard}
+          color="text-rose-600"
+          bg="bg-rose-100"
         />
       </div>
 

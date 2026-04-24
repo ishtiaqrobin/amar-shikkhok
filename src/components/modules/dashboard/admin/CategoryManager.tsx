@@ -34,6 +34,8 @@ export function CategoryManager({ categories, token, onRefresh }: CategoryManage
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [editingCategory, setEditingCategory] = useState<Category | null>(null);
     const [loading, setLoading] = useState(false);
+    const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+    const [categoryIdToDelete, setCategoryIdToDelete] = useState<string | null>(null);
 
     // Form State
     const [name, setName] = useState("");
@@ -75,17 +77,24 @@ export function CategoryManager({ categories, token, onRefresh }: CategoryManage
         setLoading(false);
     };
 
-    const handleDelete = async (id: string) => {
-        if (!confirm("Are you sure you want to delete this category?")) return;
+    const handleDeleteClick = (id: string) => {
+        setCategoryIdToDelete(id);
+        setIsDeleteDialogOpen(true);
+    };
+
+    const confirmDelete = async () => {
+        if (!categoryIdToDelete) return;
 
         setLoading(true);
-        const { error } = await categoryService.deleteCategory(token, id);
+        const { error } = await categoryService.deleteCategory(token, categoryIdToDelete);
         if (error) {
             toast.error(error.message);
         } else {
             toast.success("Category deleted successfully");
             onRefresh();
         }
+        setIsDeleteDialogOpen(false);
+        setCategoryIdToDelete(null);
         setLoading(false);
     };
 
@@ -96,8 +105,8 @@ export function CategoryManager({ categories, token, onRefresh }: CategoryManage
                     <BookOpen className="h-5 w-5 text-primary" />
                     All Categories ({categories.length})
                 </h2>
-                <Button onClick={() => handleOpenDialog()} className="shadow-sm rounded-xl">
-                    <Plus className="mr-2 h-4 w-4" /> New Category
+                <Button onClick={() => handleOpenDialog()} className="shadow-sm rounded-xl cursor-pointer">
+                    <Plus className="mr-2 h-4 w-4" /> Create Category
                 </Button>
             </div>
 
@@ -112,7 +121,7 @@ export function CategoryManager({ categories, token, onRefresh }: CategoryManage
                                 <Button
                                     variant="ghost"
                                     size="icon"
-                                    className="h-8 w-8 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                                    className="h-8 w-8 text-blue-600 hover:text-blue-700 bg-blue-50 cursor-pointer"
                                     onClick={() => handleOpenDialog(category)}
                                 >
                                     <Pencil className="h-4 w-4" />
@@ -120,8 +129,8 @@ export function CategoryManager({ categories, token, onRefresh }: CategoryManage
                                 <Button
                                     variant="ghost"
                                     size="icon"
-                                    className="h-8 w-8 text-destructive hover:text-red-700 hover:bg-red-50"
-                                    onClick={() => handleDelete(category.id)}
+                                    className="h-8 w-8 text-destructive hover:text-red-700 bg-red-50 cursor-pointer"
+                                    onClick={() => handleDeleteClick(category.id)}
                                 >
                                     <Trash2 className="h-4 w-4" />
                                 </Button>
@@ -177,6 +186,28 @@ export function CategoryManager({ categories, token, onRefresh }: CategoryManage
                         <Button onClick={handleSave} disabled={loading} className="rounded-full px-8">
                             {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                             {editingCategory ? "Update" : "Save"}
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
+            <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+                <DialogContent className="rounded-3xl max-w-[400px]">
+                    <DialogHeader>
+                        <DialogTitle>Confirm Delete</DialogTitle>
+                    </DialogHeader>
+                    <div className="py-4">
+                        <p className="text-muted-foreground">
+                            Are you sure you want to delete this category? This action cannot be undone.
+                        </p>
+                    </div>
+                    <DialogFooter className="flex gap-2">
+                        <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)} disabled={loading} className="rounded-full flex-1">
+                            Cancel
+                        </Button>
+                        <Button variant="destructive" onClick={confirmDelete} disabled={loading} className="rounded-full flex-1">
+                            {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                            Delete
                         </Button>
                     </DialogFooter>
                 </DialogContent>

@@ -8,7 +8,7 @@ export default function AboutPage() {
     <div className="flex flex-col gap-20 py-12">
       {/* Hero Section */}
       <section className="container mx-auto px-4 text-center">
-        <h1 className="text-4xl font-extrabold tracking-tight lg:text-6xl mb-6 bg-linear-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+        <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl mb-4 bg-linear-to-r from-primary to-primary/60 bg-clip-text text-transparent">
           Our Mission & Vision
         </h1>
         <p className="max-w-[800px] mx-auto text-xl text-muted-foreground leading-relaxed">
@@ -19,7 +19,7 @@ export default function AboutPage() {
 
       {/* Stats Section */}
       <section className="bg-primary/5 py-20">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-4 md:px-6 lg:px-10">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <Card className="border-primary/10 bg-card/50 backdrop-blur-sm rounded-3xl">
               <CardHeader>
@@ -61,7 +61,7 @@ export default function AboutPage() {
       </section>
 
       {/* Vision Section */}
-      <section className="container mx-auto px-4">
+      <section className="container mx-auto px-4 md:px-6 lg:px-10">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div className="relative aspect-video rounded-3xl overflow-hidden shadow-2xl">
             <div className="absolute inset-0 bg-primary/20" />

@@ -45,7 +45,7 @@ export function Testimonials({ limit = 3 }: TestimonialsProps) {
                 </div>
             </div>
 
-            <div className="container mx-auto px-4">
+            <div className="container mx-auto   ">
                 <div className="mb-16 text-center max-w-2xl mx-auto">
                     <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
                         Students Experience

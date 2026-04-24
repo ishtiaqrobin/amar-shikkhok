@@ -1,6 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import { Menu, User, Settings } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 import { cn } from "@/lib/utils";
 
@@ -93,12 +95,48 @@ const Navbar = ({
   },
   className,
 }: Navbar1Props) => {
+  const pathname = usePathname();
   const { user, isAuthenticated } = useAuth();
+  const [isOpen, setIsOpen] = useState(false);
 
   const getDashboardUrl = () => {
     if (user?.role === "ADMIN") return "/admin-dashboard";
     if (user?.role === "TUTOR") return "/tutor-dashboard";
     return "/student-dashboard";
+  };
+
+  const renderMenuItem = (item: MenuItem) => {
+    const isActive = pathname === item.url && item.url !== "/";
+    return (
+      <NavigationMenuItem key={item.title}>
+        <NavigationMenuLink
+          asChild
+          className={cn(
+            "group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-muted hover:text-accent-foreground",
+            isActive && "bg-muted text-primary font-semibold"
+          )}
+        >
+          <Link href={item.url}>{item.title}</Link>
+        </NavigationMenuLink>
+      </NavigationMenuItem>
+    );
+  };
+
+  const renderMobileMenuItem = (item: MenuItem) => {
+    const isActive = pathname === item.url && item.url !== "/";
+    return (
+      <Link
+        key={item.title}
+        href={item.url}
+        onClick={() => setIsOpen(false)}
+        className={cn(
+          "text-md font-semibold transition-colors",
+          isActive ? "text-primary" : "text-muted-foreground hover:text-primary"
+        )}
+      >
+        {item.title}
+      </Link>
+    );
   };
 
   return (
@@ -161,12 +199,12 @@ const Navbar = ({
                       Dashboard
                     </Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
+                  {/* <DropdownMenuItem asChild>
                     <Link href="/profile" className="cursor-pointer">
                       <Settings className="mr-2 h-4 w-4" />
                       Settings
                     </Link>
-                  </DropdownMenuItem>
+                  </DropdownMenuItem> */}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
                     <LogoutButton variant="ghost" className="w-full justify-start px-2" />
@@ -189,25 +227,86 @@ const Navbar = ({
         {/* Mobile Menu */}
         <div className="block lg:hidden">
           <div className="flex items-center justify-between">
-            {/* Logo */}
-            <Link href="/" className="flex items-center gap-2">
-              <Image
-                src={logo}
-                className="max-h-8 dark:invert"
-                alt="Amar Shikkhok"
-                width={32}
-                height={32}
-              />
-              <span className="text-lg font-bold tracking-tighter">
-                Amar <span className="text-primary">Shikkhok</span>
-              </span>
-            </Link>
+            <div className="flex items-center gap-2">
+              {/* Hamburger Menu - Always visible on mobile */}
+              <Sheet open={isOpen} onOpenChange={setIsOpen}>
+                <SheetTrigger asChild>
+                  <Button variant="outline" size="icon">
+                    <Menu className="size-4" />
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="left" className="overflow-y-auto">
+                  <SheetHeader>
+                    <SheetTitle>
+                      <Link href="/" onClick={() => setIsOpen(false)} className="flex items-center gap-2">
+                        <Image
+                          src={logo}
+                          className="max-h-8 dark:invert"
+                          alt="Amar Shikkhok"
+                          width={32}
+                          height={32}
+                        />
+                        <span className="text-lg font-bold tracking-tighter">
+                          Amar <span className="text-primary">Shikkhok</span>
+                        </span>
+                      </Link>
+                    </SheetTitle>
+                  </SheetHeader>
+                  <div className="flex flex-col gap-6 p-4">
+                    <Accordion
+                      type="single"
+                      collapsible
+                      className="flex w-full flex-col gap-4"
+                    >
+                      {menu.map((item) => renderMobileMenuItem(item))}
+                    </Accordion>
+
+                    <div className="flex flex-col gap-3">
+                      {isAuthenticated ? (
+                        <>
+                          <Button asChild variant="outline" onClick={() => setIsOpen(false)}>
+                            <Link href={getDashboardUrl()}>Dashboard</Link>
+                          </Button>
+                          <LogoutButton variant="default" className="w-full" />
+                        </>
+                      ) : (
+                        <>
+                          <Button asChild variant="outline" onClick={() => setIsOpen(false)}>
+                            <Link href={auth.login.url}>{auth.login.title}</Link>
+                          </Button>
+                          <Button asChild onClick={() => setIsOpen(false)}>
+                            <Link href={auth.signup.url}>{auth.signup.title}</Link>
+                          </Button>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </SheetContent>
+              </Sheet>
+
+              {/* Logo */}
+              <Link href="/" className="flex items-center gap-2">
+                <Image
+                  src={logo}
+                  className="max-h-8 dark:invert"
+                  alt="Amar Shikkhok"
+                  width={32}
+                  height={32}
+                />
+                <span className="text-lg font-bold tracking-tighter">
+                  Amar <span className="text-primary">Shikkhok</span>
+                </span>
+              </Link>
+            </div>
+
             <div className="flex items-center gap-2">
               <ModeToggle />
-              {isAuthenticated ? (
+
+              {/* Profile Dropdown (Mobile) - Only if Authenticated */}
+              {isAuthenticated && (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <button className="flex items-center gap-2 rounded-full  focus:outline-none focus:ring-2 focus:ring-primary">
+                    <button className="flex items-center gap-2 rounded-full focus:outline-none focus:ring-2 focus:ring-primary">
                       <Avatar className="h-9 w-9">
                         <AvatarImage src={user?.image || undefined} alt={user?.name} />
                         <AvatarFallback>
@@ -235,89 +334,24 @@ const Navbar = ({
                         Dashboard
                       </Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
+                    {/* <DropdownMenuItem asChild>
                       <Link href="/profile" className="cursor-pointer">
                         <Settings className="mr-2 h-4 w-4" />
                         Settings
                       </Link>
-                    </DropdownMenuItem>
+                    </DropdownMenuItem> */}
                     <DropdownMenuSeparator />
                     <DropdownMenuItem asChild>
                       <LogoutButton variant="ghost" className="w-full justify-start px-2" />
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
-              ) : (
-                <Sheet>
-                  <SheetTrigger asChild>
-                    <Button variant="outline" size="icon">
-                      <Menu className="size-4" />
-                    </Button>
-                  </SheetTrigger>
-                  <SheetContent className="overflow-y-auto">
-                    <SheetHeader>
-                      <SheetTitle>
-                        <Link href="/" className="flex items-center gap-2">
-                          <Image
-                            src={logo}
-                            className="max-h-8 dark:invert"
-                            alt="Amar Shikkhok"
-                            width={32}
-                            height={32}
-                          />
-                          <span className="text-lg font-bold tracking-tighter">
-                            Amar <span className="text-primary">Shikkhok</span>
-                          </span>
-                        </Link>
-                      </SheetTitle>
-                    </SheetHeader>
-                    <div className="flex flex-col gap-6 p-4">
-                      <Accordion
-                        type="single"
-                        collapsible
-                        className="flex w-full flex-col gap-4"
-                      >
-                        {menu.map((item) => renderMobileMenuItem(item))}
-                      </Accordion>
-
-                      <div className="flex flex-col gap-3">
-                        <Button asChild variant="outline">
-                          <Link href={auth.login.url}>{auth.login.title}</Link>
-                        </Button>
-                        <Button asChild>
-                          <Link href={auth.signup.url}>{auth.signup.title}</Link>
-                        </Button>
-                      </div>
-                    </div>
-                  </SheetContent>
-                </Sheet>
               )}
             </div>
           </div>
         </div>
       </div>
     </section>
-  );
-};
-
-const renderMenuItem = (item: MenuItem) => {
-  return (
-    <NavigationMenuItem key={item.title}>
-      <NavigationMenuLink
-        asChild
-        className="group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-muted hover:text-accent-foreground"
-      >
-        <Link href={item.url}>{item.title}</Link>
-      </NavigationMenuLink>
-    </NavigationMenuItem>
-  );
-};
-
-const renderMobileMenuItem = (item: MenuItem) => {
-  return (
-    <Link key={item.title} href={item.url} className="text-md font-semibold">
-      {item.title}
-    </Link>
   );
 };
 

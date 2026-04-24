@@ -11,6 +11,7 @@ export interface AdminStats {
   cancelledBookings: number;
   totalRevenue: number;
   totalCategories: number;
+  totalPayments: number;
 }
 
 export interface AdminUser {

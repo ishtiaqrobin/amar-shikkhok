@@ -23,7 +23,7 @@ const steps = [
 export function HowItWorks() {
     return (
         <section className="py-20 bg-background">
-            <div className="container mx-auto px-4">
+            <div className="container mx-auto  ">
                 <div className="mb-16 text-center">
                     <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
                         How It Works
@@ -38,7 +38,7 @@ export function HowItWorks() {
                     <div className="absolute top-1/2 left-0 hidden h-0.5 w-full -translate-y-full bg-border md:block -z-10" />
 
                     {steps.map((step, index) => (
-                        <div key={index} className="flex flex-col items-center text-center space-y-6 bg-background px-4">
+                        <div key={index} className="flex flex-col items-center text-center space-y-6 bg-background  ">
                             <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 border-4 border-background shadow-sm relative">
                                 <span className="absolute -top-2 -right-2 flex h-6 w-6 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
                                     {index + 1}

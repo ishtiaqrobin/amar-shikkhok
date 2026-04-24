@@ -28,6 +28,11 @@ const COLOR_MAP: Record<string, string> = {
     "Arts": "bg-yellow-50 dark:bg-yellow-900/10",
 };
 
+const HeaderData = {
+    title: "Popular Categories",
+    description: "Select your favorite subject and find the best tutor."
+}
+
 export function CategorySection() {
     const [categories, setCategories] = useState<Category[]>([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -48,12 +53,14 @@ export function CategorySection() {
     if (isLoading) {
         return (
             <section className="py-16 bg-muted/30">
-                <div className="container mx-auto px-4">
+                <div className="container mx-auto">
                     <div className="mb-12 text-center">
-                        <div className="space-y-2 flex flex-col items-center">
-                            <Skeleton className="h-10 w-64 rounded-lg" />
-                            <Skeleton className="h-6 w-80 rounded-lg" />
-                        </div>
+                        <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+                            {HeaderData.title}
+                        </h2>
+                        <p className="mt-4 text-lg text-muted-foreground">
+                            {HeaderData.description}
+                        </p>
                     </div>
 
                     <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
@@ -76,13 +83,13 @@ export function CategorySection() {
 
     return (
         <section className="py-16 bg-muted/30">
-            <div className="container mx-auto px-4">
+            <div className="container mx-auto">
                 <div className="mb-12 text-center">
                     <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-                        Popular Categories
+                        {HeaderData.title}
                     </h2>
                     <p className="mt-4 text-lg text-muted-foreground">
-                        Select your favorite subject and find the best tutor.
+                        {HeaderData.description}
                     </p>
                 </div>
 

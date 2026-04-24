@@ -4,7 +4,7 @@ import { ProfileForm } from "@/components/modules/profile/ProfileForm";
 import { AvatarUpload } from "@/components/modules/profile/AvatarUpload";
 import { userService } from "@/services/user.service";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, Settings } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import { useState, useEffect } from "react";
 import { User } from "@/types/tutor.type";
@@ -62,8 +62,39 @@ export function StudentProfileClient({ userToken }: StudentProfileClientProps) {
 
     if (isLoading) {
         return (
-            <div className="flex items-center justify-center min-h-[400px]">
-                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            <div className="space-y-6 w-full">
+                <div>
+                    <Skeleton className="h-9 w-[300px]" />
+                    <Skeleton className="h-5 w-[450px] mt-2" />
+                </div>
+
+                <div className="grid gap-8 lg:grid-cols-12">
+                    <Card className="lg:col-span-4 border-primary/10 shadow-lg rounded-3xl overflow-hidden h-fit">
+                        <div className="h-24 bg-muted/20" />
+                        <CardContent className="-mt-16 relative flex flex-col items-center">
+                            <Skeleton className="h-32 w-32 rounded-full border-4 border-background" />
+                            <div className="mt-8 space-y-4 w-full">
+                                <Skeleton className="h-16 w-full rounded-2xl" />
+                                <Skeleton className="h-14 w-full rounded-2xl" />
+                                <Skeleton className="h-14 w-full rounded-2xl" />
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    <Card className="lg:col-span-8 border-primary/10 shadow-lg rounded-3xl">
+                        <CardHeader>
+                            <Skeleton className="h-7 w-[200px]" />
+                        </CardHeader>
+                        <CardContent className="space-y-6">
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-2"><Skeleton className="h-4 w-20" /><Skeleton className="h-10 w-full rounded-xl" /></div>
+                                <div className="space-y-2"><Skeleton className="h-4 w-20" /><Skeleton className="h-10 w-full rounded-xl" /></div>
+                            </div>
+                            <div className="space-y-2"><Skeleton className="h-4 w-20" /><Skeleton className="h-10 w-full rounded-xl" /></div>
+                            <Skeleton className="h-10 w-[150px] rounded-full" />
+                        </CardContent>
+                    </Card>
+                </div>
             </div>
         );
     }
@@ -77,11 +108,9 @@ export function StudentProfileClient({ userToken }: StudentProfileClientProps) {
     }
 
     return (
-        <div className="container max-w-5xl mx-auto space-y-8 min-h-screen py-8">
+        <div className="space-y-6 w-full">
             <div>
-                <h1 className="text-3xl font-extrabold flex items-center gap-3">
-                    <Settings className="h-8 w-8 text-primary" /> Account Settings
-                </h1>
+                <h1 className="text-3xl font-bold">Profile Management</h1>
                 <p className="text-muted-foreground mt-2">Manage your personal information and profile</p>
             </div>
 

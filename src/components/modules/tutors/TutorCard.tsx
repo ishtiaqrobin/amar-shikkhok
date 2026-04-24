@@ -63,7 +63,7 @@ export function TutorCard({ tutor }: TutorCardProps) {
                     <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest">Hourly Fee</span>
                     <span className="text-xl font-black text-primary">{formatPrice(tutor.hourlyRate)}</span>
                 </div>
-                <Button size="sm" asChild className="rounded-full shadow-lg shadow-primary/20 group-hover:scale-105 transition-all">
+                <Button size="sm" asChild className="rounded-full shadow-lg shadow-primary/20 transition-all">
                     <Link href={`/tutors/${tutor.id}`} className="flex items-center gap-2">
                         Details <ExternalLink className="h-3 w-3" />
                     </Link>

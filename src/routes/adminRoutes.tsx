@@ -1,5 +1,11 @@
 import { Route } from "@/types";
-import { LayoutDashboard, Users, Calendar, FolderKanban, UserCog } from "lucide-react";
+import {
+  LayoutDashboard,
+  Users,
+  Calendar,
+  FolderKanban,
+  UserCog,
+} from "lucide-react";
 
 export const adminRoutes: Route[] = [
   {

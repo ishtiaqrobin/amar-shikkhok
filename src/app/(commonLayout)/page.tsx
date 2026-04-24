@@ -14,7 +14,7 @@ export default function Home() {
   console.log("User from useAuth", user);
 
   return (
-    <div className="flex flex-col min-h-screen px-4 md:px-6">
+    <div className="flex flex-col min-h-screen px-4 md:px-6 lg:px-10">
       {/* Static Content */}
       <HeroSection />
 

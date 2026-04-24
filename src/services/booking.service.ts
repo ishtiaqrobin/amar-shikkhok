@@ -186,4 +186,74 @@ export const bookingService = {
       };
     }
   },
+
+  /**
+   * Initiate payment for a booking
+   */
+  initiatePayment: async function (
+    bookingId: string,
+    token: string,
+  ): Promise<{ data: string | null; error: ServiceError | null }> {
+    try {
+      const res = await fetch(`${API_URL}/bookings/${bookingId}/payment`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        credentials: "include",
+      });
+
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+
+      const response = await res.json();
+      return { data: response.data, error: null };
+    } catch (err) {
+      console.error("Error initiating payment:", err);
+      return {
+        data: null,
+        error: {
+          message:
+            err instanceof Error ? err.message : "Error initiating payment",
+        },
+      };
+    }
+  },
+
+  /**
+   * Verify payment status
+   */
+  verifyPayment: async function (
+    sessionId: string,
+    token: string,
+  ): Promise<{ data: boolean | null; error: ServiceError | null }> {
+    try {
+      const url = new URL(`${API_URL}/bookings/payment/verify`);
+      url.searchParams.append("session_id", sessionId);
+
+      const res = await fetch(url.toString(), {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        credentials: "include",
+      });
+
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+
+      const response = await res.json();
+      return { data: response.data, error: null };
+    } catch (err) {
+      console.error("Error verifying payment:", err);
+      return {
+        data: null,
+        error: {
+          message:
+            err instanceof Error ? err.message : "Error verifying payment",
+        },
+      };
+    }
+  },
 };

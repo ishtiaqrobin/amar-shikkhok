@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { TutorStats } from "@/components/modules/dashboard/tutor/TutorStats";
 import { tutorsService } from "@/services/tutors.service";
 import { bookingService } from "@/services/booking.service";
-import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import type { TutorStats as TutorStatsType } from "@/types/tutor.type";
 import type { Booking } from "@/types/booking.type";
@@ -46,7 +45,7 @@ export default function TutorDashboardPage() {
         }
       } catch (error) {
         console.error("Dashboard fetch error:", error);
-        toast.error("ত্রুটি", { description: "ড্যাশবোর্ড তথ্য লোড করতে ব্যর্থ হয়েছে" });
+        toast.error("Error", { description: "Failed to load dashboard data" });
       } finally {
         setIsLoading(false);
       }
@@ -55,13 +54,6 @@ export default function TutorDashboardPage() {
     fetchData();
   }, [sessionToken, isLoading]);
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
-  }
 
   return (
     <div className="space-y-6 min-h-screen">

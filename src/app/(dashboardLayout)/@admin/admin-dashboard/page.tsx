@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import { AdminStats } from "@/components/modules/dashboard/admin/AdminStats";
 import { adminService } from "@/services/admin.service";
 import { useAuth } from "@/hooks/useAuth";
-import { Loader2, RefreshCcw } from "lucide-react";
+import { RefreshCcw } from "lucide-react";
 import { toast } from "sonner";
 import { AdminStats as AdminStatsType } from "@/types/admin.type";
 import { Button } from "@/components/ui/button";
@@ -35,13 +35,6 @@ export default function AdminDashboardPage() {
         }
     }, [authLoading, userToken, fetchStats]);
 
-    if (isLoading && !stats) {
-        return (
-            <div className="flex items-center justify-center min-h-[400px]">
-                <Loader2 className="h-8 w-8 animate-spin text-primary" />
-            </div>
-        );
-    }
 
     return (
         <div className="space-y-8 min-h-screen">

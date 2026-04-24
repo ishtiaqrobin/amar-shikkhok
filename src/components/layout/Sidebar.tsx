@@ -21,11 +21,13 @@ import { tutorRoutes } from "@/routes/tutorRoutes";
 import { Route } from "@/types";
 import { useAuth } from "@/hooks/useAuth";
 import { LogoutButton } from "@/components/modules/authentication/LogoutButton";
+import { usePathname } from "next/navigation";
 import logo from "@/assets/images/logo.webp";
 import Image from "next/image";
 
 export function DashboardSidebar(props: React.ComponentProps<typeof SidebarPrimitive>) {
     const { user } = useAuth();
+    const pathname = usePathname();
     let routes: Route[] = [];
 
     // Determine routes based on user role
@@ -64,9 +66,10 @@ export function DashboardSidebar(props: React.ComponentProps<typeof SidebarPrimi
                             <SidebarMenu>
                                 {group.items.map((item) => {
                                     const Icon = item.icon;
+                                    const isActive = pathname === item.url;
                                     return (
                                         <SidebarMenuItem key={item.title}>
-                                            <SidebarMenuButton asChild>
+                                            <SidebarMenuButton asChild isActive={isActive}>
                                                 <Link href={item.url} className="flex items-center gap-2">
                                                     {Icon && <Icon className="h-4 w-4" />}
                                                     <span>{item.title}</span>

@@ -10,6 +10,12 @@ import { formatPrice } from "@/lib/utils";
 import { tutorsService } from "@/services/tutors.service";
 import { TutorListItem } from "@/types/tutor.type";
 
+const HeaderData = {
+    title: "Find the Best Tutors",
+    description: "Our platform's best-rated experienced teachers.",
+    buttonText: "See All Tutors"
+}
+
 export function FeaturedTutors() {
     const [tutors, setTutors] = useState<TutorListItem[]>([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -37,13 +43,21 @@ export function FeaturedTutors() {
     if (isLoading) {
         return (
             <section className="py-20 bg-muted/20">
-                <div className="container mx-auto px-4">
-                    <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6 text-center md:text-left">
-                        <div className="space-y-4 flex flex-col items-center md:items-start">
-                            <Skeleton className="h-10 w-64 rounded-lg" />
-                            <Skeleton className="h-6 w-80 rounded-lg" />
+                <div className="container mx-auto   ">
+                    <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+                        <div className="space-y-4">
+                            <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+                                {HeaderData.title}
+                            </h2>
+                            <p className="text-lg text-muted-foreground">
+                                {HeaderData.description}
+                            </p>
                         </div>
-                        <Skeleton className="h-10 w-32 rounded-full hidden md:block" />
+                        <div className="hidden md:flex">
+                        </div>
+                        <Button asChild variant="outline" className="hidden md:flex rounded-full">
+                            <Link href="/tutors">{HeaderData.buttonText}</Link>
+                        </Button>
                     </div>
 
                     <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -81,18 +95,20 @@ export function FeaturedTutors() {
 
     return (
         <section className="py-20 bg-muted/20">
-            <div className="container mx-auto px-4">
+            <div className="container mx-auto   ">
                 <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
                     <div className="space-y-4">
                         <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-                            Find the Best Tutors
+                            {HeaderData.title}
                         </h2>
                         <p className="text-lg text-muted-foreground">
-                            Our platform&apos;s best-rated experienced teachers.
+                            {HeaderData.description}
                         </p>
                     </div>
+                    <div className="hidden md:flex">
+                    </div>
                     <Button asChild variant="outline" className="hidden md:flex rounded-full">
-                        <Link href="/tutors">See All Tutors</Link>
+                        <Link href="/tutors">{HeaderData.buttonText}</Link>
                     </Button>
                 </div>
 

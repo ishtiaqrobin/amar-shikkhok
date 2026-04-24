@@ -91,7 +91,7 @@ export function TutorProfileForm({ tutor, userToken }: TutorProfileFormProps) {
     }
 
     return (
-        <Card className="border-primary/10 shadow-sm rounded-2xl">
+        <Card className="border-primary/10 shadow-sm rounded-3xl">
             <CardHeader>
                 <CardTitle>Professional Profile</CardTitle>
             </CardHeader>
@@ -194,7 +194,11 @@ export function TutorProfileForm({ tutor, userToken }: TutorProfileFormProps) {
                                                 type="number"
                                                 className="rounded-xl"
                                                 {...field}
-                                                onChange={e => field.onChange(Number(e.target.value))}
+                                                onFocus={(e) => e.target.select()}
+                                                onChange={e => {
+                                                    const value = e.target.value;
+                                                    field.onChange(value === "" ? 0 : Number(value));
+                                                }}
                                             />
                                         </FormControl>
                                         <FormMessage />
@@ -213,7 +217,11 @@ export function TutorProfileForm({ tutor, userToken }: TutorProfileFormProps) {
                                                 type="number"
                                                 className="rounded-xl"
                                                 {...field}
-                                                onChange={e => field.onChange(Number(e.target.value))}
+                                                onFocus={(e) => e.target.select()}
+                                                onChange={e => {
+                                                    const value = e.target.value;
+                                                    field.onChange(value === "" ? 0 : Number(value));
+                                                }}
                                             />
                                         </FormControl>
                                         <FormMessage />
@@ -236,7 +244,7 @@ export function TutorProfileForm({ tutor, userToken }: TutorProfileFormProps) {
                             )}
                         />
 
-                        <Button type="submit" className="w-full md:w-auto px-8 rounded-full h-11 shadow-lg shadow-primary/20">Save Changes</Button>
+                        <Button type="submit" className="w-full px-8 rounded-full h-11 shadow-lg shadow-primary/20">Save Changes</Button>
                     </form>
                 </Form>
             </CardContent>

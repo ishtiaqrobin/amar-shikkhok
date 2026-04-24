@@ -5,7 +5,14 @@ import { authClient } from "@/lib/auth-client";
 import { User } from "@/types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { toast } from "sonner";
 import { Loader2, Mail, Lock, Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
@@ -23,9 +30,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-export function LoginForm({
-  ...props
-}: React.ComponentProps<"div">) {
+export function LoginForm({ ...props }: React.ComponentProps<"div">) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -150,11 +155,7 @@ export function LoginForm({
               )}
             />
 
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={isLoading}
-            >
+            <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -173,7 +174,10 @@ export function LoginForm({
       <CardFooter>
         <p className="text-sm text-center w-full text-muted-foreground">
           Don&apos;t have an account?{" "}
-          <Link href="/register" className="text-primary hover:underline font-medium">
+          <Link
+            href="/register"
+            className="text-primary hover:underline font-medium"
+          >
             Register
           </Link>
         </p>

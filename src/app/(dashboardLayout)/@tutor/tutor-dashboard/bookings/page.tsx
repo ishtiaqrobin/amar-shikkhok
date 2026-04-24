@@ -6,7 +6,7 @@ import { BookingList } from "@/components/modules/booking/BookingList";
 import { useAuth } from "@/hooks/useAuth";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Loader2 } from "lucide-react";
+import { Loader2, BookOpen, Calendar, CheckCircle } from "lucide-react";
 import { toast } from "sonner";
 import type { Booking } from "@/types/booking.type";
 
@@ -97,18 +97,25 @@ export default function TutorBookingsPage() {
                 </TabsContent>
             </Tabs>
 
+            {/* Sub Card For Stats */}
             <div className="grid gap-4 md:grid-cols-3">
-                <Card>
-                    <CardHeader className="pb-2">
+                <Card className="overflow-hidden border-none shadow-md hover:shadow-lg transition-shadow">
+                    <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
                         <CardTitle className="text-sm font-medium text-muted-foreground">Total Bookings</CardTitle>
+                        <div className="bg-blue-100 p-2 rounded-lg">
+                            <BookOpen className="h-4 w-4 text-blue-600" />
+                        </div>
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold">{bookings.length}</div>
                     </CardContent>
                 </Card>
-                <Card>
-                    <CardHeader className="pb-2">
+                <Card className="overflow-hidden border-none shadow-md hover:shadow-lg transition-shadow">
+                    <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
                         <CardTitle className="text-sm font-medium text-muted-foreground">Confirmed</CardTitle>
+                        <div className="bg-purple-100 p-2 rounded-lg">
+                            <Calendar className="h-4 w-4 text-purple-600" />
+                        </div>
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold">
@@ -116,9 +123,12 @@ export default function TutorBookingsPage() {
                         </div>
                     </CardContent>
                 </Card>
-                <Card>
-                    <CardHeader className="pb-2">
+                <Card className="overflow-hidden border-none shadow-md hover:shadow-lg transition-shadow">
+                    <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
                         <CardTitle className="text-sm font-medium text-muted-foreground">Completed</CardTitle>
+                        <div className="bg-emerald-100 p-2 rounded-lg">
+                            <CheckCircle className="h-4 w-4 text-emerald-600" />
+                        </div>
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold">

@@ -20,7 +20,7 @@ export function HeroSection() {
     };
 
     return (
-        <section className="relative overflow-hidden bg-background py-16 lg:py-24">
+        <section className="relative overflow-hidden bg-background py-16 lg:py-24 ">
             {/* Background decoration */}
             <div className="absolute top-0 right-0 -translate-y-12 translate-x-12 blur-3xl opacity-20">
                 <div className="h-64 w-64 rounded-full" />
@@ -29,7 +29,7 @@ export function HeroSection() {
                 <div className="h-48 w-48 rounded-full" />
             </div>
 
-            <div className="container relative z-10 mx-auto px-4">
+            <div className="container relative z-10 mx-auto">
                 <div className="grid items-center gap-12 lg:grid-cols-2">
                     {/* Content */}
                     <div className="flex flex-col space-y-8">
@@ -59,7 +59,7 @@ export function HeroSection() {
                                     onChange={(e) => setSearchQuery(e.target.value)}
                                 />
                             </div>
-                            <Button type="submit" className="rounded-full px-6 mr-1">
+                            <Button type="submit" className="rounded-full px-6 mr-1 cursor-pointer">
                                 Search
                             </Button>
                         </form>

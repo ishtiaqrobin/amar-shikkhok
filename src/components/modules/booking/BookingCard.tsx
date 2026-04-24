@@ -11,6 +11,8 @@ import type { Booking, BookingStatus } from "@/types/booking.type";
 import { ReviewDialog } from "./ReviewDialog";
 import { useAuth } from "@/hooks/useAuth";
 import { formatPrice } from "@/lib/utils";
+import { bookingService } from "@/services/booking.service";
+import { toast } from "sonner";
 
 interface BookingCardProps {
     booking: Booking;
@@ -20,12 +22,14 @@ interface BookingCardProps {
 }
 
 const statusColors: Record<BookingStatus, string> = {
+    PENDING: "bg-yellow-500",
     CONFIRMED: "bg-blue-500",
     COMPLETED: "bg-green-500",
     CANCELLED: "bg-red-500",
 };
 
 const statusLabels: Record<BookingStatus, string> = {
+    PENDING: "PENDING",
     CONFIRMED: "CONFIRMED",
     COMPLETED: "COMPLETED",
     CANCELLED: "CANCELLED",
@@ -36,9 +40,22 @@ export function BookingCard({ booking, userRole, onCancel, onComplete }: Booking
     const [isReviewOpen, setIsReviewOpen] = useState(false);
 
     const otherUser = userRole === "STUDENT" ? booking.tutor?.user : booking.student;
-    const canCancel = userRole === "STUDENT" && booking.status === "CONFIRMED";
+    const canCancel = userRole === "STUDENT" && (booking.status === "CONFIRMED" || booking.status === "PENDING");
     const canComplete = userRole === "TUTOR" && booking.status === "CONFIRMED";
     const canReview = userRole === "STUDENT" && booking.status === "COMPLETED" && !booking.review;
+    const canPay = userRole === "STUDENT" && booking.status === "PENDING";
+
+    const handlePayment = async () => {
+        const token = session?.token;
+        if (!token) return;
+
+        const { data: paymentUrl, error } = await bookingService.initiatePayment(booking.id, token);
+        if (error) {
+            toast.error("Payment Error", { description: error.message });
+        } else if (paymentUrl) {
+            window.location.href = paymentUrl;
+        }
+    };
 
     return (
         <>
@@ -100,8 +117,18 @@ export function BookingCard({ booking, userRole, onCancel, onComplete }: Booking
                         </div>
                     )}
 
-                    {(canCancel || canComplete || canReview) && (
+                    {(canCancel || canComplete || canReview || canPay) && (
                         <div className="flex gap-3 pt-4 border-t border-primary/5">
+                            {canPay && (
+                                <Button
+                                    variant="default"
+                                    size="sm"
+                                    onClick={handlePayment}
+                                    className="flex-1 rounded-full font-bold uppercase tracking-widest text-[10px] h-10 shadow-lg shadow-primary/20 bg-green-600 hover:bg-green-700"
+                                >
+                                    Pay Now
+                                </Button>
+                            )}
                             {canCancel && onCancel && (
                                 <Button
                                     variant="destructive"

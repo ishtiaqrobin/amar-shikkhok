@@ -60,18 +60,29 @@ export function TutorProfileClient({ tutor }: TutorProfileClientProps) {
             return;
         }
 
-        const { error } = await bookingService.createBooking(data, token);
-
+        const { data: booking, error } = await bookingService.createBooking(data, token);
+        
         if (error) {
             toast.error("Error", {
                 description: error.message,
             });
-        } else {
+        } else if (booking) {
             toast.success("Success!", {
-                description: "Session booked successfully",
+                description: "Session booked! Redirecting to payment...",
             });
+            
+            const { data: paymentUrl, error: paymentError } = await bookingService.initiatePayment(booking.id, token);
+            
+            if (paymentError) {
+                toast.error("Payment Error", {
+                    description: "Failed to initiate payment. Please pay from your dashboard.",
+                });
+                router.push("/student-dashboard/bookings");
+            } else if (paymentUrl) {
+                window.location.href = paymentUrl;
+            }
+            
             setIsBookingModalOpen(false);
-            router.push("/student-dashboard/bookings");
         }
     };
 
@@ -90,7 +101,7 @@ export function TutorProfileClient({ tutor }: TutorProfileClientProps) {
 
     return (
         <>
-            <div className="container mx-auto px-4 py-12">
+            <div className="container mx-auto px-4 md:px-6 lg:px-10 py-12">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     {/* Left Column - Profile Info */}
                     <div className="lg:col-span-1 space-y-6">
@@ -121,7 +132,7 @@ export function TutorProfileClient({ tutor }: TutorProfileClientProps) {
                                     </div>
 
                                     <Button
-                                        className="w-full h-14 rounded-full text-lg font-black uppercase tracking-widest shadow-lg shadow-primary/20 transition-all hover:scale-[1.02]"
+                                        className="w-full h-14 rounded-full text-lg font-black uppercase tracking-widest shadow-lg shadow-primary/20 transition-all hover:shadow-primary/40 duration-300"
                                         size="lg"
                                         onClick={handleBookClick}
                                         disabled={!authLoading && !!authUser && authUser.role !== "STUDENT"}

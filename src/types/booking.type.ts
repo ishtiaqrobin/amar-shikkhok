@@ -1,6 +1,7 @@
 import type { Review } from "./tutor.type";
 
 export enum BookingStatus {
+  PENDING = "PENDING",
   CONFIRMED = "CONFIRMED",
   COMPLETED = "COMPLETED",
   CANCELLED = "CANCELLED",

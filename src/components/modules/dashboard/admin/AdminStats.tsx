@@ -1,7 +1,7 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, UserCheck, GraduationCap, Calendar, CheckCircle2, DollarSign, BookOpen } from "lucide-react";
+import { Users, UserCheck, GraduationCap, Calendar, CheckCircle2, DollarSign, BookOpen, Coins } from "lucide-react";
 import { AdminStats as AdminStatsType } from "@/types/admin.type";
 import { formatPrice } from "@/lib/utils";
 
@@ -31,7 +31,7 @@ export function AdminStats({ stats }: AdminStatsProps) {
             title: "Total Revenue",
             value: formatPrice(stats?.totalRevenue || 0),
             icon: DollarSign,
-            description: "Earnings from completed sessions",
+            description: "Total earnings from paid sessions",
             color: "text-green-600",
             bg: "bg-green-100",
         },
@@ -63,6 +63,12 @@ export function AdminStats({ stats }: AdminStatsProps) {
             value: stats?.completedBookings || 0,
             icon: CheckCircle2,
             color: "text-cyan-600",
+        },
+        {
+            title: "Paid Sessions",
+            value: stats?.totalPayments || 0,
+            icon: Coins,
+            color: "text-rose-600",
         }
     ];
 

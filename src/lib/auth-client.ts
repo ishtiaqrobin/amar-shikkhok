@@ -3,7 +3,11 @@ import { env } from "@/env";
 import { createAuthClient } from "better-auth/react";
 
 export const authClient = createAuthClient({
-  baseURL: window.location.origin, // এটি অটোমেটিক আপনার ফ্রন্টেন্ড ডোমেইন নিয়ে নেবে
+  baseURL: env.NEXT_PUBLIC_AUTH_URL,
+  fetchOptions: {
+    credentials: "include",
+  },
+  // discovery: true, // এটি অনেক সময় সেশন খুঁজে পেতে সাহায্য করে
   plugins: [emailOTPClient()],
 });
 

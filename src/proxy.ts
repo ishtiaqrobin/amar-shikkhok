@@ -9,8 +9,8 @@ export async function proxy(request: NextRequest) {
   let userRole: string | null = null;
 
   try {
-    // Server-side session check
-    const { data } = await sessionService.getSession();
+    // Server-side session check — pass request so cookies are forwarded
+    const { data } = await sessionService.getSessionFromRequest(request);
 
     if (data?.user) {
       isAuthenticated = true;

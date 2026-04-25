@@ -3,11 +3,13 @@ import { env } from "@/env";
 import { createAuthClient } from "better-auth/react";
 
 export const authClient = createAuthClient({
-  baseURL: env.NEXT_PUBLIC_AUTH_URL,
+  // IMPORTANT: baseURL must be the FRONTEND's own origin.
+  // next.config.ts rewrites /api/auth/* → backend, making auth requests
+  // same-origin. This prevents browsers from blocking cross-site cookies.
+  baseURL: env.NEXT_PUBLIC_APP_URL,
   fetchOptions: {
     credentials: "include",
   },
-  // discovery: true, // এটি অনেক সময় সেশন খুঁজে পেতে সাহায্য করে
   plugins: [emailOTPClient()],
 });
 

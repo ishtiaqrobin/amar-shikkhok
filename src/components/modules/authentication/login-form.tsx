@@ -47,7 +47,11 @@ export function LoginForm({ ...props }: React.ComponentProps<"div">) {
     setIsLoading(true);
 
     try {
-      const { error } = await authClient.signIn.email({
+      // signIn.email() returns { data, error } where data contains user & session.
+      // We read the role directly from the response — no second getSession() call needed.
+      // Calling getSession() immediately after signIn causes a race condition because
+      // the browser may not have stored the cookie yet (especially cross-origin).
+      const { data, error } = await authClient.signIn.email({
         email: values.email,
         password: values.password,
       });
@@ -59,8 +63,7 @@ export function LoginForm({ ...props }: React.ComponentProps<"div">) {
 
       toast.success("Login successful! 🎉");
 
-      const { data: userSession } = await authClient.getSession();
-      const userRole = (userSession?.user as User)?.role;
+      const userRole = (data?.user as User)?.role;
 
       if (userRole === "ADMIN") {
         router.push("/admin-dashboard");

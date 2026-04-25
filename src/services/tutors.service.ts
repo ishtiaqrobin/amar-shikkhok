@@ -130,7 +130,7 @@ export const tutorsService = {
     token: string,
   ): Promise<{ data: TutorStats | null; error: ServiceError | null }> {
     try {
-      const url = `${API_URL}/tutor/stats`;
+      const url = `${API_URL}/tutors/stats`;
 
       const res = await fetch(url, {
         headers: {
@@ -163,9 +163,10 @@ export const tutorsService = {
   updateProfile: async function (
     token: string,
     payload: Partial<Tutor> & { categoryIds?: string[] },
+    tutorId: string,
   ): Promise<{ data: Tutor | null; error: ServiceError | null }> {
     try {
-      const url = `${API_URL}/tutor/profile`;
+      const url = `${API_URL}/tutors/profile/${tutorId}`;
 
       const res = await fetch(url, {
         method: "PUT",
@@ -206,7 +207,7 @@ export const tutorsService = {
     payload: Partial<Tutor> & { categoryIds?: string[] },
   ): Promise<{ data: Tutor | null; error: ServiceError | null }> {
     try {
-      const url = `${API_URL}/tutor/profile`;
+      const url = `${API_URL}/tutors/profile`;
 
       const res = await fetch(url, {
         method: "POST",
@@ -247,7 +248,7 @@ export const tutorsService = {
     payload: Omit<Availability, "id" | "tutorId">,
   ): Promise<{ data: Availability | null; error: ServiceError | null }> {
     try {
-      const url = `${API_URL}/tutor/availability`;
+      const url = `${API_URL}/tutors/availability`;
 
       const res = await fetch(url, {
         method: "POST",
@@ -288,7 +289,7 @@ export const tutorsService = {
     payload: Partial<Availability> & { dayOfWeek: string },
   ): Promise<{ data: Availability | null; error: ServiceError | null }> {
     try {
-      const url = `${API_URL}/tutor/availability`;
+      const url = `${API_URL}/tutors/availability`;
 
       const res = await fetch(url, {
         method: "PUT",
@@ -328,7 +329,7 @@ export const tutorsService = {
     token: string,
   ): Promise<{ data: Availability[] | null; error: ServiceError | null }> {
     try {
-      const url = `${API_URL}/tutor/availability`;
+      const url = `${API_URL}/tutors/availability`;
 
       const res = await fetch(url, {
         headers: {

@@ -7,6 +7,31 @@ export interface PaymentStats {
   totalPayments?: number;
   totalUsers?: number;
   totalTutors?: number;
+  withdrawableBalance?: number;
+}
+
+export interface Withdrawal {
+  id: string;
+  tutorId: string;
+  amount: number;
+  status: "PENDING" | "APPROVED" | "REJECTED";
+  method: string;
+  transactionId: string | null;
+  notes: string | null;
+  createdAt: string;
+  updatedAt: string;
+  tutor: {
+    user: {
+      name: string;
+      email: string;
+    };
+  };
+}
+
+export interface PlatformSetting {
+  id: string;
+  key: string;
+  value: string;
 }
 
 export interface PaymentUser {

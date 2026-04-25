@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { env } from "@/env";
 import { User } from "@/types/tutor.type";
 
@@ -43,17 +44,24 @@ export const userService = {
    */
   updateProfile: async function (
     token: string,
-    payload: { name?: string; phone?: string; image?: string },
+    payload: any,
   ): Promise<{ data: User | null; error: ServiceError | null }> {
     try {
+      const isFormData = payload instanceof FormData;
+
+      const headers: Record<string, string> = {
+        Authorization: `Bearer ${token}`,
+      };
+
+      if (!isFormData) {
+        headers["Content-Type"] = "application/json";
+      }
+
       const res = await fetch(`${API_URL}/users/profile`, {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+        headers,
         credentials: "include",
-        body: JSON.stringify(payload),
+        body: isFormData ? payload : JSON.stringify(payload),
       });
 
       if (!res.ok) {

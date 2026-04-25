@@ -15,27 +15,40 @@ import {
 
 interface AvatarUploadProps {
     currentImage?: string | null;
-    onUpdate: (url: string) => Promise<void>;
+    onUpdate: (file: File) => Promise<void>;
     name: string;
 }
 
 export function AvatarUpload({ currentImage, onUpdate, name }: AvatarUploadProps) {
-    const [url, setUrl] = useState(currentImage || "");
+    const [file, setFile] = useState<File | null>(null);
+    const [previewUrl, setPreviewUrl] = useState<string | null>(null);
     const [isOpen, setIsOpen] = useState(false);
     const [isUpdating, setIsUpdating] = useState(false);
 
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const selectedFile = e.target.files?.[0];
+        if (selectedFile) {
+            setFile(selectedFile);
+            const url = URL.createObjectURL(selectedFile);
+            setPreviewUrl(url);
+        }
+    };
+
     const handleUpdate = async () => {
+        if (!file) return;
         setIsUpdating(true);
-        await onUpdate(url);
+        await onUpdate(file);
         setIsUpdating(false);
         setIsOpen(false);
+        setFile(null);
+        setPreviewUrl(null);
     };
 
     return (
         <div className="flex flex-col items-center gap-4">
             <div className="relative group">
                 <Avatar className="h-32 w-32 border-4 border-background shadow-xl">
-                    <AvatarImage src={currentImage || undefined} />
+                    <AvatarImage src={previewUrl || currentImage || undefined} />
                     <AvatarFallback className="text-3xl font-bold bg-primary/10 text-primary">
                         {name.charAt(0)}
                     </AvatarFallback>
@@ -52,22 +65,31 @@ export function AvatarUpload({ currentImage, onUpdate, name }: AvatarUploadProps
                         </DialogHeader>
                         <div className="space-y-4 py-4">
                             <div className="space-y-2">
-                                <label className="text-sm font-medium">Image URL</label>
+                                <label className="text-sm font-medium">Select Image File</label>
                                 <Input
-                                    placeholder="https://example.com/image.jpg"
-                                    value={url}
-                                    onChange={(e) => setUrl(e.target.value)}
-                                    className="rounded-xl border-primary/20"
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={handleFileChange}
+                                    className="rounded-xl border-primary/20 pt-2"
                                 />
+                                {previewUrl && (
+                                    <div className="mt-4 flex justify-center">
+                                        <img 
+                                            src={previewUrl} 
+                                            alt="Preview" 
+                                            className="h-32 w-32 rounded-full object-cover border-2 border-primary/20"
+                                        />
+                                    </div>
+                                )}
                             </div>
                         </div>
                         <div className="flex justify-end gap-3">
                             <Button variant="outline" onClick={() => setIsOpen(false)} className="rounded-full">
                                 Cancel
                             </Button>
-                            <Button onClick={handleUpdate} disabled={isUpdating} className="rounded-full px-6">
+                            <Button onClick={handleUpdate} disabled={isUpdating || !file} className="rounded-full px-6">
                                 {isUpdating && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                                Update
+                                Upload
                             </Button>
                         </div>
                     </DialogContent>

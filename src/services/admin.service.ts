@@ -15,7 +15,7 @@ export const adminService = {
     token: string,
   ): Promise<{ data: AdminStats | null; error: ServiceError | null }> {
     try {
-      const res = await fetch(`${API_URL}/admin/stats`, {
+      const res = await fetch(`${API_URL}/admins/stats`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -53,8 +53,8 @@ export const adminService = {
   ): Promise<{ data: AdminUser[] | null; error: ServiceError | null }> {
     try {
       const url = role
-        ? `${API_URL}/admin/users?role=${role}`
-        : `${API_URL}/admin/users`;
+        ? `${API_URL}/admins/users?role=${role}`
+        : `${API_URL}/admins/users`;
       const res = await fetch(url, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -91,7 +91,7 @@ export const adminService = {
     userId: string,
   ): Promise<{ data: AdminUser | null; error: ServiceError | null }> {
     try {
-      const res = await fetch(`${API_URL}/admin/users/${userId}/ban`, {
+      const res = await fetch(`${API_URL}/admins/users/${userId}/ban`, {
         method: "PATCH",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -127,7 +127,7 @@ export const adminService = {
     userId: string,
   ): Promise<{ data: AdminUser | null; error: ServiceError | null }> {
     try {
-      const res = await fetch(`${API_URL}/admin/users/${userId}/unban`, {
+      const res = await fetch(`${API_URL}/admins/users/${userId}/unban`, {
         method: "PATCH",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -162,7 +162,7 @@ export const adminService = {
     token: string,
   ): Promise<{ data: AdminBooking[] | null; error: ServiceError | null }> {
     try {
-      const res = await fetch(`${API_URL}/admin/bookings`, {
+      const res = await fetch(`${API_URL}/admins/bookings`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { paymentService } from "@/services/payment.service";
 import { useAuth } from "@/hooks/useAuth";
-import { PaymentHistoryItem } from "@/types/payment.type";
+import { PaymentHistoryItem, PaymentStats } from "@/types/payment.type";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
@@ -11,49 +11,84 @@ import { Loader2, DollarSign, Calendar, User } from "lucide-react";
 import { format } from "date-fns";
 import { formatPrice } from "@/lib/utils";
 import { toast } from "sonner";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export default function TutorEarningsPage() {
     const { session, isLoading: authLoading } = useAuth();
     const [payments, setPayments] = useState<PaymentHistoryItem[]>([]);
+    const [stats, setStats] = useState<PaymentStats | null>(null);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        const fetchPayments = async () => {
+        const fetchData = async () => {
             if (!session?.token) return;
             setIsLoading(true);
-            const { data, error } = await paymentService.getPaymentHistory(session.token);
-            if (error) {
-                toast.error("Error", { description: error.message });
-            } else {
-                setPayments(data || []);
+            try {
+                const [paymentsRes, statsRes] = await Promise.all([
+                    paymentService.getPaymentHistory(session.token),
+                    paymentService.getPaymentStats(session.token)
+                ]);
+
+                if (paymentsRes.data) setPayments(paymentsRes.data);
+                if (statsRes.data) setStats(statsRes.data);
+            } catch (err) {
+                console.error("Error fetching data:", err);
+            } finally {
+                setIsLoading(false);
             }
-            setIsLoading(false);
         };
 
         if (!authLoading) {
-            fetchPayments();
+            fetchData();
         }
     }, [session?.token, authLoading]);
 
     const totalEarnings = payments.reduce((sum, p) => sum + p.totalPrice, 0);
+    const thisMonthEarnings = payments
+        .filter(p => new Date(p.updatedAt).getMonth() === new Date().getMonth())
+        .reduce((sum, p) => sum + p.totalPrice, 0);
 
     return (
         <div className="space-y-6">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold">Earnings History</h1>
-                    <p className="text-muted-foreground mt-2">Track your income and session payments</p>
+                    <h1 className="text-3xl font-bold">Earnings Overview</h1>
+                    <p className="text-muted-foreground mt-2">Detailed breakdown of your tutoring income</p>
                 </div>
-                <Card className="bg-primary text-primary-foreground border-none shadow-lg px-6 py-4 rounded-2xl">
-                    <div className="flex items-center gap-4">
-                        <div className="p-3 bg-white/20 rounded-xl">
-                            <DollarSign className="h-6 w-6" />
-                        </div>
-                        <div>
-                            <p className="text-xs font-bold uppercase tracking-widest opacity-80">Total Earnings</p>
-                            <p className="text-2xl font-black">{formatPrice(totalEarnings)}</p>
-                        </div>
-                    </div>
+            </div>
+
+            <div className="grid gap-4 md:grid-cols-4">
+                <Card className="rounded-2xl border-none shadow-md bg-primary text-primary-foreground">
+                    <CardHeader className="pb-2">
+                        <CardTitle className="text-xs font-bold uppercase tracking-widest opacity-80">Total Earnings</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="text-2xl font-black">{formatPrice(totalEarnings)}</div>
+                    </CardContent>
+                </Card>
+                <Card className="rounded-2xl border-none shadow-md bg-white">
+                    <CardHeader className="pb-2">
+                        <CardTitle className="text-xs font-bold uppercase tracking-widest text-muted-foreground">This Month</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="text-2xl font-black text-primary">{formatPrice(thisMonthEarnings)}</div>
+                    </CardContent>
+                </Card>
+                <Card className="rounded-2xl border-none shadow-md bg-white">
+                    <CardHeader className="pb-2">
+                        <CardTitle className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Balance</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="text-2xl font-black text-primary">{formatPrice(stats?.withdrawableBalance || 0)}</div>
+                    </CardContent>
+                </Card>
+                <Card className="rounded-2xl border-none shadow-md bg-white">
+                    <CardHeader className="pb-2">
+                        <CardTitle className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Total Sessions</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="text-2xl font-black text-primary">{payments.length}</div>
+                    </CardContent>
                 </Card>
             </div>
 
@@ -97,7 +132,12 @@ export default function TutorEarningsPage() {
                                             <div className="flex items-center gap-2">
                                                 <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center overflow-hidden">
                                                     {payment.student.image ? (
-                                                        <img src={payment.student.image} alt={payment.student.name} className="h-full w-full object-cover" />
+                                                        <Avatar className="h-8 w-8 border border-primary/10">
+                                                            <AvatarImage src={payment.student.image || undefined} />
+                                                            <AvatarFallback className="font-bold">
+                                                                {payment.student.name.split(' ').map((n) => n[0]).join('').toUpperCase()}
+                                                            </AvatarFallback>
+                                                        </Avatar>
                                                     ) : (
                                                         <User className="h-4 w-4 text-primary" />
                                                     )}

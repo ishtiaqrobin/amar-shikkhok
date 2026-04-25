@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { useState, useEffect, useCallback } from "react";
 import { User } from "@/types/tutor.type";
 import { Badge } from "@/components/ui/badge";
+import { ChangePasswordForm } from "@/components/modules/authentication/ChangePasswordForm";
 
 interface TutorAccountSettingsProps {
     userToken: string;
@@ -38,10 +39,13 @@ export function TutorAccountSettings({ userToken }: TutorAccountSettingsProps) {
         fetchProfile();
     }, [fetchProfile]);
 
-    const handleAvatarUpdate = async (url: string) => {
+    const handleAvatarUpdate = async (file: File) => {
         if (!userToken) return;
 
-        const { error } = await userService.updateProfile(userToken, { image: url });
+        const formData = new FormData();
+        formData.append("image", file);
+
+        const { error } = await userService.updateProfile(userToken, formData);
 
         if (error) {
             toast.error("Failed to update profile picture");
@@ -125,14 +129,18 @@ export function TutorAccountSettings({ userToken }: TutorAccountSettingsProps) {
                 </CardContent>
             </Card>
 
-            <Card className="lg:col-span-8 border-primary/10 shadow-lg rounded-3xl">
-                <CardHeader>
-                    <CardTitle>Update Information</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <ProfileForm user={user} token={userToken} onSuccess={handleProfileUpdate} />
-                </CardContent>
-            </Card>
+            <div className="lg:col-span-8 space-y-8">
+                <Card className="border-primary/10 shadow-lg rounded-3xl">
+                    <CardHeader>
+                        <CardTitle>Update Information</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <ProfileForm user={user} token={userToken} onSuccess={handleProfileUpdate} />
+                    </CardContent>
+                </Card>
+
+                <ChangePasswordForm />
+            </div>
         </div>
     );
 }

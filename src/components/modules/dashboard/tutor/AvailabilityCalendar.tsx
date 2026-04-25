@@ -92,7 +92,8 @@ export function AvailabilityCalendar({ availabilities, userToken, onSuccess }: A
             if (errors.length > 0) {
                 toast.error("Error", { description: "Some schedules could not be updated" });
             } else {
-                toast.success("Success!", { description: "Weekly schedule updated successfully" });
+                toast.success("Success!",
+                    { description: "Weekly schedule updated successfully" });
                 if (onSuccess) onSuccess();
             }
         } catch (error) {

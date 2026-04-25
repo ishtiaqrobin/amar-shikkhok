@@ -72,7 +72,7 @@ export function TutorProfileForm({ tutor, userToken }: TutorProfileFormProps) {
             };
 
             const response = tutor
-                ? await tutorsService.updateProfile(userToken, payload)
+                ? await tutorsService.updateProfile(userToken, payload, tutor.id)
                 : await tutorsService.createProfile(userToken, payload);
 
             const { error } = response;

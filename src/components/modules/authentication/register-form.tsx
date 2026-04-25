@@ -60,11 +60,7 @@ export function RegisterForm({ ...props }: React.ComponentProps<typeof Card>) {
 
       toast.success("Registration successful! 🎉");
 
-      if (values.role === "TUTOR") {
-        router.push("/tutor-dashboard");
-      } else {
-        router.push("/student-dashboard");
-      }
+      router.push(`/verify-email?email=${encodeURIComponent(values.email)}`);
     } catch (error) {
       console.error("Registration error:", error);
       toast.error("Registration failed");

@@ -8,10 +8,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { CalendarIcon, Clock } from "lucide-react";
-import { format } from "date-fns";
+import { format, getDay } from "date-fns";
 import { useState } from "react";
 import { cn, formatPrice } from "@/lib/utils";
 import type { CreateBookingInput } from "@/types/booking.type";
+import { toast } from "sonner";
+import type { Availability } from "@/types/tutor.type";
 
 interface BookingModalProps {
     isOpen: boolean;
@@ -19,6 +21,7 @@ interface BookingModalProps {
     tutorId: string;
     tutorName: string;
     hourlyRate: number;
+    availability?: Availability[];
     onSubmit: (data: CreateBookingInput) => Promise<void>;
 }
 
@@ -28,6 +31,7 @@ export function BookingModal({
     tutorId,
     tutorName,
     hourlyRate,
+    availability = [],
     onSubmit,
 }: BookingModalProps) {
     const [date, setDate] = useState<Date>();
@@ -50,7 +54,55 @@ export function BookingModal({
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!date) return;
+        if (!date) {
+            toast.error("Please select a date");
+            return;
+        }
+
+        // Validate availability
+        const selectedDay = getDay(date); // 0 (Sun) to 6 (Sat)
+        const dayAvailability = availability.find(
+            (a) => Number(a.dayOfWeek) === selectedDay && a.isAvailable
+        );
+
+        if (!dayAvailability) {
+            toast.error("Tutor is not available on this day", {
+                description: "Please check the tutor's availability schedule."
+            });
+            return;
+        }
+
+        // Time comparison function (HH:mm to minutes)
+        const toMinutes = (time: string) => {
+            const [h, m] = time.split(":").map(Number);
+            return h * 60 + m;
+        };
+
+        const startMin = toMinutes(startTime);
+        const endMin = toMinutes(endTime);
+        const availStartMin = toMinutes(dayAvailability.startTime);
+        const availEndMin = toMinutes(dayAvailability.endTime);
+
+        if (startMin < availStartMin || endMin > availEndMin) {
+            toast.error("Failed to book", {
+                description: `Selected time is outside tutor's availability`
+            });
+            return;
+        }
+
+        if (!subject) {
+            toast.error("Failed to book", {
+                description: `Subject is required`
+            });
+            return;
+        }
+
+        if (duration <= 0) {
+            toast.error("Failed to book", {
+                description: `End time must be after start time`
+            });
+            return;
+        }
 
         setIsSubmitting(true);
         try {
@@ -61,7 +113,7 @@ export function BookingModal({
                 startTime,
                 endTime,
                 notes: notes || undefined,
-                totalPrice,
+                totalPrice: totalPrice,
             });
 
             // Reset form
@@ -78,14 +130,34 @@ export function BookingModal({
         }
     };
 
+    // const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="sm:max-w-[500px] rounded-3xl">
+            <DialogContent className="sm:max-w-[500px] rounded-3xl max-h-screen overflow-y-auto">
                 <DialogHeader>
                     <DialogTitle className="text-2xl font-black">Book a Session - {tutorName}</DialogTitle>
                 </DialogHeader>
 
-                <form onSubmit={handleSubmit} className="space-y-6 pt-4">
+                {/* Display Availability Summary */}
+                {/* {availability && availability.length > 0 && (
+                    <div className="bg-primary/5 p-4 rounded-2xl border border-primary/10 space-y-2">
+                        <p className="text-[10px] font-black uppercase tracking-widest text-primary/60">Tutor Availability Schedule</p>
+                        <div className="flex flex-wrap gap-2">
+                            {availability
+                                .filter(a => a.isAvailable)
+                                .sort((a, b) => Number(a.dayOfWeek) - Number(b.dayOfWeek))
+                                .map(a => (
+                                    <div key={a.id} className="text-[10px] font-bold bg-white px-2 py-1 rounded-full border border-primary/5">
+                                        {dayNames[Number(a.dayOfWeek)].slice(0, 3)}: {a.startTime}-{a.endTime}
+                                    </div>
+                                ))
+                            }
+                        </div>
+                    </div>
+                )} */}
+
+                <form onSubmit={handleSubmit} className="space-y-5 pt-2">
                     {/* Subject */}
                     <div className="space-y-2">
                         <Label htmlFor="subject" className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Subject</Label>
@@ -120,7 +192,13 @@ export function BookingModal({
                                     mode="single"
                                     selected={date}
                                     onSelect={setDate}
-                                    disabled={(date) => date < new Date()}
+                                    disabled={(date) => {
+                                        // Disable past dates
+                                        if (date < new Date(new Date().setHours(0, 0, 0, 0))) return true;
+                                        // Disable days the tutor isn't available
+                                        const day = getDay(date);
+                                        return !availability.some(a => Number(a.dayOfWeek) === day && a.isAvailable);
+                                    }}
                                     initialFocus
                                 />
                             </PopoverContent>
@@ -164,15 +242,24 @@ export function BookingModal({
                         <div className="p-4 bg-primary/5 rounded-2xl space-y-2 border border-primary/10">
                             <div className="flex justify-between text-xs font-bold uppercase tracking-widest text-muted-foreground">
                                 <span>Duration</span>
-                                <span>{duration} Hours</span>
+                                <span>
+                                    {(() => {
+                                        const h = Math.floor(duration);
+                                        const m = Math.round((duration - h) * 60);
+
+                                        const hText = h > 0 ? `${h} Hour${h > 1 ? "s" : ""}` : "";
+                                        const mText = m > 0 ? ` ${m} Minute${m > 1 ? "s" : ""}` : "";
+                                        return (hText + mText).trim() || "0 Minute";
+                                    })()}
+                                </span>
                             </div>
                             <div className="flex justify-between text-xs font-bold uppercase tracking-widest text-muted-foreground">
                                 <span>Hourly Rate</span>
-                                <span>{formatPrice(hourlyRate)}</span>
+                                <span>{Math.round(hourlyRate)} BDT</span>
                             </div>
                             <div className="flex justify-between text-lg font-black pt-2 border-t border-primary/10 text-primary">
                                 <span>Total Payment</span>
-                                <span>{formatPrice(totalPrice)}</span>
+                                <span>{Math.round(totalPrice)} BDT</span>
                             </div>
                         </div>
                     )}
@@ -191,7 +278,7 @@ export function BookingModal({
                     </div>
 
                     {/* Actions */}
-                    <div className="flex gap-4 pt-4">
+                    <div className="flex gap-4">
                         <Button
                             type="button"
                             variant="outline"

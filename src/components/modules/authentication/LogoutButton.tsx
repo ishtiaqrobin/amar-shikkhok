@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState } from "react";
@@ -35,7 +36,7 @@ export function LogoutButton({
                             window.location.href = "/login";
                         }, 100);
                     },
-                    onError: (ctx) => {
+                    onError: (ctx: any) => {
                         toast.error("Logout failed");
                         console.error("Logout error:", ctx.error);
                         setIsLoading(false);

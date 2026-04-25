@@ -5,6 +5,9 @@ import {
   Calendar,
   FolderKanban,
   UserCog,
+  TrendingUp,
+  Landmark,
+  Settings,
 } from "lucide-react";
 
 export const adminRoutes: Route[] = [
@@ -30,6 +33,21 @@ export const adminRoutes: Route[] = [
         title: "Category Management",
         url: "/admin-dashboard/categories",
         icon: FolderKanban,
+      },
+      {
+        title: "Financials",
+        url: "/admin-dashboard/finance",
+        icon: TrendingUp,
+      },
+      {
+        title: "Withdrawals",
+        url: "/admin-dashboard/withdrawals",
+        icon: Landmark,
+      },
+      {
+        title: "Settings",
+        url: "/admin-dashboard/settings",
+        icon: Settings,
       },
       {
         title: "Profile",

@@ -293,6 +293,7 @@ export function TutorProfileClient({ tutor }: TutorProfileClientProps) {
                 tutorId={tutor.id}
                 tutorName={user.name}
                 hourlyRate={hourlyRate}
+                availability={availability}
                 onSubmit={handleBooking}
             />
         </>

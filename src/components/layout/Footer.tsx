@@ -165,21 +165,21 @@ export function Footer() {
                     </p>
                     <div className="flex flex-wrap items-center justify-center gap-6 text-sm">
                         <Link
-                            href="/privacy"
+                            href="/privacy-policy"
                             className="text-muted-foreground hover:text-primary transition-colors font-medium"
                         >
                             Privacy Policy
                         </Link>
                         <span className="text-muted-foreground/30">•</span>
                         <Link
-                            href="/terms"
+                            href="/terms-of-service"
                             className="text-muted-foreground hover:text-primary transition-colors font-medium"
                         >
                             Terms of Service
                         </Link>
                         <span className="text-muted-foreground/30">•</span>
                         <Link
-                            href="/cookies"
+                            href="/cookie-policy"
                             className="text-muted-foreground hover:text-primary transition-colors font-medium"
                         >
                             Cookie Policy

@@ -14,6 +14,14 @@ export interface AdminStats {
   totalPayments: number;
 }
 
+export interface PublicStats {
+  totalStudents: number;
+  totalTutors: number;
+  totalCategories: number;
+  avgRating: number;
+  studentImages: string[];
+}
+
 export interface AdminUser {
   id: string;
   name: string;

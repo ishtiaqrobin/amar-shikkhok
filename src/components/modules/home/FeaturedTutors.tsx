@@ -146,7 +146,7 @@ export function FeaturedTutors() {
                                     </div>
                                 </div>
                             </CardContent>
-                            <CardFooter className="p-6 pt-4 flex items-center justify-between border-t border-primary/5 bg-muted/10 mt-auto">
+                            <CardFooter className="p-6 pt-4 flex items-center justify-between border-t border-primary/5 bg-primary/5 mt-auto">
                                 <div className="flex flex-col">
                                     <span className="text-[10px] text-muted-foreground uppercase font-black">Per Hour</span>
                                     <span className="text-xl font-black text-primary">{formatPrice(tutor.hourlyRate)}</span>

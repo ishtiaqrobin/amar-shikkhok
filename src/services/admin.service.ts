@@ -1,5 +1,10 @@
 import { env } from "@/env";
-import { AdminStats, AdminUser, AdminBooking } from "@/types/admin.type";
+import {
+  AdminStats,
+  PublicStats,
+  AdminUser,
+  AdminBooking,
+} from "@/types/admin.type";
 
 const API_URL = env.NEXT_PUBLIC_API_URL;
 
@@ -39,6 +44,40 @@ export const adminService = {
         error: {
           message:
             err instanceof Error ? err.message : "Error fetching admin stats",
+        },
+      };
+    }
+  },
+
+  /**
+   * Get public statistics for home page
+   */
+  getPublicStats: async function (): Promise<{
+    data: PublicStats | null;
+    error: ServiceError | null;
+  }> {
+    try {
+      const res = await fetch(`${API_URL}/admins/public-stats`, {
+        credentials: "include",
+        cache: "no-store",
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(
+          errorData.message || `HTTP error! status: ${res.status}`,
+        );
+      }
+
+      const response = await res.json();
+      return { data: response.data, error: null };
+    } catch (err) {
+      console.error("Error fetching public stats:", err);
+      return {
+        data: null,
+        error: {
+          message:
+            err instanceof Error ? err.message : "Error fetching public stats",
         },
       };
     }

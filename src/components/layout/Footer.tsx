@@ -37,7 +37,7 @@ export function Footer() {
 
     return (
         <footer className="bg-linear-to-br from-muted/30 via-background to-muted/20 border-t border-primary/10">
-            <div className="container mx-auto px-4 py-16">
+            <div className="container mx-auto px-4 lg:px-10 py-16">
                 {/* Main Footer Content */}
                 <div className="grid grid-cols-1 gap-12 lg:grid-cols-12">
                     {/* Brand Section */}
@@ -90,9 +90,9 @@ export function Footer() {
                     </div>
 
                     {/* Links Sections */}
-                    <div className="lg:col-span-8 grid grid-cols-1 sm:grid-cols-3 gap-8 lg:gap-12">
+                    <div className="lg:col-span-8 grid grid-cols-3 sm:grid-cols-3 gap-8 lg:gap-12">
                         {/* Quick Links */}
-                        <div className="space-y-5">
+                        <div className="space-y-5 hidden sm:block">
                             <h4 className="font-bold text-lg relative inline-block">
                                 Quick Links
                                 <span className="absolute -bottom-2 left-0 w-12 h-1 bg-primary rounded-full" />

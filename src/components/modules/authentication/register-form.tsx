@@ -149,6 +149,7 @@ export function RegisterForm({ ...props }: React.ComponentProps<typeof Card>) {
                 )}
               />
 
+              {/* Who are you? (STUDENT or TUTOR) */}
               <FormField
                 control={form.control}
                 name="role"
@@ -159,13 +160,14 @@ export function RegisterForm({ ...props }: React.ComponentProps<typeof Card>) {
                       onValueChange={field.onChange}
                       defaultValue={field.value}
                       disabled={isLoading}
+
                     >
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select" />
                         </SelectTrigger>
                       </FormControl>
-                      <SelectContent>
+                      <SelectContent position="popper">
                         <SelectItem value="STUDENT">Student</SelectItem>
                         <SelectItem value="TUTOR">Tutor</SelectItem>
                       </SelectContent>

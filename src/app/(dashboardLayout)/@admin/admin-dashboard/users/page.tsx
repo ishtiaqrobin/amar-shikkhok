@@ -76,7 +76,7 @@ export default function AdminUsersPage() {
                         <SelectTrigger className="w-[160px] rounded-xl border-primary/10">
                             <SelectValue placeholder="Select Role" />
                         </SelectTrigger>
-                        <SelectContent className="rounded-xl">
+                        <SelectContent className="rounded-xl" position="popper">
                             <SelectItem value="ALL">All Users</SelectItem>
                             <SelectItem value="ADMIN">Admin</SelectItem>
                             <SelectItem value="TUTOR">Tutor</SelectItem>

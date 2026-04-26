@@ -14,9 +14,11 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 export default function StudentOrdersPage() {
-    const { session, isLoading: authLoading } = useAuth();
+    const { user, session, isLoading: authLoading } = useAuth();
     const [orders, setOrders] = useState<PaymentHistoryItem[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -43,6 +45,71 @@ export default function StudentOrdersPage() {
         const [endHour, endMin] = endTime.split(":").map(Number);
         const durationMinutes = (endHour * 60 + endMin) - (startHour * 60 + startMin);
         return (durationMinutes / 60).toFixed(1);
+    };
+
+    const generateInvoice = (order: PaymentHistoryItem) => {
+        const doc = new jsPDF();
+
+        // Add Header
+        doc.setFontSize(22);
+        doc.setTextColor(30, 41, 59); // Slate 800
+        doc.text("INVOICE", 105, 20, { align: "center" });
+
+        doc.setFontSize(12);
+        doc.text("Amar Shikkhok Platform", 105, 30, { align: "center" });
+
+        doc.setLineWidth(0.5);
+        doc.line(20, 35, 190, 35);
+
+        // Order Info
+        doc.setFontSize(10);
+        doc.setTextColor(100, 116, 139); // Slate 500
+        doc.text(`Invoice Date: ${format(new Date(), "dd MMM, yyyy")}`, 20, 45);
+        doc.text(`Booking Date: ${format(new Date(order.sessionDate), "dd MMM, yyyy")}`, 20, 50);
+        doc.text(`Transaction ID: ${order.transactionId || "N/A"}`, 20, 55);
+
+        // Student & Tutor Info
+        doc.setFontSize(12);
+        doc.setTextColor(30, 41, 59);
+        doc.text("Bill To:", 20, 70);
+        doc.setFontSize(10);
+        doc.text(user?.name || "Student", 20, 75);
+        doc.text(user?.email || "", 20, 80);
+
+        doc.setFontSize(12);
+        doc.text("Tutor Details:", 130, 70);
+        doc.setFontSize(10);
+        doc.text(order.tutor.user.name, 130, 75);
+        doc.text(order.tutor.user.email, 130, 80);
+
+        // Table
+        autoTable(doc, {
+            startY: 90,
+            head: [['Subject', 'Duration', 'Time Slot', 'Price']],
+            body: [
+                [
+                    order.subject,
+                    `${calculateHours(order.startTime, order.endTime)} Hours`,
+                    `${order.startTime} - ${order.endTime}`,
+                    `${order.totalPrice} BDT`
+                ]
+            ],
+            headStyles: { fillColor: [59, 130, 246] }, // Primary color
+        });
+
+        const finalY = (doc as jsPDF & { lastAutoTable: { finalY: number } }).lastAutoTable.finalY || 150;
+
+        // Total
+        doc.setFontSize(12);
+        doc.text(`Total Amount Paid: ${order.totalPrice} BDT`, 190, finalY + 20, { align: "right" });
+
+        // Footer
+        doc.setFontSize(10);
+        doc.setTextColor(150);
+        doc.text("Thank you for using Amar Shikkhok!", 105, 280, { align: "center" });
+
+        doc.save(`Invoice_${order.id.slice(0, 8)}.pdf`);
+        toast.success("Invoice downloaded successfully");
     };
 
     return (
@@ -142,7 +209,7 @@ export default function StudentOrdersPage() {
                                                 variant="ghost"
                                                 size="sm"
                                                 className="h-8 w-8 p-0 rounded-full hover:bg-primary/10 hover:text-primary transition-colors"
-                                                onClick={() => toast.info("Invoice generation is coming soon!")}
+                                                onClick={() => generateInvoice(order)}
                                             >
                                                 <Download className="h-4 w-4" />
                                                 <span className="sr-only">Download Invoice</span>

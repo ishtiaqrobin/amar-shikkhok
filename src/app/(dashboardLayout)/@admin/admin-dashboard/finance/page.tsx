@@ -14,24 +14,29 @@ import { Button } from "@/components/ui/button";
 
 import { PaymentStats, PaymentHistoryItem } from "@/types/payment.type";
 import { useCallback } from "react";
+import { settingService, PlatformSetting } from "@/services/setting.service";
+import * as XLSX from 'xlsx';
 
 export default function AdminFinancePage() {
     const { session, isLoading: authLoading } = useAuth();
     const [stats, setStats] = useState<PaymentStats | null>(null);
     const [history, setHistory] = useState<PaymentHistoryItem[]>([]);
+    const [settings, setSettings] = useState<PlatformSetting[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 
     const fetchData = useCallback(async () => {
         if (!session?.token) return;
         setIsLoading(true);
         try {
-            const [statsRes, historyRes] = await Promise.all([
+            const [statsRes, historyRes, settingsRes] = await Promise.all([
                 paymentService.getPaymentStats(session.token),
-                paymentService.getPaymentHistory(session.token)
+                paymentService.getPaymentHistory(session.token),
+                settingService.getAllSettings(session.token)
             ]);
 
             if (statsRes.data) setStats(statsRes.data);
             if (historyRes.data) setHistory(historyRes.data || []);
+            if (settingsRes.data) setSettings(settingsRes.data);
         } catch (err) {
             console.error("Error fetching data:", err);
         } finally {
@@ -45,6 +50,33 @@ export default function AdminFinancePage() {
         }
     }, [authLoading, fetchData]);
 
+    const exportToExcel = () => {
+        if (history.length === 0) {
+            toast.error("No data to export");
+            return;
+        }
+
+        const exportData = history.map((item) => ({
+            Date: format(new Date(item.sessionDate), "dd MMM, yyyy"),
+            Subject: item.subject,
+            Student: item.student.name,
+            "Student Email": item.student.email,
+            Tutor: item.tutor.user.name,
+            "Tutor Email": item.tutor.user.email,
+            Amount: item.totalPrice,
+            Status: item.paymentStatus,
+            "Transaction ID": item.transactionId || "N/A"
+        }));
+
+        const worksheet = XLSX.utils.json_to_sheet(exportData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Transactions");
+        
+        // Generate buffer and save
+        XLSX.writeFile(workbook, `Finance_Report_${format(new Date(), "yyyy-MM-dd")}.xlsx`);
+        toast.success("Excel report downloaded successfully");
+    };
+
     return (
         <div className="space-y-6">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -52,7 +84,7 @@ export default function AdminFinancePage() {
                     <h1 className="text-3xl font-bold">Financial Overview</h1>
                     <p className="text-muted-foreground mt-2">Monitor platform revenue and transactions</p>
                 </div>
-                <Button className="rounded-full gap-2 font-bold" variant="outline" onClick={() => toast.info("Exporting report...")}>
+                <Button className="rounded-full gap-2 font-bold" variant="outline" onClick={exportToExcel}>
                     <Download className="h-4 w-4" />
                     Export Report
                 </Button>
@@ -91,7 +123,9 @@ export default function AdminFinancePage() {
                         <CardTitle className="text-sm font-medium text-muted-foreground uppercase tracking-widest">Commission</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-black text-primary">10%</div>
+                        <div className="text-2xl font-black text-primary">
+                            {settings.find(s => s.key === "PLATFORM_FEE_PERCENT")?.value || "0"}%
+                        </div>
                         <p className="text-[10px] mt-1 text-muted-foreground">Standard platform fee</p>
                     </CardContent>
                 </Card>

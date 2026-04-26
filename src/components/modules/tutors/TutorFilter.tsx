@@ -109,7 +109,7 @@ export function TutorFilter() {
                         <SelectTrigger className="rounded-xl border-primary/20">
                             <SelectValue placeholder="Select Category" />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent position="popper" className="max-h-[300px]">
                             <SelectItem value="all">All Categories</SelectItem>
                             {categories.map((cat) => (
                                 <SelectItem key={cat.id} value={cat.id}>

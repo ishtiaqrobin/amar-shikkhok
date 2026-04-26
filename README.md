@@ -1,36 +1,75 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Amar Shikkhok - Frontend Application
 
-## Getting Started
+A modern, responsive, and feature-rich tutor booking interface built with Next.js 15+ and Tailwind CSS 4.
 
-First, run the development server:
+## 🌟 Key Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **⚡ High Performance**: Built on Next.js 15 with App Router and server-side rendering.
+- **🎨 Premium UI**: Crafted with Radix UI and Tailwind CSS 4 for a sleek, consistent look.
+- **🌗 Dark Mode**: Full support for light and dark themes.
+- **📱 Responsive**: Optimized for desktop, tablet, and mobile devices.
+- **🔐 Secure Auth**: Seamless integration with Better Auth.
+- **🛒 Checkout**: Smooth booking flow with Stripe integration.
+- **📊 Dashboards**: Dedicated views for Students, Tutors, and Admins.
+- **📥 Data Export**: Generate PDF and Excel reports for bookings and payments.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🛠️ Technologies
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Framework**: [Next.js 15+](https://nextjs.org/)
+- **Styling**: [Tailwind CSS 4](https://tailwindcss.com/)
+- **UI Components**: [Radix UI](https://www.radix-ui.com/)
+- **Icons**: [Lucide React](https://lucide.dev/)
+- **Forms**: [React Hook Form](https://react-hook-form.com/) + [Zod](https://zod.dev/)
+- **Animations**: [Lenis](https://lenis.darkroom.engineering/) (Smooth Scroll)
+- **Toasts**: [Sonner](https://sonner.emilkowal.ski/)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🚦 Getting Started
 
-## Learn More
+### Prerequisites
 
-To learn more about Next.js, take a look at the following resources:
+- Node.js (v18+)
+- Backend API running
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Installation
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-## Deploy on Vercel
+2. Configure environment variables:
+   Create a `.env` file based on `.env.example`:
+   ```bash
+   cp .env.example .env
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+3. Start the development server:
+   ```bash
+   npm run dev
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+4. Build for production:
+   ```bash
+   npm run build
+   ```
+
+## 🔑 Environment Variables
+
+Required variables in `.env`:
+
+| Key | Description |
+| --- | --- |
+| `NEXT_PUBLIC_API_URL` | Backend API base URL |
+| `BETTER_AUTH_URL` | Authentication service URL |
+| `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | Stripe publishable key |
+
+## 📜 Available Scripts
+
+- `npm run dev`: Starts the Next.js development server.
+- `npm run build`: Compiles the application for production.
+- `npm run start`: Starts the production server.
+- `npm run lint`: Runs ESLint to check for code quality issues.
+
+## 📄 License
+
+This project is licensed under the [MIT License](./LICENSE).

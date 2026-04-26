@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { authClient } from "@/lib/auth-client";
+import { env } from "@/env";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Loader2, Chrome } from "lucide-react";
@@ -23,7 +24,10 @@ export function GoogleAuthButton({
         try {
             await authClient.signIn.social({
                 provider: "google",
-                callbackURL: "http://localhost:3000",
+                // callbackURL must be on the FRONTEND origin so the session
+                // cookie (set via Next.js rewrite proxy) is accessible.
+                // Never hardcode localhost — use the env variable.
+                callbackURL: `${env.NEXT_PUBLIC_APP_URL}/student-dashboard`,
             });
         } catch (error) {
             console.error("Google auth error:", error);

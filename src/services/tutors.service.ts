@@ -158,6 +158,52 @@ export const tutorsService = {
   },
 
   /**
+   * Get current tutor's profile
+   */
+  getMyProfile: async function (
+    token: string,
+  ): Promise<{ data: Tutor | null; error: ServiceError | null }> {
+    try {
+      const url = `${API_URL}/tutors/profile/me`;
+
+      const res = await fetch(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        credentials: "include",
+        cache: "no-store",
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(
+          errorData.message || `HTTP error! status: ${res.status}`,
+        );
+      }
+
+      const response = await res.json();
+      const tutor = response.data;
+
+      // Map categories to category (singular) and availabilities to availability
+      if (tutor) {
+        tutor.category = tutor.categories?.[0] || null;
+        tutor.availability = tutor.availabilities || tutor.availability || [];
+      }
+
+      return { data: tutor, error: null };
+    } catch (err) {
+      console.error("Error fetching my profile:", err);
+      return {
+        data: null,
+        error: {
+          message:
+            err instanceof Error ? err.message : "Error fetching my profile",
+        },
+      };
+    }
+  },
+
+  /**
    * Update tutor profile
    */
   updateProfile: async function (

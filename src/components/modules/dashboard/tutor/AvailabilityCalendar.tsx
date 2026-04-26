@@ -90,7 +90,9 @@ export function AvailabilityCalendar({ availabilities, userToken, onSuccess }: A
             const errors = results.filter(r => r?.error);
 
             if (errors.length > 0) {
-                toast.error("Error", { description: "Some schedules could not be updated" });
+                // Get the first error message or a generic one
+                const errorMsg = errors[0]?.error?.message || "Some schedules could not be updated";
+                toast.error("Error", { description: errorMsg });
             } else {
                 toast.success("Success!",
                     { description: "Weekly schedule updated successfully" });
@@ -98,7 +100,8 @@ export function AvailabilityCalendar({ availabilities, userToken, onSuccess }: A
             }
         } catch (error) {
             console.error("Save availability error:", error);
-            toast.error("Error", { description: "Failed to update schedule" });
+            const errorMsg = error instanceof Error ? error.message : "Failed to update schedule";
+            toast.error("Error", { description: errorMsg });
         } finally {
             setLoading(false);
         }
